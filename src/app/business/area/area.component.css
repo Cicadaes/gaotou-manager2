@@ -1,0 +1,15 @@
+.area {
+  padding: 15px;
+}
+.area .select {
+  padding: 5px 0;
+}
+.select{
+  margin-bottom: 10px;
+}
+.area .select span {
+  display: inline-block;
+}
+.btn-manner{
+  margin-bottom: 15px;
+}

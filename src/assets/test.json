@@ -1,0 +1,31 @@
+{
+  "province": {
+    "administrativeAreaId": 2,
+    "administrativeAreaName": "贵州省",
+    "level": 1
+  },
+  "city": {
+    "administrativeAreaId": 3,
+    "administrativeAreaName": "贵阳市",
+    "level": 2
+  },
+  "serviceArea": {
+    "serviceAreaId": 1,
+    "serviceName": "久长服务区"
+  },
+  "saOrientation": {
+    "destination": "贵阳",
+    "flag": "3",
+    "flagName": "下行",
+    "orientaionId": 1,
+    "source": "遵义"
+  },
+
+  "cashRegisterCode": "asdasaaaaa",
+
+  "store": {
+    "categoryCode": "2",
+    "storeId": 1,
+    "storeName": "中超"
+  }
+}

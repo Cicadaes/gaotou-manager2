@@ -1,0 +1,351 @@
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<app-s-loation locationTitle="服务区管理"></app-s-loation>
+<div class="serarea-manage">
+  <h4 class="text-center">服务区管理</h4>
+  <!--按钮-->
+  <div class="btn-manner">
+    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-info" (click)="revampClick()">修改</button>
+  </div>
+  <!--数据-->
+  <p-table [columns]="cols" [value]="serAreas" selectionMode="multiple" [(selection)]="selectedSerAreas" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" blockScroll="true" [modal]="true" [width]="900">
+    <div class="ui-g ui-fluid">
+      <!--所属公司-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addorganizationName">所属公司：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addorganizationName" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属公司..."></p-dropdown>
+        </div>
+      </div>
+      <!--所属部门-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="adddeptName">所属部门：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="adddeptName" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+        </div>
+      </div>
+      <!--区划-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+        </div>
+      </div>
+      <!--创建人-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="chiefName">创建人：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="chiefName" placeholder="请选择创建人..." (click)="userTreeClick()" [(ngModel)]="addUserTree.label"/>
+        </div>
+      </div>
+      <!--创建人电话-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="chiefPhone">创建人：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="chiefPhone" disabled placeholder="请添加创建人电话..." [(ngModel)]="addUserTree.areaCode"/>
+        </div>
+      </div>
+      <!--服务区名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="serviceAreaName">服务区名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="serviceAreaName" placeholder="请输入服务区名称..." [(ngModel)]="addSerarea.serviceAreaName"/>
+        </div>
+      </div>
+      <!--————————————公共属性————————————-->
+      <div class="ui-g-12" style="border-bottom: 2px dotted black">
+        <h4 class="text-center">公共属性</h4>
+      </div>
+      <div class="ui-g-6" *ngFor="let item of commonAttributeValues;let i = index">
+        <div class="ui-g-4">
+          <label for="longitude">{{item.attributeName}}：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="longitude" [placeholder]="'请输入'+item.attributeName+'...'" [(ngModel)]="item.value"/>
+        </div>
+      </div>
+      <!--————————————上行属性————————————-->
+      <div class="ui-g-12" style="border-bottom: 2px dotted black">
+        <h4 class="text-center">上行属性</h4>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>上行起始点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="上行起始点..." [(ngModel)]="upSource"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>上行结束点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="上行结束点..." [(ngModel)]="upDestination"/>
+        </div>
+      </div>
+      <div class="ui-g-6" *ngFor="let item of upAttribute;let i = index">
+        <div class="ui-g-3">
+          <label>{{item.attributeName}}：</label>
+        </div>
+        <div class="ui-g-6">
+          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+        </div>
+        <div class="ui-g-3">
+          <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+        </div>
+      </div>
+      <!--————————————下行属性————————————-->
+      <div class="ui-g-12" style="border-bottom: 2px dotted black">
+        <h4 class="text-center">下行属性</h4>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>下行起始点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="下行起始点..." [(ngModel)]="downSource"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>下行结束点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="下行结束点..." [(ngModel)]="downDestination"/>
+        </div>
+      </div>
+      <div class="ui-g-6" *ngFor="let item of downAttribute;let i = index">
+        <div class="ui-g-3">
+          <label>{{item.attributeName}}：</label>
+        </div>
+        <div class="ui-g-6">
+          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+        </div>
+        <div class="ui-g-3">
+          <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <!--修改弹框-->
+  <!--<p-dialog header="修改信息" [(visible)]="revampDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+    <div class="ui-g ui-fluid">
+      &lt;!&ndash;所属公司&ndash;&gt;
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addorganizationName">所属公司：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addorganizationName" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属公司..."></p-dropdown>
+        </div>
+      </div>
+      &lt;!&ndash;所属部门&ndash;&gt;
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="adddeptName">所属部门：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="adddeptName" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+        </div>
+      </div>
+      &lt;!&ndash;区划&ndash;&gt;
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+        </div>
+      </div>
+      &lt;!&ndash;创建人&ndash;&gt;
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="chiefName">创建人：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="chiefName" placeholder="请选择创建人..." (click)="userTreeClick()" [(ngModel)]="addUserTree.label"/>
+        </div>
+      </div>
+      &lt;!&ndash;创建人电话&ndash;&gt;
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="chiefPhone">创建人：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="chiefPhone" disabled placeholder="请添加创建人电话..." [(ngModel)]="addUserTree.areaCode"/>
+        </div>
+      </div>
+      &lt;!&ndash;服务区名称&ndash;&gt;
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="serviceAreaName">服务区名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="serviceAreaName" placeholder="请输入服务区名称..." [(ngModel)]="addSerarea.serviceAreaName"/>
+        </div>
+      </div>
+      &lt;!&ndash;————————————公共属性————————————&ndash;&gt;
+      <div class="ui-g-12" style="border-bottom: 2px dotted black">
+        <h4 class="text-center">公共属性</h4>
+      </div>
+      <div class="ui-g-6" *ngFor="let item of commonAttributeValues;let i = index">
+        <div class="ui-g-4">
+          <label for="longitude">{{item.attributeName}}：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="longitude" [placeholder]="'请输入'+item.attributeName+'...'" [(ngModel)]="item.value"/>
+        </div>
+      </div>
+      &lt;!&ndash;————————————上行属性————————————&ndash;&gt;
+      <div class="ui-g-12" style="border-bottom: 2px dotted black">
+        <h4 class="text-center">上行属性</h4>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>上行起始点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="上行起始点..." [(ngModel)]="upSource"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>上行结束点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="上行结束点..." [(ngModel)]="upDestination"/>
+        </div>
+      </div>
+      <div class="ui-g-6" *ngFor="let item of upAttribute;let i = index">
+        <div class="ui-g-3">
+          <label>{{item.attributeName}}：</label>
+        </div>
+        <div class="ui-g-6">
+          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+        </div>
+        <div class="ui-g-3">
+          <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+        </div>
+      </div>
+      &lt;!&ndash;————————————下行属性————————————&ndash;&gt;
+      <div class="ui-g-12" style="border-bottom: 2px dotted black">
+        <h4 class="text-center">下行属性</h4>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>下行起始点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="下行起始点..." [(ngModel)]="downSource"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>下行结束点：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText placeholder="下行结束点..." [(ngModel)]="downDestination"/>
+        </div>
+      </div>
+      <div class="ui-g-6" *ngFor="let item of downAttribute;let i = index">
+        <div class="ui-g-3">
+          <label>{{item.attributeName}}：</label>
+        </div>
+        <div class="ui-g-6">
+          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+        </div>
+        <div class="ui-g-3">
+          <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+        </div>
+      </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="revampSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="revampDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>-->
+  <!--区域树弹框-->
+  <p-dialog header="请选择区域" [(visible)]="areaDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <!--(onNodeUnselect)="nodeUnselect($event)"-->
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="addAreaTrees"
+            selectionMode="single"
+            [(selection)]="addAreaTree"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="treeSelectAreaClick()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="areaDialog=false;addAreaTree.label=''">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <!--用户树树弹框-->
+  <p-dialog header="请选择区域" [(visible)]="userDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="addUserTrees"
+            selectionMode="single"
+            [(selection)]="addUserTree"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="userTreeOnNodeSelect()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="userDialog=false;">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>

@@ -1,0 +1,114 @@
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<app-s-loation locationTitle="职位管理"></app-s-loation>
+<h1 class="text-center">职位管理</h1>
+<div class="video-manage">
+  <!--按钮-->
+  <div class="btn-manner">
+    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+  </div>
+  <!--数据-->
+  <p-table [columns]="cols" [value]="duties" selectionMode="multiple" [(selection)]="selectedDuties" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--所属公司-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addCompany">所属公司：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addCompany" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属公司..."></p-dropdown>
+        </div>
+      </div>
+      <!--所属部门-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addDep">所属部门：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addDep" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+        </div>
+      </div>
+      <!--上级职务-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addpid">上级职务：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addpid" [options]="addDepTopDutySelect" (onChange)="topDutyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+        </div>
+      </div>
+      <!--职务名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="adddutyName">职务名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="adddutyName" [(ngModel)]="addDuty.dutyName" />
+        </div>
+      </div>
+      <!--职位顺序-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addpos">职位顺序：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addpos" type="number" [(ngModel)]="addDuty.pos" />
+        </div>
+      </div>
+      <!--数量-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addquantity">数量：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addquantity" type="number" [(ngModel)]="addDuty.quantity" />
+        </div>
+      </div>
+      <!--是否是一把手-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>是否是一把手：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton name="group1" value="1" label="是" [(ngModel)]="addDuty.boss" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="0" label="不是" [(ngModel)]="addDuty.boss" inputId="opt1"></p-radioButton>
+        </div>
+      </div>
+      <!--职位描述-->
+      <div class="ui-g-12">
+        <div class="ui-g-2">
+          <label for="adddescription">职位描述：</label>
+        </div>
+        <div class="ui-g-10">
+          <textarea id="adddescription" rows="5" cols="70" pInputTextarea [(ngModel)]="addDuty.description"></textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>

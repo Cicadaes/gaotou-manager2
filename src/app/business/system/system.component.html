@@ -1,0 +1,173 @@
+<app-s-loation locationTitle="系统配置"></app-s-loation>
+<h1 class="text-center">系统配置</h1>
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw'}"></p-messages>
+<h3>表格增删该查修改交互demo</h3>
+<!--按钮-->
+<div class="btn-manner">
+  <button class="btn btn-primary" (click)="addClick()">增加</button>
+  <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+  <button class="btn btn-info" (click)="revampClick()">修改</button>
+  <button class="btn btn-warning" (click)="checkClick()">查看</button>
+  <div style="float: right">
+    <div class="ui-inputgroup">
+      <button label="Search"  type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" (click)="searchClick()">
+        <span class="ui-button-text ui-clickable">搜索 </span>
+      </button>
+      <input placeholder="请输入关键字..." type="text" [(ngModel)]="searchField" (keydown)="searchKeydown($event)" class="ui-inputtext ui-corner-all ui-state-default ui-widget">
+    </div>
+  </div>
+</div>
+<!--数据-->
+<p-table [columns]="cols" [value]="cars" [(selection)]="selectedCars3" (onRowSelect)="onRowSelect($event)" [metaKeySelection]="true">
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 3em">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th *ngFor="let col of columns">
+        {{col.header}}
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr [pSelectableRow]="rowData">
+      <td>
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td>
+      <td *ngFor="let col of columns">
+        {{rowData[col.field]}}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<!--增加弹框-->
+<p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="addvin">Vin</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="addvin" [(ngModel)]="addCar.vin" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="addyear">Year</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="addyear" [(ngModel)]="addCar.year" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="addbrand">Brand</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="addbrand" [(ngModel)]="addCar.brand" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="addcolor">Color</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="addcolor" [(ngModel)]="addCar.color" />
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+      <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+    </div>
+  </p-footer>
+</p-dialog>
+<!--修改弹框-->
+<p-dialog header="修改信息" [(visible)]="revampDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid" *ngIf="car1">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="vin">Vin</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="vin" [(ngModel)]="car1.vin" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="year">Year</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="year" [(ngModel)]="car1.year" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="brand">Brand</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="brand" [(ngModel)]="car1.brand" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="color">Color</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="color" [(ngModel)]="car1.color" />
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button class="btn btn-success" type="button" (click)="revampSave()">保存</button>
+      <button class="btn btn-warning" type="button" (click)="revampDialog=false">取消</button>
+    </div>
+  </p-footer>
+</p-dialog>
+<!--详情弹窗-->
+<p-dialog header="查看详情" [(visible)]="detailsDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="300">
+  <div class="ui-g ui-fluid" *ngIf="car1">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="vin">Vin</label>
+      </div>
+      <div class="ui-g-8">
+        <span>{{car1.vin}}</span>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="year">Year</label>
+      </div>
+      <div class="ui-g-8">
+        <span>{{car1.year}}</span>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="brand">Brand</label>
+      </div>
+      <div class="ui-g-8">
+        <span>{{car1.brand}}</span>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="color">Color</label>
+      </div>
+      <div class="ui-g-8">
+        <span>{{car1.color}}</span>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button class="btn btn-danger" type="button" (click)="detailsDialog=false">关闭</button>
+    </div>
+  </p-footer>
+</p-dialog>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+

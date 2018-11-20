@@ -1,0 +1,98 @@
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<app-s-loation locationTitle="服务区字段管理"></app-s-loation>
+<div class="serarea-manage">
+  <h4 class="text-center">服务区字段管理</h4>
+  <!--按钮-->
+  <div class="btn-manner">
+    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+  </div>
+  <!--数据-->
+  <p-table [columns]="cols" [value]="fields" selectionMode="multiple" [(selection)]="selectedfields" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--所属分类-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="attributeCategoryId">所属分类：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="attributeCategoryId" [options]="addFieldType" (onChange)="fieldTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属分类..."></p-dropdown>
+        </div>
+      </div>
+      <!--选择方向-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>是否有方向：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="addenabled1" name="group1" value="1" [(ngModel)]="addField.hasOrientation" label="有" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addenabled2" name="group1" value="0" [(ngModel)]="addField.hasOrientation" label="否" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+      <!--字段编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="attributeName">字段编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="attributeName" [(ngModel)]="addField.attributeName"/>
+        </div>
+      </div>
+      <!--字段名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="attributeDesc">字段名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input id="attributeDesc" pInputText [(ngModel)]="addField.attributeDesc" />
+        </div>
+      </div>
+      <!--字段顺序-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="position">字段顺序：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText type="number" id="position" [(ngModel)]="addField.position"/>
+        </div>
+      </div>
+      <!--是否显示在页面表单-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>是否显示在页面表单：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="addena1" name="group1" value="1" [(ngModel)]="addField.showTableHead" label="是" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addena2" name="group1" value="0" [(ngModel)]="addField.showTableHead" label="否" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>

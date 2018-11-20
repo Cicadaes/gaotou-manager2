@@ -1,0 +1,185 @@
+<app-s-loation locationTitle="公司管理"></app-s-loation>
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<h1 class="text-center">公司管理</h1>
+<div class="company">
+  <!--按钮-->
+  <div class="btn-manner">
+    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+  </div>
+  <!--数据-->
+  <p-table [columns]="cols" [value]="companies" selectionMode="multiple" [(selection)]="selectedcompanies" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addpostcode">公司邮编：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addpostcode" [(ngModel)]="addCompany.postcode" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addfoundDate">成立日期：</label>
+        </div>
+        <div class="ui-g-8">
+          <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
+          <p-calendar id="addfoundDate" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd"></p-calendar>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addregNo">工商注册号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addregNo" [(ngModel)]="addCompany.regNo" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addlatitude">维度：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addlatitude" [(ngModel)]="addCompany.latitude" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addlongitude">经度：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addlongitude" [(ngModel)]="addCompany.longitude" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addlegalPerson">企业法人：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addlegalPerson" [(ngModel)]="addCompany.legalPerson" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addaddress">公司地址：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addaddress" [(ngModel)]="addCompany.address" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addname">公司名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addname" [(ngModel)]="addCompany.name" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addfax">传真：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addfax" [(ngModel)]="addCompany.fax" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addtelNumber">单位电话：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addtelNumber" [(ngModel)]="addCompany.telNumber" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addemail">单位邮箱：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addemail" [(ngModel)]="addCompany.email" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addscale">公司规模：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addscale" [(ngModel)]="addCompany.scale" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addcategory">公司类型：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addcategory" [(ngModel)]="addCompany.category" />
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-2">
+          <label for="addintroduction">公司简介：</label>
+        </div>
+        <div class="ui-g-9">
+          <textarea id="addintroduction" [(ngModel)]="addCompany.introduction" rows="5" cols="30" pInputTextarea></textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <!--区域选择-->
+  <p-dialog header="请选择区域" [(visible)]="areaDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <!--(onNodeUnselect)="nodeUnselect($event)"-->
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="addAreaTrees"
+            selectionMode="single"
+            [(selection)]="addAreaTree"
+            (onNodeSelect)="treeOnNodeSelect($event)"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="treeSelectAreaClick()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="areaDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>

@@ -1,0 +1,113 @@
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<app-s-loation locationTitle="视频组管理"></app-s-loation>
+<div class="user-manage">
+  <h1 class="text-center">视频组管理</h1>
+  <!--按钮-->
+  <div class="btn-manner">
+    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+  </div>
+  <!--数据-->
+  <p-table [columns]="cols" [value]="videoGroups" selectionMode="multiple" [(selection)]="selectedVideoGroups" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addServiceAreaName">所属服务区：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addServiceAreaName" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="highDirec">上下行：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addgroupCode">分组编号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addgroupCode" [(ngModel)]="addVideoGroup.groupCode"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addgroupName">分组名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addgroupName" [(ngModel)]="addVideoGroup.groupName"/>
+        </div>
+      </div>
+      <!--<div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addenabled">是否可用：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="addenabled" name="group1" value="1" [(ngModel)]="addVideoGroup.enabled" label="可用" inputId="opt2" (onClick)="selectEnabledClick($event)"></p-radioButton>
+          <p-radioButton id="addenabled" name="group1" value="0" [(ngModel)]="addVideoGroup.enabled" label="不可用" inputId="opt3" (onClick)="selectEnabledClick($event)"></p-radioButton>
+        </div>
+      </div>-->
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <!--区域弹框-->
+  <p-dialog header="请选择区域" [(visible)]="areaDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <!--(onNodeUnselect)="nodeUnselect($event)"-->
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="addAreaTrees"
+            selectionMode="single"
+            [(selection)]="addAreaTree"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="treeSelectAreaClick()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="areaDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>
+

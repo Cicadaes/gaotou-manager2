@@ -1,0 +1,7 @@
+.btn-manner{
+  margin-bottom: 10px;
+}
+.btn-manner>.pull-right>input{
+  height: 32px;
+}
+

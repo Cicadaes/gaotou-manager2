@@ -1,0 +1,106 @@
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<app-s-loation locationTitle="区域管理"></app-s-loation>
+<div class="user-manage">
+  <!--按钮-->
+  <div class="btn-manner">
+    <h4 class="text-center">区域管理</h4>
+    <button class="btn btn-primary" (click)="addDialog=true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <!--<button class="btn btn-info" (click)="revampClick()">修改</button>
+    <button class="btn btn-warning" (click)="checkClick()">查看</button>
+    <div style="float: right">
+      <div class="ui-inputgroup">
+        <button label="Search"  type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" (click)="searchClick()">
+          <span class="ui-button-text ui-clickable">搜索 </span>
+        </button>
+        <input placeholder="请输入关键字..." type="text" [(ngModel)]="searchField" (keydown)="searchKeydown($event)" class="ui-inputtext ui-corner-all ui-state-default ui-widget">
+      </div>
+    </div>-->
+  </div>
+  <!--table数据-->
+  <p-treeTable [value]="areas" [columns]="cols" selectionMode="multiple" [(selection)]="selectAreas" (onNodeSelect)="onNodeSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+      <tr [ttSelectableRow]="rowNode">
+        <td *ngFor="let col of columns; let i = index">
+          <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-treeTable>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="600">
+    <div class="ui-g ui-fluid">
+      <!--区域名称-->
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="addAreaName">区域名称</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName" (click)="treeAreaClick()" [(ngModel)]="addArea.areaName" />
+        </div>
+      </div>
+      <!--区域编码-->
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="addAreaCode">区域编码</label>
+        </div>
+        <div class="ui-g-8">
+          <input disabled pInputText id="addAreaCode" [(ngModel)]="addArea.areaCode" />
+        </div>
+      </div>
+      <!--区域类型-->
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>区域类型</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton name="group1" value="0" label="国家" [(ngModel)]="addArea.level" inputId="opt1"></p-radioButton>
+          <p-radioButton name="group1" value="1" label="省份直辖市" [(ngModel)]="addArea.level" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="2" label="地级市" [(ngModel)]="addArea.level" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <!--区域弹框-->
+  <p-dialog header="区域编码" [(visible)]="areaDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <!--(onNodeUnselect)="nodeUnselect($event)"-->
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="addAreaTrees"
+            selectionMode="single"
+            [(selection)]="addAreaTree"
+            (onNodeSelect)="treeOnNodeSelect($event)"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <!--<p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="selectAreaClick()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="areaDialog=false">取消</button>
+      </div>
+    </p-footer>-->
+  </p-dialog>
+</div>
+

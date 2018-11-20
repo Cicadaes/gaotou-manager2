@@ -1,0 +1,177 @@
+<!--提示信息-->
+<p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
+<!--确认弹窗-->
+<p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
+<app-s-loation locationTitle="视频管理"></app-s-loation>
+<div class="user-manage">
+  <h1 class="text-center">视频管理</h1>
+  <!--按钮-->
+  <div class="btn-manner">
+    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+  </div>
+  <!--数据-->
+  <p-table [columns]="cols" [value]="videos" selectionMode="multiple" [(selection)]="selectedvideos" (onRowSelect)="onRowSelect($event)">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td *ngFor="let col of columns">
+          {{rowData[col.field]}}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <!--增加弹框-->
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--区划-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+        </div>
+      </div>
+      <!--服务区-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addserviceAreaId">所属服务区：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+        </div>
+      </div>
+      <!--上下行-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addsaOrientationId">上下行：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addsaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+        </div>
+      </div>
+      <!--店铺-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addstoreId">所属店铺：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addstoreId" [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺..."></p-dropdown>
+        </div>
+      </div>
+      <!--是否在店铺内-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addvideoUrl">是否在店铺内：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="addenabled" name="group1" value="1" [(ngModel)]="addVideo.inStore" label="是" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addenabled" name="group1" value="0" [(ngModel)]="addVideo.inStore" label="否" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+      <!--视频分组-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addgroupId">所属分组：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addgroupId" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择分组..."></p-dropdown>
+        </div>
+      </div>
+      <!--摄像头名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addcameraName">摄像头名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addcameraName" [(ngModel)]="addVideo.cameraName"/>
+        </div>
+      </div>
+      <!--摄像头编号-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addcameraNumber">摄像头编号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addcameraNumber" [(ngModel)]="addVideo.cameraNumber"/>
+        </div>
+      </div>
+      <!--外网地址-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addoutUrl">摄像头外网地址：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addoutUrl" [(ngModel)]="addVideo.outUrl"/>
+        </div>
+      </div>
+      <!--内网地址-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addinnerUrl">摄像头内网地址：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addinnerUrl" [(ngModel)]="addVideo.innerUrl"/>
+        </div>
+      </div>
+      <!--源地址-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addvideoUrl">视频源地址：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addvideoUrl" [(ngModel)]="addVideo.videoUrl"/>
+        </div>
+      </div>
+      <!--将是窗口得位置-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addvideoUrl">显示窗口位置：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="addenabled" name="group1" value="1" [(ngModel)]="addVideo.showLocation" label="1" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addenabled" name="group1" value="2" [(ngModel)]="addVideo.showLocation" label="2" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled" name="group1" value="3" [(ngModel)]="addVideo.showLocation" label="3" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled" name="group1" value="4" [(ngModel)]="addVideo.showLocation" label="4" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <!--区域弹框-->
+  <p-dialog header="请选择区域" [(visible)]="areaDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <!--(onNodeUnselect)="nodeUnselect($event)"-->
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="addAreaTrees"
+            selectionMode="single"
+            [(selection)]="addAreaTree"
+            (onNodeSelect)="treeOnNodeSelect($event)"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="treeSelectAreaClick()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="areaDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+</div>
+
