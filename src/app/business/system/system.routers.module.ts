@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {SystemComponent} from './system.component';
+import {EventTypeComponent} from './event-type/event-type.component';
 const mainRoutes: Routes = [
-  {path: '', component: SystemComponent},
+  {path: 'eventtype', component: EventTypeComponent},
 ];
 
 @NgModule({
