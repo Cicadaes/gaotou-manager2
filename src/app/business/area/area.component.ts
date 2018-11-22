@@ -41,6 +41,7 @@ export class AreaComponent implements OnInit {
       {field: 'areaName', header: '区域名称'},
       {field: 'areaCode', header: '区域编码'},
       {field: 'level', header: '区域级别'},
+      {field: 'id', header: '区域ID'},
       {field: 'idt', header: '添加时间'},
     ];
     this.updateAreaDate();
