@@ -40,7 +40,7 @@ export class VideomComponent implements OnInit {
     this.cols = [
       {field: 'id', header: '摄像头id'},
       {field: 'cameraNumber', header: '摄像头编号'},
-      {field: 'groupcameraNameName', header: '摄像头名称'},
+      {field: 'cameraName', header: '摄像头名称'},
       {field: 'showLocation', header: '监视窗位置'},
       {field: 'idt', header: '添加时间'},
     ];
