@@ -3,12 +3,13 @@
 <p-messages [(value)]="msgs" [closable]="true" [style]="{'position':'fixed','top': '0','margin-top': '0','width': '100vw','z-index':'9999'}"></p-messages>
 <!--确认弹窗-->
 <p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
-<div class="user-manage">
+<!--<div class="user-manage">-->
   <h4 class="text-center">事件类型管理</h4>
   <!--按钮-->
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="eventTypes" selectionMode="multiple" [(selection)]="selecteEventTypes" (onRowSelect)="onRowSelect($event)">
@@ -56,4 +57,33 @@
       </div>
     </p-footer>
   </p-dialog>
-</div>
+
+  <!--修改弹框-->
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--分类编号-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="categoryCode">分类编号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="categoryCode1" [(ngModel)]="modifyEventType.categoryCode" ([value])="this.modifyEventType.categoryCode"/>
+        </div>
+      </div>
+      <!--分类名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="eventCategoryName">分类名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="eventCategoryName1" [(ngModel)]="modifyEventType.eventCategoryName" ([value])="this.modifyEventType.eventCategoryName"/>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifyData()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
