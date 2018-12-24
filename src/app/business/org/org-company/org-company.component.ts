@@ -268,7 +268,7 @@ export class OrgCompanyComponent implements OnInit {
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-    } else if (this.selectedcompanies.length > 0 && this.selectedcompanies.length <= 1) {
+    } else if (this.selectedcompanies.length === 1) {
       this.modifyDialog = true;
       this.modifyCompany.address = this.selectedcompanies[0].address;
       this.modifyCompany.areaCode = this.selectedcompanies[0].areaCode;

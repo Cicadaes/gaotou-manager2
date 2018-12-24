@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {AddApply, Apply} from '../../common/model/apply-model';
+import {Component, OnInit} from '@angular/core';
+import {AddApply, Apply, ModifyApply} from '../../common/model/apply-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {ApplyService} from '../../common/services/apply.service';
@@ -19,6 +19,9 @@ export class ApplyComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addApply: AddApply = new AddApply();
+  // 修改相关
+  public modifyDialog: boolean;
+  public modifyApply: ModifyApply = new ModifyApply();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -27,7 +30,8 @@ export class ApplyComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private applyService: ApplyService,
     private globalService: GlobalService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -38,6 +42,7 @@ export class ApplyComponent implements OnInit {
     ];
     this.updateApplyListData();
   }
+
   public updateApplyListData(): void {
     this.applyService.searchList({page: 1, nums: 1000}).subscribe(
       (value) => {
@@ -46,11 +51,13 @@ export class ApplyComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.apply = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -61,6 +68,7 @@ export class ApplyComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addApply);
@@ -114,9 +122,11 @@ export class ApplyComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 生成应用密钥
   public getAppKeyClick() {
     this.applyService.getAppKey().subscribe(
@@ -125,6 +135,7 @@ export class ApplyComponent implements OnInit {
       }
     );
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedApplies === undefined || this.selectedApplies.length === 0) {
@@ -190,7 +201,7 @@ export class ApplyComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedApplies.length; i ++) {
+            for (let i = 0; i < this.selectedApplies.length; i++) {
               ids.push(this.selectedApplies[i].id);
             }
             this.applyService.deleteList(ids).subscribe(
@@ -239,8 +250,99 @@ export class ApplyComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
+  }
+
+  // 修改
+  public modifyBtn(): void {
+    if (this.selectedApplies === undefined || this.selectedApplies.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedApplies.length === 1) {
+      this.modifyDialog = true;
+      this.modifyApply.id = this.selectedApplies[0].id;
+      this.modifyApply.idt = this.selectedApplies[0].idt;
+      this.modifyApply.appDesc = this.selectedApplies[0].appDesc;
+      this.modifyApply.appKey = this.selectedApplies[0].appKey;
+      this.modifyApply.appName = this.selectedApplies[0].appName;
+      this.modifyApply.version = this.selectedApplies[0].version;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  //确认修改
+  public modifySure(): void {
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.applyService.modifyList(this.modifyApply).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedApplies = undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateApplyListData();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+
   }
 }

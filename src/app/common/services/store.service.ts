@@ -25,12 +25,12 @@ export class StoreService {
     return this.http.post(`${this.globalService.urls}/storeInfo/delete`, params);
   }
   // 修改
-  public modifyList(): Observable<any> {
-    return this.http.post('http://localhost/gaotouService/modify.php', '');
+  public modifyList(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/storeInfo/update`, params)
   }
   // 查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/storeInfo/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/storeInfo/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {

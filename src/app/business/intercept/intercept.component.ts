@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {AddIntercept, Intercept} from '../../common/model/intercept-model';
+import {Component, OnInit} from '@angular/core';
+import {AddIntercept, Intercept, ModifyIntercept} from '../../common/model/intercept-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {InterceptService} from '../../common/services/intercept.service';
@@ -25,6 +25,10 @@ export class InterceptComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
+
+  // 修改相关
+  public modifyDialog: boolean;//增加弹窗显示控制
+  public modifyIntercept: ModifyIntercept = new ModifyIntercept();//增加弹窗显示控制
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -33,7 +37,8 @@ export class InterceptComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private interceptService: InterceptService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -45,6 +50,7 @@ export class InterceptComponent implements OnInit {
     ];
     this.updateInterceptDate();
   }
+
   public updateInterceptDate(): void {
     this.interceptService.searchList({page: 1, nums: 1000, bayonetType: '2'}).subscribe(
       (value) => {
@@ -53,11 +59,13 @@ export class InterceptComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.intercept = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -68,6 +76,7 @@ export class InterceptComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addIntercept);
@@ -121,9 +130,11 @@ export class InterceptComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedintercepts === undefined || this.selectedintercepts.length === 0) {
@@ -189,7 +200,7 @@ export class InterceptComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedintercepts.length; i ++) {
+            for (let i = 0; i < this.selectedintercepts.length; i++) {
               ids.push(this.selectedintercepts[i].id);
             }
             this.interceptService.deleteList(ids).subscribe(
@@ -239,10 +250,105 @@ export class InterceptComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+  // 修改
+  public modifyBtn(): void {
+    if (this.selectedintercepts === undefined || this.selectedintercepts.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedintercepts.length === 1) {
+      this.modifyDialog = true;
+      this.modifyIntercept.bayonetCode = this.selectedintercepts[0].bayonetCode;
+      this.modifyIntercept.bayonetName = this.selectedintercepts[0].bayonetName;
+      this.modifyIntercept.bayonetType = this.selectedintercepts[0].bayonetType;
+      this.modifyIntercept.id = this.selectedintercepts[0].id;
+      this.modifyIntercept.idt = this.selectedintercepts[0].idt;
+      this.modifyIntercept.serviceArea.serviceAreaId = this.selectedintercepts[0].serviceAreaId;
+      this.modifyIntercept.serviceArea.serviceAreaName = this.selectedintercepts[0].serviceAreaName;
+      this.modifyIntercept.province.administrativeAreaId = this.selectedintercepts[0].administrativeAreaId;
+      this.modifyIntercept.province.administrativeAreaName = this.selectedintercepts[0].administrativeAreaName;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 修改确认
+  public modifySure(): void {
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.interceptService.modifyList(this.modifyIntercept).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedintercepts = undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateInterceptDate();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+
+  }
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -252,20 +358,29 @@ export class InterceptComponent implements OnInit {
       }
     );
   }
+
   public treeOnNodeSelect(event) {
     // this.areaDialog = false;
     // this.addAreaTreeSelect.push(event.node);
     // console.log(this.addAreaTree);
   }
+
   public treeSelectAreaClick(): void {
     const a = parseFloat(this.addAreaTree.level);
-    if (a >= 2 ) {
+    if (a >= 2) {
       this.addIntercept.province.administrativeAreaId = this.addAreaTree.id;
       this.addIntercept.province.administrativeAreaName = this.addAreaTree.label;
       this.addIntercept.province.level = this.addAreaTree.level;
       this.addIntercept.city.administrativeAreaId = this.addAreaTree.parent.id;
       this.addIntercept.city.administrativeAreaName = this.addAreaTree.parent.label;
       this.addIntercept.city.level = this.addAreaTree.parent.level;
+
+      this.modifyIntercept.province.administrativeAreaId = this.addAreaTree.id;
+      this.modifyIntercept.province.administrativeAreaName = this.addAreaTree.label;
+      this.modifyIntercept.province.level = this.addAreaTree.level;
+      this.modifyIntercept.city.administrativeAreaId = this.addAreaTree.parent.id;
+      this.modifyIntercept.city.administrativeAreaName = this.addAreaTree.parent.label;
+      this.modifyIntercept.city.level = this.addAreaTree.parent.level;
       this.areaDialog = false;
       this.interceptService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -280,10 +395,14 @@ export class InterceptComponent implements OnInit {
       }, 3000);
     }
   }
+
   // 选择服务区
   public serviceChange(e): void {
     this.addIntercept.serviceArea.serviceAreaId = e.value.id;
-    this.addIntercept.serviceArea.serviceName = e.value.name;
+    this.addIntercept.serviceArea.serviceAreaName = e.value.name;
+
+    this.modifyIntercept.serviceArea.serviceAreaId = e.value.id;
+    this.modifyIntercept.serviceArea.serviceAreaName = e.value.name;
     this.interceptService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -291,6 +410,7 @@ export class InterceptComponent implements OnInit {
       }
     );
   }
+
   // 选择上下行
   public directionChange(e): void {
     this.addIntercept.saOrientation.destination = e.value.destination;
@@ -298,12 +418,19 @@ export class InterceptComponent implements OnInit {
     this.addIntercept.saOrientation.flagName = e.value.flagName;
     this.addIntercept.saOrientation.orientaionId = e.value.orientaionId;
     this.addIntercept.saOrientation.source = e.value.source;
+
+    this.modifyIntercept.saOrientation.destination = e.value.destination;
+    this.modifyIntercept.saOrientation.flag = e.value.flag;
+    this.modifyIntercept.saOrientation.flagName = e.value.flagName;
+    this.modifyIntercept.saOrientation.orientaionId = e.value.orientaionId;
+    this.modifyIntercept.saOrientation.source = e.value.source;
   }
+
   // 数据格式化
   public initializeTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new TreeNode();
+      const childnode = new TreeNode();
       childnode.label = data[i].areaName;
       childnode.id = data[i].id;
       childnode.areaCode = data[i].areaCode;
@@ -320,10 +447,11 @@ export class InterceptComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceArea(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       childnode.administrativeAreaId = data[i].administrativeAreaId;
@@ -331,11 +459,12 @@ export class InterceptComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceAreaDirec(data): any {
     const oneChild = [];
     if (data) {
       for (let i = 0; i < data.length; i++) {
-        const childnode =  new SelectItem();
+        const childnode = new SelectItem();
         childnode.name = data[i].flagName + '：' + data[i].source + '—>' + data[i].destination;
         childnode.code = data[i].flag;
         childnode.destination = data[i].id;

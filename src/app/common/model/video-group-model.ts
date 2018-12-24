@@ -15,3 +15,13 @@ export class AddVideoGroup {
   groupName?: string; // 分组名称
   // enabled?: any; // 是否可用
 }
+export class ModifyVideoGroup {
+  serviceAreaId?: number; // 服务区ID
+  saOrientationId?: number; // 方向id
+  groupCode?: string; // 视频设备分组编号
+  groupName?: string; // 分组名称
+  // enabled?: any; // 是否可用
+  id?: number;
+  idt?: string; // 创建时间
+  enabled?: boolean; // 是否可用
+}

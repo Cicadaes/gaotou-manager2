@@ -25,13 +25,13 @@ export class VideoGroupService {
     return this.http.post(`${this.globalService.urls}/cameraGroup/delete`, params);
   }
   // 修改
-  public modifyList(): Observable<any> {
-    return this.http.post('http://localhost/gaotouService/modify.php', '');
+  public modifyList(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/cameraGroup/update`, params);
   }
   // 查询
   public searchList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.urls}/cameraGroup/queryByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.url}/cameraGroup/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {

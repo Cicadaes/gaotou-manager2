@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="applies" selectionMode="multiple" [(selection)]="selectedApplies" (onRowSelect)="onRowSelect($event)">
@@ -74,6 +75,55 @@
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
         <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="900">
+    <div class="ui-g ui-fluid">
+      <!--应用名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="appName1">应用名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="appName1" [(ngModel)]="modifyApply.appName" ([value])="this.modifyApply.appName"/>
+        </div>
+      </div>
+      <!--应用密钥-->
+      <div class="ui-g-6">
+        <div class="ui-g-3">
+          <label for="appKey1">应用密钥：</label>
+        </div>
+        <div class="ui-g-7">
+          <input pInputText id="appKey1" disabled [(ngModel)]="modifyApply.appKey" ([value])="this.modifyApply.appKey"/>
+        </div>
+        <div class="ui-g-2">
+          <button class="btn btn-info" (click)="getAppKeyClick()">生成密钥</button>
+        </div>
+      </div>
+      <!--应用描述-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="appDesc1">应用描述：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="appDesc1" [(ngModel)]="modifyApply.appDesc"  ([value])="this.modifyApply.appDesc"/>
+        </div>
+      </div>
+      <!--应用版本-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="version1">应用版本：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="version1" [(ngModel)]="modifyApply.version"  ([value])="this.modifyApply.version"/>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
       </div>
     </p-footer>
   </p-dialog>

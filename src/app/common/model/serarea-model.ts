@@ -11,7 +11,12 @@ export class AddFieldType {
   categoryName?: string; // 分类名称
   sequence?: number; // 序列
 }
-
+export class ModifyFieldType {
+  categoryName?: string; // 分类名称
+  sequence?: number; // 序列
+  id?: number;
+  idt?: string;
+}
 /*******************字段泛型**************************/
 export class Field {
   attributeCategoryId?: number; // 属性分类id
@@ -27,6 +32,7 @@ export class Field {
   udt?: string;
   id?: number;
   idt?: string;
+  hasOrientation?: any; // 单选框(1公共2上行3下行)
 }
 export class AddField {
   attributeCategoryId?: number; // 属性分类
@@ -36,7 +42,16 @@ export class AddField {
   position?: number; // 字段顺序
   showTableHead?: any; // 是否显示在页面表单
 }
-
+export class ModifyField {
+  attributeCategoryId?: number; // 属性分类
+  hasOrientation?: any; // 单选框(1公共2上行3下行)
+  attributeName?: string; // 字段名称
+  attributeDesc?: string; // 字段描述
+  position?: number; // 字段顺序
+  showTableHead?: any; // 是否显示在页面表单
+  id?: number;
+  idt?: string;
+}
 /*******************服务区泛型**************************/
 export class Serarea {
   organizationId?: number; // 机构ID

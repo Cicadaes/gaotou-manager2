@@ -293,7 +293,7 @@ export class OrgDutyComponent implements OnInit {
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-    } else if (this.selectedDuties.length > 0 && this.selectedDuties.length <= 1) {
+    } else if (this.selectedDuties.length === 1) {
 
       this.modifyDialog = true;
       this.modifyDuty.id = this.selectedDuties[0].id;

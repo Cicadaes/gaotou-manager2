@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {AddField, Field} from '../../../common/model/serarea-model';
+import {Component, OnInit} from '@angular/core';
+import {AddField, Field, ModifyField} from '../../../common/model/serarea-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {GlobalService} from '../../../common/services/global.service';
@@ -20,6 +20,9 @@ export class SerareaFieldsComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addField: AddField = new AddField();
   public addFieldType: SelectItem[]; // 服务区列表
+  // 修改相关
+  public modifyDialog: boolean; //修改弹窗显示控制
+  public modifyField: ModifyField = new ModifyField();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -28,7 +31,8 @@ export class SerareaFieldsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private serareaService: SerareaService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -46,6 +50,7 @@ export class SerareaFieldsComponent implements OnInit {
     );
     this.uploadFieldData();
   }
+
   public uploadFieldData(): void {
     this.serareaService.searchSaFieldList({page: 1, nums: 100}).subscribe(
       (value) => {
@@ -54,11 +59,13 @@ export class SerareaFieldsComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.field = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -69,6 +76,7 @@ export class SerareaFieldsComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addField);
@@ -132,9 +140,11 @@ export class SerareaFieldsComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedfields === undefined || this.selectedfields.length === 0) {
@@ -196,7 +206,7 @@ export class SerareaFieldsComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedfields.length; i ++) {
+            for (let i = 0; i < this.selectedfields.length; i++) {
               ids.push(this.selectedfields[i].id);
             }
             this.serareaService.deleteSaFieldList(ids).subscribe(
@@ -243,19 +253,127 @@ export class SerareaFieldsComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+  // 修改
+  public modifyBtn(): void {
+    if (this.selectedfields === undefined || this.selectedfields.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedfields.length === 1) {
+      this.modifyDialog = true;
+      this.modifyField.id = this.selectedfields[0].id;
+      this.modifyField.idt = this.selectedfields[0].idt;
+      this.modifyField.attributeCategoryId = this.selectedfields[0].attributeCategoryId;
+      this.modifyField.hasOrientation = this.selectedfields[0].hasOrientation;
+      this.modifyField.attributeName = this.selectedfields[0].attributeName;
+      this.modifyField.attributeDesc = this.selectedfields[0].attributeDesc;
+      this.modifyField.position = this.selectedfields[0].position;
+      this.modifyField.showTableHead = this.selectedfields[0].showTableHead;
+      this.modifyField.showTableHead = this.selectedfields[0].showTableHead;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 修改确认
+  public modifySure(): void {
+    if (this.modifyField.showTableHead === '1') {
+      this.modifyField.showTableHead = true;
+    } else {
+      this.modifyField.showTableHead = false;
+    }
+    if (this.modifyField.hasOrientation === '1') {
+      this.modifyField.hasOrientation = true;
+    } else {
+      this.modifyField.hasOrientation = false;
+    }
+
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.serareaService.modifySaFieldItem(this.modifyField).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedfields=undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.uploadFieldData();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+
+  }
+
   // 字段分类改变
   public fieldTypeChange(e) {
     this.addField.attributeCategoryId = e.value.id;
+    this.modifyField.attributeCategoryId = e.value.id;
   }
+
   // 数据格式化
   public initializeFieldType(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].categoryName;
       childnode.id = data[i].id;
       oneChild.push(childnode);

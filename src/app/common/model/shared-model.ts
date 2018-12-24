@@ -73,7 +73,7 @@ export class AddCity {
 // 服务区
 export class AddServiceArea {
   serviceAreaId?: number;
-  serviceName?: string;
+  serviceAreaName?: string;
 }
 // 上下行
 export class AddSaOrientation {

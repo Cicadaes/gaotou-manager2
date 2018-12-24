@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideoGroupService} from '../../common/services/video-group.service';
-import {AddVideoGroup, VideoGroup} from '../../common/model/video-group-model';
+import {AddVideoGroup, ModifyVideoGroup, VideoGroup} from '../../common/model/video-group-model';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 
 @Component({
@@ -24,6 +24,10 @@ export class VideoGroupComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
+
+  //修改相关
+  public modifyDialog: boolean; //添加弹窗显示控制
+  public modifyVideoGroup: ModifyVideoGroup = new ModifyVideoGroup();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -32,7 +36,8 @@ export class VideoGroupComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private videoGroupService: VideoGroupService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -42,6 +47,7 @@ export class VideoGroupComponent implements OnInit {
     ];
     this.updateCashDate();
   }
+
   public updateCashDate(): void {
     this.videoGroupService.searchList({page: 1, nums: 100}).subscribe(
       (value) => {
@@ -50,11 +56,13 @@ export class VideoGroupComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.videoGroup = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -65,13 +73,14 @@ export class VideoGroupComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
-   /* if (this.addVideoGroup.enabled === '1') {
-      this.addVideoGroup.enabled = true;
-    } else {
-      this.addVideoGroup.enabled = false;
-    }*/
+    /* if (this.addVideoGroup.enabled === '1') {
+       this.addVideoGroup.enabled = true;
+     } else {
+       this.addVideoGroup.enabled = false;
+     }*/
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -123,9 +132,11 @@ export class VideoGroupComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedVideoGroups === undefined || this.selectedVideoGroups.length === 0) {
@@ -191,7 +202,7 @@ export class VideoGroupComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedVideoGroups.length; i ++) {
+            for (let i = 0; i < this.selectedVideoGroups.length; i++) {
               ids.push(this.selectedVideoGroups[i].id);
             }
             this.videoGroupService.deleteList(ids).subscribe(
@@ -240,11 +251,104 @@ export class VideoGroupComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
   // 选择区域
+
+  // 修改
+  public modifyBtn(): void {
+    if (this.selectedVideoGroups === undefined || this.selectedVideoGroups.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要删除的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedVideoGroups.length === 1) {
+      this.modifyDialog = true;
+      this.modifyVideoGroup.groupCode = this.selectedVideoGroups[0].groupCode;
+      this.modifyVideoGroup.groupName = this.selectedVideoGroups[0].groupName;
+      this.modifyVideoGroup.id = this.selectedVideoGroups[0].id;
+      this.modifyVideoGroup.idt = this.selectedVideoGroups[0].idt;
+      this.modifyVideoGroup.enabled = this.selectedVideoGroups[0].enabled;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 修改确认
+  public modifySure(): void {
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.videoGroupService.modifyList(this.modifyVideoGroup).subscribe(
+          (value) => {
+            console.log(value);
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedVideoGroups = undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateCashDate();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+
+  }
+
   public AreaTreeClick(): void {
     this.areaDialog = true;
     this.videoGroupService.searchAreaList({page: 1, nums: 100}).subscribe(
@@ -253,9 +357,10 @@ export class VideoGroupComponent implements OnInit {
       }
     );
   }
+
   public treeSelectAreaClick(): void {
     const a = parseFloat(this.addAreaTree.level);
-    if (a >= 2 ) {
+    if (a >= 2) {
       this.areaDialog = false;
       this.videoGroupService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         (value) => {
@@ -270,9 +375,11 @@ export class VideoGroupComponent implements OnInit {
       }, 3000);
     }
   }
+
   // 选择服务区
   public serviceChange(e): void {
     this.addVideoGroup.serviceAreaId = e.value.id;
+    this.modifyVideoGroup.serviceAreaId = e.value.id;
     this.videoGroupService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -280,23 +387,28 @@ export class VideoGroupComponent implements OnInit {
       }
     );
   }
+
   // 选择上下行
   public directionChange(e): void {
     this.addVideoGroup.saOrientationId = e.value.id;
-   /* this.videoGroupService.searchStoreItem(e.value.orientaionId).subscribe(
-      (value) => {
-        console.log(value.data);
-        this.storeList = this.initializeStore(value.data);
-      }
-    );*/
+    this.modifyVideoGroup.saOrientationId = e.value.id;
+    /* this.videoGroupService.searchStoreItem(e.value.orientaionId).subscribe(
+       (value) => {
+         console.log(value.data);
+         this.storeList = this.initializeStore(value.data);
+       }
+     );*/
   }
+
   // 选择是否可用开关
-  public selectEnabledClick(e): void {}
+  public selectEnabledClick(e): void {
+  }
+
   // 数据格式化
   public initializeTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new TreeNode();
+      const childnode = new TreeNode();
       childnode.label = data[i].areaName;
       childnode.id = data[i].id;
       childnode.areaCode = data[i].areaCode;
@@ -313,21 +425,23 @@ export class VideoGroupComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceArea(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       oneChild.push(childnode);
     }
     return oneChild;
   }
+
   public initializeServiceAreaDirec(data): any {
     const oneChild = [];
     if (data) {
       for (let i = 0; i < data.length; i++) {
-        const childnode =  new SelectItem();
+        const childnode = new SelectItem();
         childnode.name = data[i].flagName + '：' + data[i].source + '—>' + data[i].destination;
         childnode.id = data[i].id;
         oneChild.push(childnode);

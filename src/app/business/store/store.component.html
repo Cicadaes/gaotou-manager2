@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="stores" selectionMode="multiple" [(selection)]="selectedstores" (onRowSelect)="onRowSelect($event)">
@@ -95,13 +96,13 @@
       <!--经营状态-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addvideoUrl">经营状态：</label>
+          <label >经营状态：</label>
         </div>
         <div class="ui-g-8">
-          <p-radioButton id="addenabled" name="group1" value="1" [(ngModel)]="addStore.operateStatus" label="营业" inputId="opt2"></p-radioButton>
-          <p-radioButton id="addenabled" name="group1" value="2" [(ngModel)]="addStore.operateStatus" label="停业" inputId="opt3"></p-radioButton>
-          <p-radioButton id="addenabled" name="group1" value="3" [(ngModel)]="addStore.operateStatus" label="关闭" inputId="opt3"></p-radioButton>
-          <p-radioButton id="addenabled" name="group1" value="4" [(ngModel)]="addStore.operateStatus" label="其他" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled1" name="group1" value="1" [(ngModel)]="addStore.operateStatus" label="营业" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addenabled2" name="group1" value="2" [(ngModel)]="addStore.operateStatus" label="停业" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled3" name="group1" value="3" [(ngModel)]="addStore.operateStatus" label="关闭" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled4" name="group1" value="4" [(ngModel)]="addStore.operateStatus" label="其他" inputId="opt3"></p-radioButton>
         </div>
       </div>
       <!--经营状态改变日期-->
@@ -116,12 +117,12 @@
       <!--收银分类-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addvideoUrl">收银分类：</label>
+          <label >收银分类：</label>
         </div>
         <div class="ui-g-8">
-          <p-radioButton id="addenabled" name="group1" value="1" [(ngModel)]="addStore.cashierType" label="自备" inputId="opt2"></p-radioButton>
-          <p-radioButton id="addenabled" name="group1" value="2" [(ngModel)]="addStore.cashierType" label="统一" inputId="opt3"></p-radioButton>
-          <p-radioButton id="addenabled" name="group1" value="3" [(ngModel)]="addStore.cashierType" label="其他" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled5" name="group2" value="1" [(ngModel)]="addStore.cashierType" label="自备" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addenabled6" name="group2" value="2" [(ngModel)]="addStore.cashierType" label="统一" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addenabled7" name="group2" value="3" [(ngModel)]="addStore.cashierType" label="其他" inputId="opt3"></p-radioButton>
         </div>
       </div>
       <!--店铺编码-->
@@ -245,4 +246,194 @@
       </div>
     </p-footer>
   </p-dialog>
+
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--区划-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifyAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" ([value])="addAreaTree.label"/>
+        </div>
+      </div>
+      <!--服务区-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifyserviceAreaId">所属服务区：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+        </div>
+      </div>
+      <!--上下行-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifysaOrientationId">上下行：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+        </div>
+      </div>
+      <!--店铺分类-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifystoreId">店铺分类：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="modifystoreId" [options]="storeTypes" (onChange)="storeTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺类型..."></p-dropdown>
+        </div>
+      </div>
+      <!--合同开始日期-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="contractStartDate1">合同开始日期：</label>
+        </div>
+        <div class="ui-g-8">
+          <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
+          <p-calendar id="contractStartDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'contractStartDate')" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="modifyStore.contractStartDate"></p-calendar>
+        </div>
+      </div>
+      <!--合同到期日期-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="contractExpirationDate1">合同到期日期：</label>
+        </div>
+        <div class="ui-g-8">
+          <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
+          <p-calendar id="contractExpirationDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'contractExpirationDate')" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="modifyStore.contractExpirationDate"></p-calendar>
+        </div>
+      </div>
+      <!--经营状态-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label >经营状态：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="modifyenabled1" name="group1" value="1" [(ngModel)]="modifyStore.operateStatus" label="营业" inputId="opt2"></p-radioButton>
+          <p-radioButton id="modifyenabled2" name="group1" value="2" [(ngModel)]="modifyStore.operateStatus" label="停业" inputId="opt3"></p-radioButton>
+          <p-radioButton id="modifyenabled3" name="group1" value="3" [(ngModel)]="modifyStore.operateStatus" label="关闭" inputId="opt3"></p-radioButton>
+          <p-radioButton id="modifyenabled4" name="group1" value="4" [(ngModel)]="modifyStore.operateStatus" label="其他" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+      <!--经营状态改变日期-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="statusChangeDate1">经营状态改变日期：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-calendar id="statusChangeDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'statusChangeDate')" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd"></p-calendar>
+        </div>
+      </div>
+      <!--收银分类-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label >收银分类：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="modifyenabled5" name="group2" value="1" [(ngModel)]="modifyStore.cashierType" label="自备" inputId="opt2"></p-radioButton>
+          <p-radioButton id="modifyenabled6" name="group2" value="2" [(ngModel)]="modifyStore.cashierType" label="统一" inputId="opt3"></p-radioButton>
+          <p-radioButton id="modifyenabled7" name="group2" value="3" [(ngModel)]="modifyStore.cashierType" label="其他" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+      <!--店铺编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifystoreCode">店铺编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifystoreCode" [(ngModel)]="modifyStore.storeCode"  ([value])="this.modifyStore.storeCode"/>
+        </div>
+      </div>
+      <!--店铺名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addstoreName">店铺名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifystoreName" [(ngModel)]="modifyStore.storeName"  ([value])="this.modifyStore.storeName"/>
+        </div>
+      </div>
+      <!--电费账号-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="electricityAccount1">电费账号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="electricityAccount1" [(ngModel)]="modifyStore.electricityAccount" ([value])="this.modifyStore.electricityAccount"/>
+        </div>
+      </div>
+      <!--水费账号-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifywaterAccount">水费账号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifywaterAccount" [(ngModel)]="modifyStore.waterAccount" ([value])="this.modifyStore.waterAccount"/>
+        </div>
+      </div>
+      <!--建组面积-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifybuildAera">建组面积：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifybuildAera" [(ngModel)]="modifyStore.buildAera" ([value])="this.modifyStore.buildAera"/>
+        </div>
+      </div>
+      <!--实用面积-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifyusableArea">实用面积：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifyusableArea" [(ngModel)]="modifyStore.usableArea" ([value])="this.modifyStore.industryName"/>
+        </div>
+      </div>
+      <!--行业编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifyindustryCode">行业编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifyindustryCode" [(ngModel)]="modifyStore.industryCode" ([value])="this.modifyStore.industryName"/>
+        </div>
+      </div>
+      <!--行业名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifyindustryName">行业名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifyindustryName" [(ngModel)]="modifyStore.industryName" ([value])="this.modifyStore.industryName"/>
+        </div>
+      </div>
+      <!--负责人姓名-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="modifyprincipal">负责人姓名：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="modifyprincipal" [(ngModel)]="modifyStore.principal" ([value])="this.modifyStore.principal"/>
+        </div>
+      </div>
+      <!--负责人电话-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="principalMobile1">负责人电话：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="principalMobile1" [(ngModel)]="modifyStore.principalMobile" ([value])="this.modifyStore.principalMobile"/>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
 </div>

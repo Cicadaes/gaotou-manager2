@@ -15,3 +15,11 @@ export class AddApply {
   appDesc?: string; // 应用描述
   version?: string; // 应用版本
 }
+export class ModifyApply {
+  appName?: string; // 应用名称
+  appKey?: string; // 应用密钥
+  appDesc?: string; // 应用描述
+  version?: string; // 应用版本
+  id?: number;
+  idt?: string;
+}

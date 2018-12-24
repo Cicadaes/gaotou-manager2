@@ -9,7 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
-    <button class="btn btn-info" (click)="revampClick()">修改</button>
+    <button class="btn btn-success" type="button" (click)="revampClick()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="serAreas" selectionMode="multiple" [(selection)]="selectedSerAreas" (onRowSelect)="onRowSelect($event)">

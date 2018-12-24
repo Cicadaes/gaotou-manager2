@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="fields" selectionMode="multiple" [(selection)]="selectedfields" (onRowSelect)="onRowSelect($event)">
@@ -82,8 +83,8 @@
           <label>是否显示在页面表单：</label>
         </div>
         <div class="ui-g-8">
-          <p-radioButton id="addena1" name="group1" value="1" [(ngModel)]="addField.showTableHead" label="是" inputId="opt2"></p-radioButton>
-          <p-radioButton id="addena2" name="group1" value="0" [(ngModel)]="addField.showTableHead" label="否" inputId="opt3"></p-radioButton>
+          <p-radioButton id="addena1" name="group2" value="1" [(ngModel)]="addField.showTableHead" label="是" inputId="opt2"></p-radioButton>
+          <p-radioButton id="addena2" name="group2" value="0" [(ngModel)]="addField.showTableHead" label="否" inputId="opt3"></p-radioButton>
         </div>
       </div>
 
@@ -92,6 +93,73 @@
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
         <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--所属分类-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="attributeCategoryId1">所属分类：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="attributeCategoryId1" [options]="addFieldType" (onChange)="fieldTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属分类..."></p-dropdown>
+        </div>
+      </div>
+      <!--选择方向-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>是否有方向：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="modifyenabled1" name="group1" value="1" [(ngModel)]="modifyField.hasOrientation" label="有" inputId="opt2"></p-radioButton>
+          <p-radioButton id="modifyenabled2" name="group1" value="0" [(ngModel)]="modifyField.hasOrientation" label="否" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+      <!--字段编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="attributeName1">字段编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="attributeName1" [(ngModel)]="modifyField.attributeName" ([value])="this.modifyField.attributeName"/>
+        </div>
+      </div>
+      <!--字段名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="attributeDesc1">字段名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input id="attributeDesc1" pInputText [(ngModel)]="modifyField.attributeDesc" ([value])="this.modifyField.attributeDesc"/>
+        </div>
+      </div>
+      <!--字段顺序-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="position">字段顺序：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText type="number" id="position1" [(ngModel)]="modifyField.position" ([value])="this.modifyField.position"/>
+        </div>
+      </div>
+      <!--是否显示在页面表单-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label>是否显示在页面表单：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton id="modifyena1" name="group2" value="1" [(ngModel)]="modifyField.showTableHead" label="是" inputId="opt2"></p-radioButton>
+          <p-radioButton id="modifyena2" name="group2" value="0" [(ngModel)]="modifyField.showTableHead" label="否" inputId="opt3"></p-radioButton>
+        </div>
+      </div>
+
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
       </div>
     </p-footer>
   </p-dialog>

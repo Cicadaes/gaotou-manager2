@@ -264,7 +264,7 @@ export class OrgDepartmentComponent implements OnInit {
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-    }else if (this.selectedorgs.length >0 && this.selectedorgs.length <=1){
+    }else if (this.selectedorgs.length ===1){
       this.modifyDialog = true;
       this.modifyDepartment.id = this.selectedorgs[0].id;
       this.modifyDepartment.organizationId  = this.selectedorgs[0].organizationId;

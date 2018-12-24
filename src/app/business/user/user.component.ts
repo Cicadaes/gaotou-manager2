@@ -270,7 +270,7 @@ export class UserComponent implements OnInit {
         clearTimeout(this.cleanTimer);
       }
       this.msgs = [];
-      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要删除的项'});
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);

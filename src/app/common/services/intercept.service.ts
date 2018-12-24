@@ -25,12 +25,12 @@ export class InterceptService {
     return this.http.post(`${this.globalService.urls}/bayonet/delete`, params);
   }
   // 修改
-  public modifyList(): Observable<any> {
-    return this.http.post('http://localhost/gaotouService/modify.php', '');
+  public modifyList(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/bayonet/update`, params);
   }
   // 查询卡口出口1进
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/bayonet/queryByPaging/${num.page}/${num.nums}`, {bayonet_type: num.bayonetType});
+    return this.http.post(`${this.globalService.url}/bayonet/queryByPaging/${num.page}/${num.nums}`, {bayonet_type: num.bayonetType});
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {

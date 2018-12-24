@@ -25,3 +25,16 @@ export class AddWifi {
   devicePosition?: string; // 设备位置
   devicePositionCode?: string; // 位置编号
 }
+export class ModifyWifi {
+  // 区划
+  province: AddProvince = new AddProvince();
+  city: AddCity = new AddCity();
+  // 服务区, 上下行
+  serviceArea: AddServiceArea = new AddServiceArea();
+  saOrientation: AddSaOrientation = new AddSaOrientation();
+  deviceCode?: string; // 设备编号
+  devicePosition?: string; // 设备位置
+  devicePositionCode?: string; // 位置编号
+  id?: number;
+  idt?: string;
+}

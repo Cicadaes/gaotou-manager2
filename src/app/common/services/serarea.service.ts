@@ -26,12 +26,12 @@ export class SerareaService {
     return this.http.post(`${this.globalService.urls}/serviceArea/attributeCategory/delete`, params);
   }
   // 修改
-  public modifySaFieldTypeItem(): Observable<any> {
-    return this.http.post('http://localhost/gaotouService/modify.php', '');
+  public modifySaFieldTypeItem(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/serviceArea/attributeCategory/update`, params);
   }
   // 查询
   public searchSaFieldTypeList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/serviceArea/attributeCategory/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/serviceArea/attributeCategory/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*****************************字段管理**************************/
@@ -48,12 +48,12 @@ export class SerareaService {
     return this.http.post(`${this.globalService.urls}/serviceArea/attribute/delete`, params);
   }
   // 修改
-  public modifySaFieldItem(): Observable<any> {
-    return this.http.post('http://localhost/gaotouService/modify.php', '');
+  public modifySaFieldItem(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/serviceArea/attribute/update`, params);
   }
   // 查询
   public searchSaFieldList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/serviceArea/attribute/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/serviceArea/attribute/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*****************************服务区**************************/

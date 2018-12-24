@@ -26,12 +26,12 @@ export class WifiService {
     return this.http.post(`${this.globalService.urls}/wifiProber/delete`, params);
   }
   // 修改
-  public modifyList(): Observable<any> {
-    return this.http.post('http://localhost/gaotouService/modify.php', '');
+  public modifyList(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/wifiProber/update`, params);
   }
   // 查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/wifiProber/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/wifiProber/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {
