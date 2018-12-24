@@ -18,6 +18,7 @@ import {
   TreeTableModule
 } from 'primeng/primeng';
 import { EventTypeComponent } from './event-type/event-type.component';
+import {SystemComponent} from './system.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,7 @@ import { EventTypeComponent } from './event-type/event-type.component';
     RadioButtonModule,
     CalendarModule
   ],
-  declarations: [EventTypeComponent],
+  declarations: [EventTypeComponent, SystemComponent],
   providers: [SystemService, MessageService, ConfirmationService]
 })
 export class SystemModule { }
