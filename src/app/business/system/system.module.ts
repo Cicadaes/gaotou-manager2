@@ -27,7 +27,6 @@ import {SystemComponent} from './system.component';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-
     TreeTableModule,
     ConfirmDialogModule,
     ProgressSpinnerModule,
@@ -39,7 +38,7 @@ import {SystemComponent} from './system.component';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
   ],
   declarations: [EventTypeComponent, SystemComponent],
   providers: [SystemService, MessageService, ConfirmationService]

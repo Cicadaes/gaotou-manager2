@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-system',
+  templateUrl: './system.component.html',
+  styleUrls: ['./system.component.css']
 })
 export class SystemComponent implements OnInit {
   constructor() {}
