@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AreaService } from '../../common/services/area.service';
+import {Component, OnInit} from '@angular/core';
+import {AreaService} from '../../common/services/area.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {AddTree, Area} from '../../common/model/area-model';
@@ -20,7 +20,7 @@ export class AreaComponent implements OnInit {
   public selectAreas: Area[]; // 多选接受变量
   // 添加及树结构相关
   public addDialog: boolean; // 增加弹窗
-  public addArea: AddTree = new AddTree (); // 增加字段
+  public addArea: AddTree = new AddTree(); // 增加字段
   public addAreaTrees: AddTreeArea[];
   public addAreaTree: AddTreeArea;
   public addAreaTreeSelect = [];
@@ -34,7 +34,8 @@ export class AreaComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private datePipe: DatePipe,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -46,9 +47,10 @@ export class AreaComponent implements OnInit {
     ];
     this.updateAreaDate();
   }
+
   // 获取生效的服务区
   public updateAreaDate(): void {
-    this.areaService.searchList({page: '1', nums: '100'} , {}).subscribe(
+    this.areaService.searchList({page: '1', nums: '100'}, {}).subscribe(
       (value) => {
         console.log(value);
         this.areas = this.tableTreeInitialize(value.data.contents);
@@ -56,11 +58,13 @@ export class AreaComponent implements OnInit {
     );
 
   }
+
   // 选中后赋值
   public onNodeSelect(event): void {
     console.log(event.data);
     this.area = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -71,6 +75,7 @@ export class AreaComponent implements OnInit {
     }
     return car;
   }
+
   // 增加、保存增加
   public addsSave(): void {
     this.addArea = this.addInitializeTree1(this.addAreaTreeSelect)[0];
@@ -122,9 +127,11 @@ export class AreaComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectAreas === undefined || this.selectAreas.length === 0) {
@@ -236,10 +243,13 @@ export class AreaComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+
   // 树结构
   public treeAreaClick(): void {
     this.areaDialog = true;
@@ -249,17 +259,19 @@ export class AreaComponent implements OnInit {
       }
     );
   }
+
   public treeOnNodeSelect(event) {
     this.areaDialog = false;
     this.addAreaTreeSelect = [];
     this.addAreaTreeSelect.push(event.node);
     this.addArea = this.addInitializeTree1(this.addAreaTreeSelect)[0];
   }
+
   // 递归调用重组数据结构
   public tableTreeInitialize(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new Area();
+      const childnode = new Area();
       childnode.data = {
         areaName: data[i].areaName,
         areaCode: data[i].areaCode,
@@ -279,10 +291,11 @@ export class AreaComponent implements OnInit {
     }
     return oneChild;
   }
+
   public tableTreeInitialize1(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new Area();
+      const childnode = new Area();
       childnode.data = {
         areaName: data[i].areaName,
         areaCode: data[i].areaCode,
@@ -303,10 +316,11 @@ export class AreaComponent implements OnInit {
     }
     return oneChild;
   }
+
   public addInitializeTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new AddTreeArea();
+      const childnode = new AddTreeArea();
       childnode.label = data[i].areaName;
       childnode.areaCode = data[i].areaCode;
       childnode.parentId = data[i].parentId;
@@ -322,10 +336,11 @@ export class AreaComponent implements OnInit {
     }
     return oneChild;
   }
+
   public addInitializeTree1(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new AddTree();
+      const childnode = new AddTree();
       childnode.areaName = data[i].label;
       childnode.areaCode = data[i].areaCode;
       childnode.parentId = data[i].parentId;

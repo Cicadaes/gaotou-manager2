@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {AddDepartment, Department} from '../../../common/model/org-model';
+import {AddDepartment, Department, ModifyDepartment} from '../../../common/model/org-model';
 import {SelectItem} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
+import {e} from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-department',
@@ -21,6 +22,10 @@ export class OrgDepartmentComponent implements OnInit {
   public addOrg: AddDepartment = new AddDepartment(); // 添加参数字段
   public addCompanySelect: SelectItem[]; // 公司列表
   public addOrgSelect: SelectItem[]; // 部门列表
+
+  //修改相关
+  public modifyDialog: boolean;//修改弹窗显示控制
+  public modifyDepartment: ModifyDepartment = new ModifyDepartment();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -124,6 +129,7 @@ export class OrgDepartmentComponent implements OnInit {
   }
   // 删除
   public deleteFirm(): void {
+    console.log(this.selectedorgs);
     if (this.selectedorgs === undefined || this.selectedorgs.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -246,10 +252,111 @@ export class OrgDepartmentComponent implements OnInit {
       });
     }
   }
+
+  // 修改
+  public modifybtn(): void{
+    if (this.selectedorgs === undefined || this.selectedorgs.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }else if (this.selectedorgs.length >0 && this.selectedorgs.length <=1){
+      this.modifyDialog = true;
+      this.modifyDepartment.id = this.selectedorgs[0].id;
+      this.modifyDepartment.organizationId  = this.selectedorgs[0].organizationId;
+      this.modifyDepartment.organizationName  = this.selectedorgs[0].organizationName;
+      this.modifyDepartment.deptName  = this.selectedorgs[0].deptName;
+      this.modifyDepartment.pDeptName  = this.selectedorgs[0].pDeptName;
+      this.modifyDepartment.deptCode  = this.selectedorgs[0].deptCode;
+      this.modifyDepartment.deptCategory= this.selectedorgs[0].deptCategory;
+      this.modifyDepartment.fax= this.selectedorgs[0].fax;
+      this.modifyDepartment.telNumber= this.selectedorgs[0].telNumber;
+      this.modifyDepartment.description= this.selectedorgs[0].description;
+      this.modifyDepartment.endFlag= this.selectedorgs[0].endFlag;
+      this.modifyDepartment.pid= this.selectedorgs[0].pid;
+      this.modifyDepartment.idt= this.selectedorgs[0].idt;
+    }else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+  //修改确认
+  public modifySure(): void{
+    console.log(this.modifyDepartment);
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.orgService.modifyDepartList(this.modifyDepartment).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedorgs=undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateOrgDate();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              console.log(value);
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {}
+    });
+  }
+
   // 选择公司
   public companyChange(e): void {
+    console.log(e);
     this.addOrg.organizationName = e.value.name;
     this.addOrg.organizationId = e.value.id;
+    this.modifyDepartment.organizationName = e.value.name;
+    this.modifyDepartment.organizationId = e.value.id;
+
     this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
       (value) => {
         this.addOrgSelect = this.initializeSelectOrg(value.data);
@@ -261,6 +368,8 @@ export class OrgDepartmentComponent implements OnInit {
     console.log(e);
     this.addOrg.pid = e.value.pid;
     this.addOrg.pids = `/${e.value.pid}/${e.value.pids}`;
+    this.modifyDepartment.pid = e.value.pid;
+    this.modifyDepartment.pDeptName = e.value.name;
   }
   // 数据格式化
   public initializeSelectCompany(data): any {

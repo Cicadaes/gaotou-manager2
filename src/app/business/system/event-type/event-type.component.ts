@@ -55,7 +55,6 @@ export class EventTypeComponent implements OnInit {
   public onRowSelect(event): void {
     console.log(event.data);
     this.eventType = this.cloneCar(event.data);
-    // this.modifyList = event.data;
   }
 
   // 遍历修改后的数据，并把它赋值给car1

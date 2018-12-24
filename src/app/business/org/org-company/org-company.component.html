@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="companies" selectionMode="multiple" [(selection)]="selectedcompanies" (onRowSelect)="onRowSelect($event)">
@@ -52,7 +53,7 @@
         </div>
         <div class="ui-g-8">
           <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
-          <p-calendar id="addfoundDate" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd"></p-calendar>
+          <p-calendar id="addfoundDate" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" ></p-calendar>
         </div>
       </div>
       <div class="ui-g-6">
@@ -182,4 +183,138 @@
       </div>
     </p-footer>
   </p-dialog>
+  <!--修改弹框-->
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.modifyCompany.areaName"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addpostcode">公司邮编：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addpostcode1" [(ngModel)]="this.modifyCompany.postcode" ([value])="this.modifyCompany.postcode"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addfoundDate1">成立日期：</label>
+        </div>
+        <div class="ui-g-8">
+          <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
+          <p-calendar id="addfoundDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="this.modifyCompany.foundDate"></p-calendar>
+
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addregNo">工商注册号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addregNo1" [(ngModel)]="modifyCompany.regNo" ([value])="this.modifyCompany.regNo"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addlatitude">维度：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addlatitude1" [(ngModel)]="modifyCompany.latitude" ([value])="this.modifyCompany.latitude"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addlongitude">经度：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addlongitude1" [(ngModel)]="modifyCompany.longitude"  ([value])="this.modifyCompany.longitude"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addlegalPerson">企业法人：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addlegalPerson1" [(ngModel)]="modifyCompany.legalPerson" ([value])="this.modifyCompany.legalPerson"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addaddress">公司地址：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addaddress1" [(ngModel)]="modifyCompany.address" ([value])="this.modifyCompany.address"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addname">公司名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addname1" [(ngModel)]="modifyCompany.name" ([value])="this.modifyCompany.name"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addfax">传真：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addfax1" [(ngModel)]="modifyCompany.fax" ([value])="this.modifyCompany.fax"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addtelNumber">单位电话：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addtelNumber1" [(ngModel)]="modifyCompany.telNumber" ([value])="this.modifyCompany.telNumber"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addemail">单位邮箱：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addemail1" [(ngModel)]="modifyCompany.email"  ([value])="this.modifyCompany.email"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addscale">公司规模：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addscale1" [(ngModel)]="modifyCompany.scale"  ([value])="this.modifyCompany.scale" />
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addcategory">公司类型：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addcategory1" [(ngModel)]="modifyCompany.category"  ([value])="this.modifyCompany.category"/>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-2">
+          <label for="addintroduction">公司简介：</label>
+        </div>
+        <div class="ui-g-9">
+          <textarea id="addintroduction1" [(ngModel)]="modifyCompany.introduction" rows="5" cols="30" pInputTextarea >{{this.modifyCompany.introduction}}</textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
 </div>

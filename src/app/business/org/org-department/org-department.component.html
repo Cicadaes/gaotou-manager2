@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifybtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="orgs" selectionMode="multiple" [(selection)]="selectedorgs">
@@ -100,6 +101,81 @@
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
         <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addCompany1">所属公司：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addCompany1" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属公司..."  ></p-dropdown>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addOrgs1">所属部门：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="addOrgs1" [options]="addOrgSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..." ></p-dropdown>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="adddeptName1">部门名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="adddeptName1" [(ngModel)]="modifyDepartment.deptName" ([value])="this.modifyDepartment.deptName"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addteldeptCode1">部门编号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addteldeptCode1" [(ngModel)]="modifyDepartment.deptCode" ([value])="this.modifyDepartment.deptCode"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addfax1">部门传真：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addfax1" [(ngModel)]="modifyDepartment.fax"  ([value])="this.modifyDepartment.fax"/>
+        </div>
+      </div>
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addtelNumber1">部门电话：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addtelNumber1" [(ngModel)]="modifyDepartment.telNumber" ([value])="this.modifyDepartment.telNumber"/>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>是否是服务区：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-radioButton name="group1" value="1" label="是" [(ngModel)]="modifyDepartment.deptCategory" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="0" label="不是" [(ngModel)]="modifyDepartment.deptCategory" inputId="opt1"></p-radioButton>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-2">
+          <label for="addintroduction1">部门描述：</label>
+        </div>
+        <div class="ui-g-10">
+          <textarea id="addintroduction1" rows="5" cols="70" pInputTextarea [(ngModel)]="modifyDepartment.description">{{this.modifyDepartment.description}}</textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
       </div>
     </p-footer>
   </p-dialog>

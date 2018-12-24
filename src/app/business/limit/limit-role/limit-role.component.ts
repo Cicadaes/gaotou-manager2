@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {LimitService} from '../../../common/services/limit.service';
-import {AddRole, Role} from '../../../common/model/limit-model';
+import {AddRole, modifyRole, Role} from '../../../common/model/limit-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 
@@ -18,6 +18,10 @@ export class LimitRoleComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addRole: AddRole = new AddRole();
+
+  // 修改相关
+  public modifyDialog: boolean;//控制显示弹窗显示
+  public modifyRole: modifyRole = new modifyRole();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -26,7 +30,8 @@ export class LimitRoleComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -37,6 +42,7 @@ export class LimitRoleComponent implements OnInit {
     ];
     this.uploadRoleData();
   }
+
   public uploadRoleData(): void {
     this.limitService.searchRoleList({page: 1, nums: 1000}).subscribe(
       (value) => {
@@ -45,11 +51,13 @@ export class LimitRoleComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.role = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -60,6 +68,7 @@ export class LimitRoleComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addRole);
@@ -114,9 +123,11 @@ export class LimitRoleComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedRoles === undefined || this.selectedRoles.length === 0) {
@@ -182,7 +193,7 @@ export class LimitRoleComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedRoles.length; i ++) {
+            for (let i = 0; i < this.selectedRoles.length; i++) {
               ids.push(this.selectedRoles[i].id);
             }
             this.limitService.deleteRoleList(ids).subscribe(
@@ -231,8 +242,99 @@ export class LimitRoleComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
+  }
+
+  //修改
+  public modifyBtn(): void {
+    if (this.selectedRoles === undefined || this.selectedRoles.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要删除的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedRoles.length > 0 && this.selectedRoles.length <= 1) {
+      this.modifyDialog = true;
+      this.modifyRole.id = this.selectedRoles[0].id;
+      this.modifyRole.description = this.selectedRoles[0].description;
+      this.modifyRole.idt = this.selectedRoles[0].idt;
+      this.modifyRole.roleCode = this.selectedRoles[0].roleCode;
+      this.modifyRole.roleName = this.selectedRoles[0].roleName;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 修改确认
+  public modifySure(): void{
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.limitService.modifyRoleItem(this.modifyRole).subscribe(
+          (value) => {
+            console.log(value);
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedRoles = undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.uploadRoleData();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+
   }
 }

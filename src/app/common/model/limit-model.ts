@@ -13,4 +13,10 @@ export class AddRole {
   roleName?: string; // 角色名称
   description?: string; // 角色描述
 }
-
+export class modifyRole {
+  roleCode?: string; // 角色编码
+  roleName?: string; // 角色名称
+  description?: string; // 角色描述
+  id?: number;
+  idt?: string;
+}

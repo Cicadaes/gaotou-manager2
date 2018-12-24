@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="roles" selectionMode="multiple" [(selection)]="selectedRoles" (onRowSelect)="onRowSelect($event)">
@@ -62,6 +63,44 @@
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
         <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--角色编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="roleCode1">角色编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="roleCode1" [(ngModel)]="modifyRole.roleCode" ([value])="this.modifyRole.roleCode"/>
+        </div>
+      </div>
+      <!--角色名称-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="roleName1">角色名称：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="roleName1" [(ngModel)]="modifyRole.roleName" ([value])="this.modifyRole.roleName"/>
+        </div>
+      </div>
+      <!--角色描述-->
+      <div class="ui-g-12">
+        <div class="ui-g-2">
+          <label for="description1">角色描述：</label>
+        </div>
+        <div class="ui-g-9">
+          <textarea id="description1" [(ngModel)]="modifyRole.description" rows="5" cols="70" pInputTextarea>{{this.modifyRole.description}}</textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
       </div>
     </p-footer>
   </p-dialog>

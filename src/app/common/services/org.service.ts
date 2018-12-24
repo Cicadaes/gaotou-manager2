@@ -27,7 +27,7 @@ export class OrgService {
   }
   // 公司修改接口
   public modifyCompanyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/update`, params);
+    return this.http.post(`${this.globalService.url}/organization/update`, params);
   }
   /*************************部门*******************************/
   // 部门增加
@@ -44,33 +44,33 @@ export class OrgService {
   }
   // 部门修改接口
   public modifyDepartList(params): Observable<any> {
-    return this.http.post('${this.globalService.urls}/organization/update', params);
+    return this.http.post(`${this.globalService.url}/department/update`, params);
   }
   // 部门查询
   public searchDepartList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/department/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/department/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*************************职位*******************************/
-  // 部门增加
+  // 职位增加
   public addDutyItem(params): Observable<any> {
     return this.http.post(`${this.globalService.urls}/duty/add`, params);
   }
-  // 部门删除单个
+  // 职位删除单个
   public deleteDutyItem(id): Observable<any> {
     return this.http.get(`${this.globalService.urls}/duty/delete/${id}`);
   }
-  // 部门删除多个
+  // 职位删除多个
   public deleteDutyList(params): Observable<any> {
     return this.http.post(`${this.globalService.urls}/duty/delete`, params);
   }
-  // 部门修改接口
+  // 职位修改接口
   public modifyDutyList(params): Observable<any> {
-    return this.http.post('${this.globalService.urls}/duty/update', params);
+    return this.http.post(`${this.globalService.url}/duty/update`, params);
   }
-  // 部门查询
+  // 职位查询
   public searchDutyList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/duty/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/duty/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*************************数据联动查询*******************************/
@@ -94,5 +94,12 @@ export class OrgService {
     } else {
       return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}`);
     }
+  }
+
+  public searchIdDepIdDutyList(params): Observable<any> {
+    // if (params.depId) {
+    //   return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}/${params.depId}`);
+    // } else {
+      return this.http.get(`${this.globalService.url}/duty/queryById/${params}`);
   }
 }

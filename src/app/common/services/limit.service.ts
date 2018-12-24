@@ -25,10 +25,10 @@ export class LimitService {
   }
   // 修改
   public modifyRoleItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/role/update`, params);
+    return this.http.post(`${this.globalService.url}/role/update`, params);
   }
   // 查询
   public searchRoleList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/role/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/role/queryByPaging/${num.page}/${num.nums}`, {});
   }
 }

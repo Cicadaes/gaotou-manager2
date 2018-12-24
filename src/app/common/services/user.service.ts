@@ -25,6 +25,10 @@ export class UserService {
   public deleteList(params): Observable<any> {
     return this.http.post(`${this.globalService.urls}/user/delete`, params);
   }
+  // 删除多个
+  public modifyUser(params): Observable<any> {
+    return this.http.post(`${this.globalService.url}/user/update`, params);
+  }
   // 分页查询
   public searchList(num): Observable<any> {
     return this.http.post(`${this.globalService.urls}/user/queryByPaging/${num.page}/${num.nums}`, {});

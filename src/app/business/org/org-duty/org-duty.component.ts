@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
-import {AddDuty, Duty} from '../../../common/model/org-model';
+import {AddDuty, Duty, ModifyDuty} from '../../../common/model/org-model';
 import {SelectItem} from '../../../common/model/shared-model';
 
 @Component({
@@ -22,6 +22,9 @@ export class OrgDutyComponent implements OnInit {
   public addCompanySelect: SelectItem[]; // 公司列表
   public addDepSelect: SelectItem[]; // 部门列表
   public addDepTopDutySelect: SelectItem[]; // 上级职务
+  // 修改相关
+  public modifyDialog: boolean;//修改弹窗显示控制
+  public modifyDuty: ModifyDuty = new ModifyDuty();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -30,7 +33,8 @@ export class OrgDutyComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private orgService: OrgService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -47,12 +51,13 @@ export class OrgDutyComponent implements OnInit {
       }
     );
   }
+
   public updateDutyDate(): void {
-   /* this.orgService.searchDepartList({page: 1, nums: 100}).subscribe(
-      (val) => {
-        this.orgs = val.data.contents;
-      }
-    );*/
+    /* this.orgService.searchDepartList({page: 1, nums: 100}).subscribe(
+       (val) => {
+         this.orgs = val.data.contents;
+       }
+     );*/
     this.orgService.searchDutyList({page: 1, nums: 100}).subscribe(
       (val) => {
         console.log(val);
@@ -60,6 +65,7 @@ export class OrgDutyComponent implements OnInit {
       }
     );
   }
+
   public cleanData(): void {
     this.addDuty = {};
     this.addCompanySelect = [];
@@ -67,11 +73,13 @@ export class OrgDutyComponent implements OnInit {
     this.addDepTopDutySelect = [];
     console.log(this.addCompanySelect);
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.duty = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -82,9 +90,10 @@ export class OrgDutyComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
-    console.log(this.addDuty);
+    console.log(this.modifyDuty);
     if (this.addDuty.boss === '1') {
       this.addDuty.boss = false;
     } else {
@@ -142,9 +151,11 @@ export class OrgDutyComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedDuties === undefined || this.selectedDuties.length === 0) {
@@ -212,7 +223,7 @@ export class OrgDutyComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedDuties.length; i ++) {
+            for (let i = 0; i < this.selectedDuties.length; i++) {
               ids.push(this.selectedDuties[i].id);
             }
             this.orgService.deleteDutyItem(ids).subscribe(
@@ -265,14 +276,123 @@ export class OrgDutyComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+  //修改
+  public modifyBtn(): void {
+    if (this.selectedDuties === undefined || this.selectedDuties.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要删除的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedDuties.length > 0 && this.selectedDuties.length <= 1) {
+
+      this.modifyDialog = true;
+      this.modifyDuty.id = this.selectedDuties[0].id;
+      this.modifyDuty.pid = this.selectedDuties[0].pid;
+      this.modifyDuty.deptId = this.selectedDuties[0].deptId;
+      this.modifyDuty.dutyName = this.selectedDuties[0].dutyName;
+      this.modifyDuty.level = this.selectedDuties[0].level;
+      this.modifyDuty.quantity = this.selectedDuties[0].quantity;
+      this.modifyDuty.pos = this.selectedDuties[0].pos;
+      this.modifyDuty.boss = this.selectedDuties[0].boss;
+      this.modifyDuty.description = this.selectedDuties[0].description;
+      this.modifyDuty.leaf = this.selectedDuties[0].leaf;
+      this.modifyDuty.organizationId = this.selectedDuties[0].organizationId;
+      this.modifyDuty.organizationName = this.selectedDuties[0].organizationName;
+      this.modifyDuty.deptName = this.selectedDuties[0].deptName;
+
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 修改确认
+  public modifySure(): void {
+    if (this.addDuty.boss === '1') {
+      this.addDuty.boss = false;
+    } else {
+      this.addDuty.boss = true;
+    }
+    this.confirmationService.confirm({
+      message: '确定要修改吗？',
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.orgService.modifyDutyList(this.modifyDuty).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedDuties=undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateDutyDate();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+              this.cleanData();
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.cleanData();
+                this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '修改提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+  }
+
   // 选择公司
   public companyChange(e): void {
     this.addDuty.organizationName = e.value.name;
     this.addDuty.organizationId = e.value.id;
+    this.modifyDuty.organizationName = e.value.name;
+    this.modifyDuty.organizationId = e.value.id;
     this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -286,47 +406,55 @@ export class OrgDutyComponent implements OnInit {
       }
     );
   }
+
   // 选择部门
   public orgsChange(e): void {
     this.addDuty.deptName = e.value.name;
     this.addDuty.deptId = e.value.id;
-    this.orgService.searchCompanyIdDepIdDutyList({companyId:  this.addDuty.organizationId, depId: e.value.id}).subscribe(
+    this.modifyDuty.deptName = e.value.name;
+    this.modifyDuty.deptId = e.value.id;
+    this.orgService.searchCompanyIdDepIdDutyList({companyId: this.addDuty.organizationId, depId: e.value.id}).subscribe(
       (val) => {
         console.log(val);
         this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
       }
     );
   }
+
   // 选择上级职务
   public topDutyChange(e): void {
     console.log(e);
     this.addDuty.pid = e.value.id;
+    this.modifyDuty.pid = e.value.id;
   }
+
   // 数据格式化
   public initializeSelectCompany(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       oneChild.push(childnode);
     }
     return oneChild;
   }
+
   public initializeSelectOrg(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].deptName;
       childnode.id = data[i].id;
       oneChild.push(childnode);
     }
     return oneChild;
   }
+
   public initializeSelectDuty(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].dutyName;
       childnode.id = data[i].id;
       oneChild.push(childnode);

@@ -22,6 +22,7 @@ export class Company {
   telNumber?: string;
   udt?: any;
 }
+
 export class AddCompany {
   areaCode?: string; // 行政区划编码
   areaName?: string; // 行政区划名称
@@ -43,6 +44,30 @@ export class AddCompany {
   pids?: string; // 节点路径
 }
 
+// 修 改
+export class modifydCompany {
+  id?: number;//数据id
+  areaCode?: string; // 行政区划编码
+  areaName?: string; // 行政区划名称
+  postcode?: string; // 邮编
+  regNo?: string; // 工商注册号
+  latitude?: string; // 维度
+  longitude?: string; // 经度
+  legalPerson?: string; // 法人
+  address?: string; // 公司地址
+  name?: string; // 公司名称
+  foundDate?: any; // 成立日期
+  fax?: string; // 传真
+  telNumber?: string; // 单位电话
+  email?: string; // 邮箱
+  scale?: string; // 公司规模
+  category?: string; // 公司类型
+  introduction?: string; // 公司简介
+  pid?: number; // 上级节点ID
+  pids?: string; // 节点路径
+  idt?: string; // 节点路径
+}
+
 // 部门table数据泛型
 export class Department {
   deptCategory?: number;
@@ -59,7 +84,9 @@ export class Department {
   pids?: string;
   telNumber?: string; // 部门电话
   udt?: any;
+  pDeptName: string; //上级部门
 }
+
 export class AddDepartment {
   organizationName?: string; // 所属公司
   organizationId?: number; // 所属公司得id
@@ -71,6 +98,23 @@ export class AddDepartment {
   fax?: string; // 部门传真
   telNumber?: string; // 部门电话
   description?: string;
+  pDeptName: string; //上级部门
+}
+
+export class ModifyDepartment {
+  deptCategory?: number;
+  organizationName?: string; // 所属公司
+  deptCode?: string; // 部门编号
+  deptName?: string; // 部门名称
+  description?: string;
+  endFlag?: number;
+  fax?: string; // 部门传真
+  id?: number;
+  idt?: string; // 创建时间
+  organizationId?: number;
+  pid?: number;
+  telNumber?: string; // 部门电话
+  pDeptName: string; //上级部门
 }
 
 // 职位数据泛型
@@ -93,6 +137,7 @@ export class Duty {
   id?: number;
   idt?: string;
 }
+
 export class AddDuty {
   organizationId?: number; // 公司id
   organizationName?: string; // 公司名称
@@ -105,3 +150,21 @@ export class AddDuty {
   boss?: any; // 一把手
   description?: string; // 描述
 }
+
+export class ModifyDuty {
+  id?: number; // 描述
+  pid?: number; // 上级职位id
+  deptId?: number; // 部门id
+  dutyName?: string; // 职务名称
+  level?: number;//等级
+  quantity?: number; // 数量
+  pos?: number; // 职位顺序
+  boss?: any; // 一把手
+  description?: string; // 描述
+  leaf?: string;//是否分支
+  organizationName?: string; // 公司名称
+  deptName?: string; // 部门名称
+  organizationId?: number; // 公司id
+}
+
+
