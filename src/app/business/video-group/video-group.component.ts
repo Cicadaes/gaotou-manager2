@@ -388,6 +388,11 @@ export class VideoGroupComponent implements OnInit {
     );
   }
 
+  public clearDown():void{
+    this.addAreaTree.label = null;
+    this.addServicesAreas = null;
+    this.highsdData = null;
+  }
   // 选择上下行
   public directionChange(e): void {
     this.addVideoGroup.saOrientationId = e.value.id;

@@ -168,7 +168,7 @@
     </p-footer>
   </p-dialog>
   <!--修改弹框-->
-  <p-dialog header="增加信息" [(visible)]="revampDialog" [responsive]="true" showEffect="fade" blockScroll="true" [modal]="true" [width]="900">
+  <p-dialog header="修改信息" [(visible)]="revampDialog" [responsive]="true" showEffect="fade" blockScroll="true" [modal]="true" [width]="900">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
       <div class="ui-g-6">
@@ -194,7 +194,7 @@
           <label for="addAreaName1">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName1" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+          <input pInputText id="addAreaName1" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="revampSerArea.administrativeAreaName"/>
         </div>
       </div>
       <!--创建人-->
@@ -209,10 +209,10 @@
       <!--创建人电话-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="chiefPhone1">创建人：</label>
+          <label for="chiefPhone1">创建人电话：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="chiefPhone1" disabled placeholder="请添加创建人电话..." [(ngModel)]="addUserTree.areaCode"/>
+          <input pInputText id="chiefPhone1" disabled placeholder="请添加创建人电话..." [(ngModel)]="revampSerArea.chiefPhone" ([value])="this.revampSerArea.chiefPhone"/>
         </div>
       </div>
       <!--服务区名称-->
@@ -221,19 +221,19 @@
           <label for="serviceAreaName1">服务区名称：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="serviceAreaName1" placeholder="请输入服务区名称..." [(ngModel)]="addSerarea.serviceAreaName"/>
+          <input pInputText id="serviceAreaName1" placeholder="请输入服务区名称..." [(ngModel)]="revampSerArea.serviceAreaName" ([value])="this.revampSerArea.serviceAreaName"/>
         </div>
       </div>
       <!--————————————公共属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">公共属性</h4>
       </div>
-      <div class="ui-g-6" *ngFor="let item of commonAttributeValues;let i = index">
+      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.commonAttributeValues;let i = index">
         <div class="ui-g-4">
-          <label for="longitude1">{{item.attributeName}}：</label>
+          <label for="longitude1">{{item.attributeDesc}}：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="longitude1" [placeholder]="'请输入'+item.attributeName+'...'" [(ngModel)]="item.value"/>
+          <input pInputText id="longitude1" [placeholder]="'请输入'+item.attributeName+'...'" [(ngModel)]="item.value" ([value])="item.value"/>
         </div>
       </div>
       <!--————————————上行属性————————————-->
@@ -245,7 +245,7 @@
           <label>上行起始点：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText placeholder="上行起始点..." [(ngModel)]="upSource"/>
+          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.upAttributeValues.source"/>
         </div>
       </div>
       <div class="ui-g-6">
@@ -253,15 +253,15 @@
           <label>上行结束点：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText placeholder="上行结束点..." [(ngModel)]="upDestination"/>
+          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.upAttributeValues.destination"/>
         </div>
       </div>
-      <div class="ui-g-6" *ngFor="let item of upAttribute;let i = index">
+      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.upAttributeValues.attributeValues;let i = index">
         <div class="ui-g-3">
-          <label>{{item.attributeName}}：</label>
+          <label>{{item.attributeDesc}}：</label>
         </div>
         <div class="ui-g-6">
-          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+          <input pInputText placeholder="数量..." [(ngModel)]="item.value" ([value])="item.value"/>
         </div>
         <div class="ui-g-3">
           <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
@@ -276,7 +276,7 @@
           <label>下行起始点：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText placeholder="下行起始点..." [(ngModel)]="downSource"/>
+          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.downAttributeValues.source" ([value])="this.revampSerArea.downAttributeValues.source"/>
         </div>
       </div>
       <div class="ui-g-6">
@@ -284,15 +284,15 @@
           <label>下行结束点：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText placeholder="下行结束点..." [(ngModel)]="downDestination"/>
+          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.downAttributeValues.destination" ([value])="this.revampSerArea.downAttributeValues.destination"/>
         </div>
       </div>
-      <div class="ui-g-6" *ngFor="let item of downAttribute;let i = index">
+      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.downAttributeValues.attributeValues;let i = index">
         <div class="ui-g-3">
-          <label>{{item.attributeName}}：</label>
+          <label>{{item.attributeDesc}}：</label>
         </div>
         <div class="ui-g-6">
-          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+          <input pInputText placeholder="数量..." [(ngModel)]="item.value"  ([value])="item.value"/>
         </div>
         <div class="ui-g-3">
           <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>

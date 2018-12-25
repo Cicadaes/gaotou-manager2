@@ -37,7 +37,7 @@
           <label for="dictionaryCode">字典编码：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="dictionaryCode" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="dictionaryCode" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="option"></p-dropdown>
         </div>
       </div>
       <!--词条编码-->
@@ -83,7 +83,7 @@
           <label for="dictionaryCode1">字典编码：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="dictionaryCode1" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="dictionaryCode1" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="option"></p-dropdown>
         </div>
       </div>
       <!--词条编码-->
@@ -117,7 +117,7 @@
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="modifySure()">修改</button>
-        <button class="btn btn-warning" type="button" (click)="modifyDialog=false;">取消</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
       </div>
     </p-footer>
   </p-dialog>

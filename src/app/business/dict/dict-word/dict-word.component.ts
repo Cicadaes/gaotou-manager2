@@ -23,6 +23,7 @@ export class DictWordComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean;
   public modifyDictWord: ModifyDictWord = new ModifyDictWord();
+  public option: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗

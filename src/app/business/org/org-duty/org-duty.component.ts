@@ -127,7 +127,7 @@ export class OrgDutyComponent implements OnInit {
                   clearTimeout(this.cleanTimer);
                 }
                 this.msgs = [];
-                this.cleanData();
+                // this.cleanData();
                 this.msgs.push({severity: 'error', summary: '增加提醒', detail: '服务器处理失败'});
                 this.cleanTimer = setTimeout(() => {
                   this.msgs = [];
@@ -360,7 +360,7 @@ export class OrgDutyComponent implements OnInit {
                   clearTimeout(this.cleanTimer);
                 }
                 this.msgs = [];
-                this.cleanData();
+                // this.cleanData();
                 this.msgs.push({severity: 'error', summary: '修改提醒', detail: '服务器处理失败'});
                 this.cleanTimer = setTimeout(() => {
                   this.msgs = [];

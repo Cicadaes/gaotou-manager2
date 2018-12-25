@@ -7,16 +7,19 @@ export class FieldType {
   idt?: string;
   udt?: string;
 }
+
 export class AddFieldType {
   categoryName?: string; // 分类名称
   sequence?: number; // 序列
 }
+
 export class ModifyFieldType {
   categoryName?: string; // 分类名称
   sequence?: number; // 序列
   id?: number;
   idt?: string;
 }
+
 /*******************字段泛型**************************/
 export class Field {
   attributeCategoryId?: number; // 属性分类id
@@ -34,6 +37,7 @@ export class Field {
   idt?: string;
   hasOrientation?: any; // 单选框(1公共2上行3下行)
 }
+
 export class AddField {
   attributeCategoryId?: number; // 属性分类
   hasOrientation?: any; // 单选框(1公共2上行3下行)
@@ -42,6 +46,7 @@ export class AddField {
   position?: number; // 字段顺序
   showTableHead?: any; // 是否显示在页面表单
 }
+
 export class ModifyField {
   attributeCategoryId?: number; // 属性分类
   hasOrientation?: any; // 单选框(1公共2上行3下行)
@@ -52,6 +57,7 @@ export class ModifyField {
   id?: number;
   idt?: string;
 }
+
 /*******************服务区泛型**************************/
 export class Serarea {
   organizationId?: number; // 机构ID
@@ -70,6 +76,7 @@ export class Serarea {
   udt?: string;
 
 }
+
 // 经纬度
 export class Coordinate {
   attributeCategoryId?: number;
@@ -103,6 +110,7 @@ export class AddSerarea {
   upAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
   downAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
 }
+
 export class ModifySerarea {
   organizationId: number; // 1 公司ID
   organizationName: string; // 1 公司名
@@ -120,6 +128,7 @@ export class ModifySerarea {
   id?: number;
   idt?: string;
 }
+
 // 上下行属性
 export class AddUpDownAttribute {
   source: string; // 起始点
@@ -128,11 +137,12 @@ export class AddUpDownAttribute {
   flagName: string; // 上下行
   attributeValues: Array<AddCommonAttribute>;
 }
+
 // 循环属性
 export class AddCommonAttribute {
-  // attributeId: number;
   attributeName: string;
   value: number;
+  attributeDesc: string;
 }
 
 /*export class AddCarAttribute {

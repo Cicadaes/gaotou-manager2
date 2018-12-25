@@ -29,7 +29,7 @@
     </ng-template>
   </p-table>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearDown()">
     <div class="ui-g ui-fluid">
       <div class="ui-g-6">
         <div class="ui-g-4">
@@ -44,7 +44,7 @@
           <label for="addServiceAreaName">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addServiceAreaName" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="addServiceAreaName" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -52,7 +52,7 @@
           <label for="highDirec">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -111,7 +111,7 @@
     </p-footer>
   </p-dialog>
 
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearDown()">
     <div class="ui-g ui-fluid">
       <div class="ui-g-6">
         <div class="ui-g-4">
@@ -126,7 +126,7 @@
           <label for="addServiceAreaName1">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addServiceAreaName1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="addServiceAreaName1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -134,7 +134,7 @@
           <label for="highDirec1">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="highDirec1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown id="highDirec1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -166,7 +166,7 @@
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
-        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false;clearDown()">取消</button>
       </div>
     </p-footer>
   </p-dialog>

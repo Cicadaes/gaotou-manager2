@@ -75,7 +75,7 @@ export class SerareaService {
   }
   // 单个id指定查询
   public searchSerAraListItem(params): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/serviceArea/queryById/${params.id}`);
+    return this.http.get(`${this.globalService.url}/serviceArea/queryById/${params.id}`);
   }
   // 查询
   public searchSerAraList(num): Observable<any> {

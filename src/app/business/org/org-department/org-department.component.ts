@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AddDepartment, Department, ModifyDepartment} from '../../../common/model/org-model';
 import {SelectItem} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -26,6 +26,7 @@ export class OrgDepartmentComponent implements OnInit {
   //修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDepartment: ModifyDepartment = new ModifyDepartment();
+  public option1: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -37,7 +38,8 @@ export class OrgDepartmentComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private orgService: OrgService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     // 时间初始化
@@ -59,6 +61,7 @@ export class OrgDepartmentComponent implements OnInit {
     ];
     this.updateOrgDate();
   }
+
   public updateOrgDate(): void {
     this.orgService.searchDepartList({page: 1, nums: 100}).subscribe(
       (val) => {
@@ -71,6 +74,7 @@ export class OrgDepartmentComponent implements OnInit {
       }
     );
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addOrg);
@@ -124,9 +128,11 @@ export class OrgDepartmentComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     console.log(this.selectedorgs);
@@ -195,7 +201,7 @@ export class OrgDepartmentComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedorgs.length; i ++) {
+            for (let i = 0; i < this.selectedorgs.length; i++) {
               ids.push(this.selectedorgs[i].id);
             }
             this.orgService.deleteDepartList(ids).subscribe(
@@ -248,13 +254,14 @@ export class OrgDepartmentComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
 
   // 修改
-  public modifybtn(): void{
+  public modifybtn(): void {
     if (this.selectedorgs === undefined || this.selectedorgs.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -264,22 +271,22 @@ export class OrgDepartmentComponent implements OnInit {
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-    }else if (this.selectedorgs.length ===1){
+    } else if (this.selectedorgs.length === 1) {
       this.modifyDialog = true;
       this.modifyDepartment.id = this.selectedorgs[0].id;
-      this.modifyDepartment.organizationId  = this.selectedorgs[0].organizationId;
-      this.modifyDepartment.organizationName  = this.selectedorgs[0].organizationName;
-      this.modifyDepartment.deptName  = this.selectedorgs[0].deptName;
-      this.modifyDepartment.pDeptName  = this.selectedorgs[0].pDeptName;
-      this.modifyDepartment.deptCode  = this.selectedorgs[0].deptCode;
-      this.modifyDepartment.deptCategory= this.selectedorgs[0].deptCategory;
-      this.modifyDepartment.fax= this.selectedorgs[0].fax;
-      this.modifyDepartment.telNumber= this.selectedorgs[0].telNumber;
-      this.modifyDepartment.description= this.selectedorgs[0].description;
-      this.modifyDepartment.endFlag= this.selectedorgs[0].endFlag;
-      this.modifyDepartment.pid= this.selectedorgs[0].pid;
-      this.modifyDepartment.idt= this.selectedorgs[0].idt;
-    }else {
+      this.modifyDepartment.organizationId = this.selectedorgs[0].organizationId;
+      this.modifyDepartment.organizationName = this.selectedorgs[0].organizationName;
+      this.modifyDepartment.deptName = this.selectedorgs[0].deptName;
+      this.modifyDepartment.pDeptName = this.selectedorgs[0].pDeptName;
+      this.modifyDepartment.deptCode = this.selectedorgs[0].deptCode;
+      this.modifyDepartment.deptCategory = this.selectedorgs[0].deptCategory;
+      this.modifyDepartment.fax = this.selectedorgs[0].fax;
+      this.modifyDepartment.telNumber = this.selectedorgs[0].telNumber;
+      this.modifyDepartment.description = this.selectedorgs[0].description;
+      this.modifyDepartment.endFlag = this.selectedorgs[0].endFlag;
+      this.modifyDepartment.pid = this.selectedorgs[0].pid;
+      this.modifyDepartment.idt = this.selectedorgs[0].idt;
+    } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
       }
@@ -290,8 +297,9 @@ export class OrgDepartmentComponent implements OnInit {
       }, 3000);
     }
   }
+
   //修改确认
-  public modifySure(): void{
+  public modifySure(): void {
     console.log(this.modifyDepartment);
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
@@ -307,7 +315,7 @@ export class OrgDepartmentComponent implements OnInit {
                 clearTimeout(this.cleanTimer);
               }
               this.msgs = [];
-              this.selectedorgs=undefined;
+              this.selectedorgs = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
               this.updateOrgDate();
               this.cleanTimer = setTimeout(() => {
@@ -345,7 +353,8 @@ export class OrgDepartmentComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
 
@@ -363,6 +372,7 @@ export class OrgDepartmentComponent implements OnInit {
       }
     );
   }
+
   // 选择部门
   public orgsChange(e): void {
     console.log(e);
@@ -371,21 +381,23 @@ export class OrgDepartmentComponent implements OnInit {
     this.modifyDepartment.pid = e.value.pid;
     this.modifyDepartment.pDeptName = e.value.name;
   }
+
   // 数据格式化
   public initializeSelectCompany(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       oneChild.push(childnode);
     }
     return oneChild;
   }
+
   public initializeSelectOrg(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].deptName;
       childnode.id = data[i].id;
       childnode.pid = data[i].pid;

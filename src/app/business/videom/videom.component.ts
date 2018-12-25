@@ -328,6 +328,7 @@ export class VideomComponent implements OnInit {
                 this.msgs = [];
               }, 3000);
               this.modifyDialog = false;
+              this.clearDown();
             } else {
               setTimeout(() => {
                 this.globalService.eventSubject.next({display: false});
@@ -395,6 +396,13 @@ export class VideomComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     }
+  }
+
+  public clearDown(): void {
+    this.addAreaTree.label = null;
+    this.addServicesAreas = null;
+    this.highsdData = null;
+    this.storeList = null;
   }
 
   // 选择服务区

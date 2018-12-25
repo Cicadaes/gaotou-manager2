@@ -74,24 +74,26 @@ export class SerareaSernumComponent implements OnInit {
         console.log(value.data);
         value.data.commonAttribute.map((val, index) => {
           this.commonAttributeValues.push(
-            {attributeName: val.attributeDesc, value: ''}
+            {attributeName: val.attributeDesc, value: '',attributeDesc:val.attributeName}
           );
         });
         value.data.hasOrientationAttribute.map((val, index) => {
           this.upAttribute.push(
-            {attributeName: val.attributeDesc, value: ''}
+            {attributeName: val.attributeDesc, value: '',attributeDesc: val.attributeDesc}
           );
           this.downAttribute.push(
-            {attributeName: val.attributeDesc, value: ''}
+            {attributeName: val.attributeDesc, value: '',attributeDesc: val.attributeDesc}
           );
         });
       }
     );
+    console.log(this.commonAttributeValues);
   }
   public updateApplyListData(): void {
     this.serareaService.searchSerAraList({page: 1, nums: 1000}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
+        console.log(value);
       }
     );
   }
@@ -314,20 +316,31 @@ export class SerareaSernumComponent implements OnInit {
         this.msgs = [];
       }, 3000);
       this.msgs.push({severity: 'error', summary: '操作错误', detail: '修改只能选择一项'});
-      this.revampDialog = false;
     } else if (this.selectedSerAreas.length === 1) {
-      this.revampDialog = true;
-
-      this.revampSerArea.administrativeAreaId = this.selectedSerAreas[0].administrativeAreaId;
-      this.revampSerArea.id = this.selectedSerAreas[0].id;
-      this.revampSerArea.idt = this.selectedSerAreas[0].idt;
-      this.revampSerArea.chiefName = this.selectedSerAreas[0].chiefName;
-      // this.revampSerArea.administrativeAreaName = this.selectedSerAreas[0].administrativeAreaName;
-      // this.globalService.eventSubject.next({display: true});
-      this.serareaService.searchSerAraListItem({id: this.serArea.id}).subscribe(
+      this.serareaService.searchSerAraListItem({id: this.selectedSerAreas[0].id}).subscribe(
         (val) => {
           if (val.status === '200') {
             console.log(val.data);
+            this.revampSerArea.administrativeAreaId = val.data.administrativeAreaId;
+            this.revampSerArea.id = val.data.id;
+            this.revampSerArea.idt = val.data.idt;
+            this.revampSerArea.serviceAreaName = val.data.serviceAreaName;
+            this.revampSerArea.administrativeAreaName = val.data.administrativeAreaName;
+            this.revampSerArea.chiefName = val.data.chiefName;
+            this.revampSerArea.chiefPhone = val.data.chiefPhone;
+            this.revampSerArea.chiefUserId = val.data.chiefUserId;
+            this.revampSerArea.commonAttributeValues = val.data.commonAttributeValues;
+            this.revampSerArea.upAttributeValues = val.data.upAttributeValues;
+            this.revampSerArea.downAttributeValues = val.data.downAttributeValues;
+            this.revampSerArea.upAttributeValues.attributeValues = val.data.upAttributeValues.attributeValues;
+            this.revampSerArea.downAttributeValues.attributeValues = val.data.downAttributeValues.attributeValues;
+
+            if (this.revampSerArea.upAttributeValues.attributeValues.length ===0){
+               this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
+            }
+            if(this.revampSerArea.downAttributeValues.attributeValues.length === 0){
+              this.revampSerArea.downAttributeValues.attributeValues = this.downAttribute;
+            }
             this.globalService.eventSubject.next({display: false});
           } else {
             // this.globalService.eventSubject.next({display: false});
@@ -337,26 +350,34 @@ export class SerareaSernumComponent implements OnInit {
               this.msgs = [];
             }, 3000);
           }
+          this.revampDialog = true;
         }
       );
+
+      // this.revampSerArea.administrativeAreaId = this.selectedSerAreas[0].administrativeAreaId;
+      // this.revampSerArea.id = this.selectedSerAreas[0].id;
+      // this.revampSerArea.idt = this.selectedSerAreas[0].idt;
+      // this.revampSerArea.chiefName = this.selectedSerAreas[0].chiefName;
+      // this.revampSerArea.administrativeAreaName = this.selectedSerAreas[0].administrativeAreaName;
+      // this.globalService.eventSubject.next({display: true});
+
     }
 
   }
   public revampSave(): void {
-    this.revampSerArea.commonAttributeValues = this.commonAttributeValues;
     // 上行
     this.revampSerArea.upAttributeValues.source = this.upSource;
     this.revampSerArea.upAttributeValues.destination = this.upDestination;
     this.revampSerArea.upAttributeValues.flag = '2';
     this.revampSerArea.upAttributeValues.flagName = '上行';
-    this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
+
     // 下行
     this.revampSerArea.downAttributeValues.source = this.downSource;
     this.revampSerArea.downAttributeValues.destination = this.downDestination;
     this.revampSerArea.downAttributeValues.flag = '3';
     this.revampSerArea.downAttributeValues.flagName = '下行';
-    this.revampSerArea.downAttributeValues.attributeValues = this.downAttribute;
 
+    console.log(this.revampSerArea);
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
       header: '修改提醒',
@@ -365,20 +386,19 @@ export class SerareaSernumComponent implements OnInit {
         this.globalService.eventSubject.next({display: true});
         this.serareaService.modifySerAraItem(this.revampSerArea).subscribe(
           (value) => {
-            if (value.state) {
-              setTimeout(() => {
-                this.globalService.eventSubject.next({display: false});
-                if (this.cleanTimer) {
-                  clearTimeout(this.cleanTimer);
-                }
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedSerAreas = undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateApplyListData();
+              this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
-                this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.msg});
-                this.cleanTimer = setTimeout(() => {
-                  this.msgs = [];
-                }, 3000);
-                this.selectedSerAreas = undefined;
-                this.revampDialog = false;
               }, 3000);
+              this.revampDialog = false;
             } else {
               setTimeout(() => {
                 this.globalService.eventSubject.next({display: false});
@@ -394,6 +414,7 @@ export class SerareaSernumComponent implements OnInit {
             }
           },
           (err) => {
+            console.log(err);
             setTimeout(() => {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -410,6 +431,7 @@ export class SerareaSernumComponent implements OnInit {
       },
       reject: () => {}
     });
+
   }
   // 选择公司
   public companyChange(e): void {

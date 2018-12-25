@@ -29,7 +29,7 @@
     </ng-template>
   </p-table>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="cleanData()">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
       <div class="ui-g-6">
@@ -108,13 +108,13 @@
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
-        <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+        <button class="btn btn-warning" type="button" (click)="addDialog=false;cleanData()">取消</button>
       </div>
     </p-footer>
   </p-dialog>
 
   <!--增加弹框-->
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="cleanData()">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
       <div class="ui-g-6">
@@ -193,7 +193,7 @@
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
-        <button class="btn btn-warning" type="button" (click)="modifyDialog=false">取消</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false;cleanData()">取消</button>
       </div>
     </p-footer>
   </p-dialog>
