@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DictService} from '../../../common/services/dict.service';
-import {AddDictWord, DictWord} from '../../../common/model/dict.model';
+import {AddDictWord, DictWord, ModifyDictWord} from '../../../common/model/dict.model';
 import {SelectItem} from '../../../common/model/shared-model';
 
 @Component({
@@ -20,6 +20,9 @@ export class DictWordComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addDictWord: AddDictWord = new AddDictWord(); // 添加参数字段
   public addDictListSelect: SelectItem[]; // 字典列表
+  // 修改相关
+  public modifyDialog: boolean;
+  public modifyDictWord: ModifyDictWord = new ModifyDictWord();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -28,7 +31,8 @@ export class DictWordComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private dictService: DictService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -46,6 +50,7 @@ export class DictWordComponent implements OnInit {
       }
     );
   }
+
   public updateDictWordsata(): void {
     this.dictService.searchDictWordList({page: 1, nums: 100}).subscribe(
       (value) => {
@@ -54,11 +59,13 @@ export class DictWordComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.dictWord = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -69,6 +76,7 @@ export class DictWordComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addDictWord);
@@ -122,9 +130,11 @@ export class DictWordComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedDictWords === undefined || this.selectedDictWords.length === 0) {
@@ -192,7 +202,7 @@ export class DictWordComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedDictWords.length; i ++) {
+            for (let i = 0; i < this.selectedDictWords.length; i++) {
               ids.push(this.selectedDictWords[i].id);
             }
             this.dictService.deleteDictWordList(ids).subscribe(
@@ -245,19 +255,126 @@ export class DictWordComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+  // 修改
+  public modifyBtn(): void {
+    if (this.selectedDictWords === undefined || this.selectedDictWords.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedDictWords.length === 1) {
+      // this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
+      //   (value) => {
+      //     console.log(value);
+      //     this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
+      //   }
+      // );
+      this.modifyDialog = true;
+      this.modifyDictWord.id = this.selectedDictWords[0].id;
+      this.modifyDictWord.idt = this.selectedDictWords[0].idt;
+      this.modifyDictWord.dictionaryCode = this.selectedDictWords[0].dictionaryCode;
+      this.modifyDictWord.enabled = this.selectedDictWords[0].enabled;
+      this.modifyDictWord.entryCode = this.selectedDictWords[0].entryCode;
+      this.modifyDictWord.entryValue = this.selectedDictWords[0].entryValue;
+      this.modifyDictWord.sequence = this.selectedDictWords[0].sequence;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 修改确认
+  public modifySure(): void {
+    console.log(this.modifyDictWord);
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.dictService.modifyDictWordItem(this.modifyDictWord).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedDictWords = undefined;
+              this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
+              this.updateDictWordsata();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '增加提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '增加提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+  }
+
+
+  // public clearDown(): void {
+  //   this.addDictListSelect =null;
+  // }
+
+
   // 选择字典
   public dictChange(e): void {
     this.addDictWord.dictionaryCode = e.value.id;
+    this.modifyDictWord.dictionaryCode = e.value.id;
   }
+
   // 格式化数据
   public initializeSelectDictList(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].dictionaryName;
       childnode.id = data[i].dictionaryCode;
       oneChild.push(childnode);

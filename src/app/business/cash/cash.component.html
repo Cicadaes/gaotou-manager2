@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="cashs" selectionMode="multiple" [(selection)]="selectedCashs" (onRowSelect)="onRowSelect($event)">
@@ -28,7 +29,7 @@
     </ng-template>
   </p-table>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearDown()">
     <div class="ui-g ui-fluid">
       <!--所属区划-->
       <div class="ui-g-6">
@@ -42,7 +43,7 @@
       <!--所属服务区-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addServicesArea">所属服务区：</label>
+          <label >所属服务区：</label>
         </div>
         <div class="ui-g-8">
           <p-dropdown [options]="addServicesAreaTrees" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
@@ -51,7 +52,7 @@
       <!--上下行-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="highsd">上下行：</label>
+          <label >上下行：</label>
         </div>
         <div class="ui-g-8">
           <p-dropdown [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
@@ -204,6 +205,62 @@
       </div>
     </p-footer>
   </p-dialog>-->
+  <!--修改弹框-->
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearDown()">
+    <div class="ui-g ui-fluid">
+      <!--所属区划-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addAreaName1">所属区划：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+        </div>
+      </div>
+      <!--所属服务区-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label >所属服务区：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown [options]="addServicesAreaTrees" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+        </div>
+      </div>
+      <!--上下行-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label >上下行：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+        </div>
+      </div>
+      <!--所属店铺-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label >所属店铺：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺..."></p-dropdown>
+        </div>
+      </div>
+      <!--收银机编号-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addcolor1">收银机编号：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addcolor1" [(ngModel)]="modifyCash.cashRegisterCode"/>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">确认</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false;clearDown()">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
 </div>
 
 

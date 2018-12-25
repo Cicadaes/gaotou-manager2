@@ -1,8 +1,8 @@
-import {Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideomService} from '../../common/services/videom.service';
-import {AddVideo, Video} from '../../common/model/videom-model';
+import {AddVideo, ModifyVideo, Video} from '../../common/model/videom-model';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 
 @Component({
@@ -26,6 +26,10 @@ export class VideomComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: SelectItem[]; // 店铺列表
   public videoGroupList: SelectItem[]; // 分组列表
+
+  // 修改相关
+  public modifyDialog: boolean; //修改弹窗显示
+  public modifyVideo: ModifyVideo = new ModifyVideo();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -34,7 +38,8 @@ export class VideomComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private videomService: VideomService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -46,6 +51,7 @@ export class VideomComponent implements OnInit {
     ];
     this.updateVideoData();
   }
+
   public updateVideoData(): void {
     this.videomService.searchList({page: 1, nums: 100}).subscribe(
       (value) => {
@@ -54,11 +60,13 @@ export class VideomComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.video = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -69,14 +77,15 @@ export class VideomComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     console.log(this.addVideo);
-     if (this.addVideo.inStore === '1') {
-     this.addVideo.inStore = true;
-   } else {
-     this.addVideo.inStore = false;
-   }
+    if (this.addVideo.inStore === '1') {
+      this.addVideo.inStore = true;
+    } else {
+      this.addVideo.inStore = false;
+    }
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -127,9 +136,11 @@ export class VideomComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedvideos === undefined || this.selectedvideos.length === 0) {
@@ -195,7 +206,7 @@ export class VideomComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedvideos.length; i ++) {
+            for (let i = 0; i < this.selectedvideos.length; i++) {
               ids.push(this.selectedvideos[i].id);
             }
             this.videomService.deleteList(ids).subscribe(
@@ -244,10 +255,114 @@ export class VideomComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+  //修改
+  public modifyBtn(): void {
+    if (this.selectedvideos === undefined || this.selectedvideos.length === 0) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要删除的项'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } else if (this.selectedvideos.length === 1) {
+      this.modifyDialog = true;
+      this.modifyVideo.cameraName = this.selectedvideos[0].cameraName;
+      this.modifyVideo.saOrientationId = this.selectedvideos[0].saOrientationId;
+      this.modifyVideo.serviceAreaId = this.selectedvideos[0].serviceAreaId;
+      this.modifyVideo.storeId = this.selectedvideos[0].storeId;
+      this.modifyVideo.groupId = this.selectedvideos[0].groupId;
+      this.modifyVideo.cameraName = this.selectedvideos[0].cameraName;
+      this.modifyVideo.inStore = this.selectedvideos[0].inStore;
+      this.modifyVideo.innerUrl = this.selectedvideos[0].innerUrl;
+      this.modifyVideo.outUrl = this.selectedvideos[0].outUrl;
+      this.modifyVideo.showLocation = this.selectedvideos[0].showLocation;
+      this.modifyVideo.videoUrl = this.selectedvideos[0].videoUrl;
+      this.modifyVideo.enabled = this.selectedvideos[0].enabled;
+      this.modifyVideo.id = this.selectedvideos[0].id;
+      this.modifyVideo.idt = this.selectedvideos[0].idt;
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  //修改确认
+  public modifySure(): void {
+    if (this.modifyVideo.inStore === '1') {
+      this.modifyVideo.inStore = true;
+    } else {
+      this.modifyVideo.inStore = false;
+    }
+    this.confirmationService.confirm({
+      message: `确定要修改吗？`,
+      header: '修改提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.videomService.modifyList(this.modifyVideo).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedvideos = undefined;
+              this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
+              this.updateVideoData();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.modifyDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '增加提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '增加提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
+  }
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -257,14 +372,16 @@ export class VideomComponent implements OnInit {
       }
     );
   }
+
   public treeOnNodeSelect(event) {
     // this.areaDialog = false;
     // this.addAreaTreeSelect.push(event.node);
     // console.log(this.addAreaTree);
   }
+
   public treeSelectAreaClick(): void {
     const a = parseFloat(this.addAreaTree.level);
-    if (a >= 2 ) {
+    if (a >= 2) {
       this.areaDialog = false;
       this.videomService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -279,18 +396,22 @@ export class VideomComponent implements OnInit {
       }, 3000);
     }
   }
+
   // 选择服务区
   public serviceChange(e): void {
     this.addVideo.serviceAreaId = e.value.id;
+    this.modifyVideo.serviceAreaId = e.value.id;
     this.videomService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         this.highsdData = this.initializeServiceAreaDirec(value.data);
       }
     );
   }
+
   // 选择上下行
   public directionChange(e): void {
     this.addVideo.saOrientationId = e.value.id;
+    this.modifyVideo.saOrientationId = e.value.id;
     console.log(e.value.id);
     this.videomService.searchStoreItem(e.value.orientaionId).subscribe(
       (value) => {
@@ -303,19 +424,24 @@ export class VideomComponent implements OnInit {
       }
     );
   }
+
   // 选择店铺
   public storeChange(e): void {
     this.addVideo.storeId = e.value.id;
+    this.modifyVideo.storeId = e.value.id;
   }
+
   // 选择视频分组
   public videoGroupChange(e): void {
     this.addVideo.groupId = e.value.id;
+    this.modifyVideo.groupId = e.value.id;
   }
+
   // 数据格式化
   public initializeTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new TreeNode();
+      const childnode = new TreeNode();
       childnode.label = data[i].areaName;
       childnode.id = data[i].id;
       childnode.areaCode = data[i].areaCode;
@@ -332,10 +458,11 @@ export class VideomComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceArea(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       childnode.administrativeAreaId = data[i].administrativeAreaId;
@@ -343,11 +470,12 @@ export class VideomComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceAreaDirec(data): any {
     const oneChild = [];
     if (data) {
       for (let i = 0; i < data.length; i++) {
-        const childnode =  new SelectItem();
+        const childnode = new SelectItem();
         childnode.name = data[i].flagName + '：' + data[i].source + '—>' + data[i].destination;
         childnode.code = data[i].flag;
         childnode.destination = data[i].id;
@@ -361,10 +489,11 @@ export class VideomComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeStore(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].storeName;
       childnode.id = data[i].id;
       childnode.categoryCode = data[i].categoryCode;
@@ -372,10 +501,11 @@ export class VideomComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeVideoGroup(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].groupName;
       childnode.id = data[i].id;
       oneChild.push(childnode);

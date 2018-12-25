@@ -134,6 +134,7 @@ export class AreaComponent implements OnInit {
 
   // 删除
   public deleteFirm(): void {
+    console.log(this.selectAreas);
     if (this.selectAreas === undefined || this.selectAreas.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);

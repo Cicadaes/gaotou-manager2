@@ -289,7 +289,7 @@ export class OrgDutyComponent implements OnInit {
         clearTimeout(this.cleanTimer);
       }
       this.msgs = [];
-      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要删除的项'});
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择需要修改的项'});
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
@@ -324,11 +324,12 @@ export class OrgDutyComponent implements OnInit {
 
   // 修改确认
   public modifySure(): void {
-    if (this.addDuty.boss === '1') {
-      this.addDuty.boss = false;
+    if (this.modifyDuty.boss === '1') {
+      this.modifyDuty.boss = false;
     } else {
-      this.addDuty.boss = true;
+      this.modifyDuty.boss = true;
     }
+    console.log(this.modifyDuty);
     this.confirmationService.confirm({
       message: '确定要修改吗？',
       header: '修改提醒',
@@ -352,6 +353,7 @@ export class OrgDutyComponent implements OnInit {
               this.modifyDialog = false;
               this.cleanData();
             } else {
+              console.log(value);
               setTimeout(() => {
                 this.globalService.eventSubject.next({display: false});
                 if (this.cleanTimer) {

@@ -388,8 +388,11 @@ export class InterceptComponent implements OnInit {
         }
       );
     } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
       this.msgs = [];
-      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择市'});
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);

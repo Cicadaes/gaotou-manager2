@@ -52,7 +52,20 @@ export class AddCash {
   idt?: string; // 创建时间
   udt?: any; // 修改时间
 }
-
+export class ModifyCash {
+  // 区划
+  province: AddCashProvince = new AddCashProvince();
+  city: AddCashCity = new AddCashCity();
+  // 服务区
+  serviceArea: AddCashServiceArea = new AddCashServiceArea();
+  // 上下行
+  saOrientation: AddCashSaOrientation = new AddCashSaOrientation();
+  // 店铺
+  store: AddCashStore =  new AddCashStore();
+  cashRegisterCode: string; // 收银机编号
+  idt?: string; // 创建时间
+  id?: number;
+}
 // 上下行方向泛型
 export class HighSpeedDirection {
   label?: string;

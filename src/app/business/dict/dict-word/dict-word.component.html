@@ -9,6 +9,7 @@
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
+    <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
   <!--数据-->
   <p-table [columns]="cols" [value]="dictWords" selectionMode="multiple" [(selection)]="selectedDictWords" (onRowSelect)="onRowSelect($event)">
@@ -71,6 +72,52 @@
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
         <button class="btn btn-success" type="button" (click)="addsSave()">保存</button>
         <button class="btn btn-warning" type="button" (click)="addDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>  <!--增加弹框-->
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+    <div class="ui-g ui-fluid">
+      <!--字典编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="dictionaryCode1">字典编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown id="dictionaryCode1" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+        </div>
+      </div>
+      <!--词条编码-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="entryCode1">词条编码：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="entryCode1" [(ngModel)]="modifyDictWord.entryCode" ([value])="this.modifyDictWord.entryCode"/>
+        </div>
+      </div>
+      <!--词条值-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="entryValue1">词条值：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="entryValue1" [(ngModel)]="modifyDictWord.entryValue" ([value])="this.modifyDictWord.entryValue"/>
+        </div>
+      </div>
+      <!--显示序列-->
+      <div class="ui-g-6">
+        <div class="ui-g-4">
+          <label for="addentryValue1">显示序列：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="addentryValue1" [(ngModel)]="modifyDictWord.sequence" ([value])="this.modifyDictWord.sequence"/>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="modifySure()">修改</button>
+        <button class="btn btn-warning" type="button" (click)="modifyDialog=false;">取消</button>
       </div>
     </p-footer>
   </p-dialog>

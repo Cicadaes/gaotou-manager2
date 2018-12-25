@@ -31,7 +31,7 @@ export class UserService {
   }
   // 分页查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/user/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.url}/user/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*************************数据联动查询*******************************/

@@ -103,6 +103,23 @@ export class AddSerarea {
   upAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
   downAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
 }
+export class ModifySerarea {
+  organizationId: number; // 1 公司ID
+  organizationName: string; // 1 公司名
+  deptId: number; // 1 部门ID
+  deptName: string; // 1 部门名
+  administrativeAreaId: number; // 1 区划id
+  administrativeAreaName: string; // 1 区划名
+  chiefUserId: number; // 1 区长用户id
+  chiefName: string; // 1 区长名
+  chiefPhone: string; // 1 区长电话
+  serviceAreaName: string; // 2 服务区名
+  commonAttributeValues: any[]; // 公共属性：经纬度及面积
+  upAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
+  downAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
+  id?: number;
+  idt?: string;
+}
 // 上下行属性
 export class AddUpDownAttribute {
   source: string; // 起始点

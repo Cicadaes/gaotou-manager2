@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {CashService} from '../../common/services/cash.service';
 import {GlobalService} from '../../common/services/global.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
-import {AddCash, Cash, TreeNode} from '../../common/model/cash-model';
+import {AddCash, Cash, ModifyCash, TreeNode} from '../../common/model/cash-model';
 import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
 
 @Component({
@@ -27,7 +27,9 @@ export class CashComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: AddTreeArea[]; // 店铺列表
   // 修改相关
-  public revampDialog: boolean; // 修改弹窗显示控制
+  public modifyDialog: boolean; // 修改弹窗显示控制
+  public modifyCash: ModifyCash = new ModifyCash();
+  // public modifyDialog: boolean; // 修改弹窗显示控制
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -36,7 +38,8 @@ export class CashComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -48,6 +51,7 @@ export class CashComponent implements OnInit {
     ];
     this.updateCashDate();
   }
+
   public updateCashDate(): void {
     this.cashService.searchList({page: 1, nums: 100}).subscribe(
       (value) => {
@@ -55,11 +59,13 @@ export class CashComponent implements OnInit {
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
     this.cash = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -70,6 +76,7 @@ export class CashComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     this.confirmationService.confirm({
@@ -122,9 +129,11 @@ export class CashComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     if (this.selectedCashs === undefined || this.selectedCashs.length === 0) {
@@ -194,7 +203,7 @@ export class CashComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedCashs.length; i ++) {
+            for (let i = 0; i < this.selectedCashs.length; i++) {
               ids.push(this.selectedCashs[i].id);
             }
             this.cashService.deleteList(ids).subscribe(
@@ -247,12 +256,15 @@ export class CashComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
+
   // 修改、保存修改
-/*  public revampClick() {
+  public modifyBtn(): void {
     if (this.selectedCashs === undefined || this.selectedCashs.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -262,47 +274,46 @@ export class CashComponent implements OnInit {
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-      this.revampDialog = false;
-    } else if (this.selectedCashs.length > 1) {
+    } else if (this.selectedCashs.length === 1) {
+      this.modifyDialog = true;
+      this.modifyCash.cashRegisterCode = this.selectedCashs[0].cashRegisterCode;
+      this.modifyCash.id = this.selectedCashs[0].id;
+      this.modifyCash.idt = this.selectedCashs[0].idt;
+    } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
       }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-      this.msgs.push({severity: 'error', summary: '操作错误', detail: '修改只能选择一项'});
-      this.revampDialog = false;
-    } else if (this.selectedCashs.length === 1) {
-      this.revampDialog = true;
     }
-
   }
-  public revampSave(): void {
+
+  //修改确认
+  public modifySure(): void {
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
       header: '修改提醒',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.globalService.eventSubject.next({display: true});
-        this.cashService.modifyList().subscribe(
+        this.cashService.modifyItem(this.modifyCash).subscribe(
           (value) => {
-            if (value.state) {
-              setTimeout(() => {
-                this.globalService.eventSubject.next({display: false});
-                const carsSave = [...this.cashs];
-                carsSave[this.cashs.indexOf(this.selectedCashs[0])] = this.cash;
-                this.cashs = carsSave;
-                if (this.cleanTimer) {
-                  clearTimeout(this.cleanTimer);
-                }
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.selectedCashs = undefined;
+              this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
+              this.updateCashDate();
+              this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
-                this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.msg});
-                this.cleanTimer = setTimeout(() => {
-                  this.msgs = [];
-                }, 3000);
-                this.selectedCashs = undefined;
-                this.revampDialog = false;
               }, 3000);
+              this.modifyDialog = false;
             } else {
               setTimeout(() => {
                 this.globalService.eventSubject.next({display: false});
@@ -318,6 +329,7 @@ export class CashComponent implements OnInit {
             }
           },
           (err) => {
+            console.log(err);
             setTimeout(() => {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -332,10 +344,21 @@ export class CashComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
-  }*/
 
+  }
+
+  public clearDown(): void {
+      this.addAreaTree.label = null;
+      this.addServicesAreaTrees = null;
+      this.highsdData = null;
+      this.storeList = null;
+  }
+  // onHide(e):void{
+  //   console.log(123);
+  // }
   // 搜索
   /*public searchKeydown(e): void {
     if (e.keyCode === 13) {
@@ -412,6 +435,7 @@ export class CashComponent implements OnInit {
       this.detailsDialog = true;
     }
   }*/
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -421,20 +445,29 @@ export class CashComponent implements OnInit {
       }
     );
   }
+
   public treeOnNodeSelect(event) {
     // this.areaDialog = false;
     // this.addAreaTreeSelect.push(event.node);
     // console.log(this.addAreaTree);
   }
+
   public treeSelectAreaClick(): void {
     const a = parseFloat(this.addAreaTree.level);
-    if (a >= 2 ) {
+    if (a >= 2) {
       this.addCash.province.administrativeAreaId = this.addAreaTree.id;
       this.addCash.province.administrativeAreaName = this.addAreaTree.label;
       this.addCash.province.level = this.addAreaTree.level;
       this.addCash.city.administrativeAreaId = this.addAreaTree.parent.id;
       this.addCash.city.administrativeAreaName = this.addAreaTree.parent.label;
       this.addCash.city.level = this.addAreaTree.parent.level;
+
+      this.modifyCash.province.administrativeAreaId = this.addAreaTree.id;
+      this.modifyCash.province.administrativeAreaName = this.addAreaTree.label;
+      this.modifyCash.province.level = this.addAreaTree.level;
+      this.modifyCash.city.administrativeAreaId = this.addAreaTree.parent.id;
+      this.modifyCash.city.administrativeAreaName = this.addAreaTree.parent.label;
+      this.modifyCash.city.level = this.addAreaTree.parent.level;
       this.areaDialog = false;
       this.cashService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -449,11 +482,14 @@ export class CashComponent implements OnInit {
       }, 3000);
     }
   }
+
   // 选择服务区
   public serviceChange(e): void {
     this.servicesAreaDialog = false;
     this.addCash.serviceArea.serviceAreaId = e.value.id;
     this.addCash.serviceArea.serviceName = e.value.name;
+    this.modifyCash.serviceArea.serviceAreaId = e.value.id;
+    this.modifyCash.serviceArea.serviceName = e.value.name;
     this.cashService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -461,6 +497,7 @@ export class CashComponent implements OnInit {
       }
     );
   }
+
   // 选择上下行
   public directionChange(e): void {
     this.addCash.saOrientation.destination = e.value.destination;
@@ -468,6 +505,12 @@ export class CashComponent implements OnInit {
     this.addCash.saOrientation.flagName = e.value.flagName;
     this.addCash.saOrientation.orientaionId = e.value.orientaionId;
     this.addCash.saOrientation.source = e.value.source;
+
+    this.modifyCash.saOrientation.destination = e.value.destination;
+    this.modifyCash.saOrientation.flag = e.value.flag;
+    this.modifyCash.saOrientation.flagName = e.value.flagName;
+    this.modifyCash.saOrientation.orientaionId = e.value.orientaionId;
+    this.modifyCash.saOrientation.source = e.value.source;
     this.cashService.searchStoreItem(e.value.orientaionId).subscribe(
       (value) => {
         console.log(value.data);
@@ -475,17 +518,23 @@ export class CashComponent implements OnInit {
       }
     );
   }
+
   // 选择店铺
   public storeChange(e): void {
     this.addCash.store.categoryCode = e.value.categoryCode;
     this.addCash.store.storeId = e.value.id;
     this.addCash.store.storeName = e.value.name;
+
+    this.modifyCash.store.categoryCode = e.value.categoryCode;
+    this.modifyCash.store.storeId = e.value.id;
+    this.modifyCash.store.storeName = e.value.name;
   }
+
   // 数据格式化
   public initializeTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new TreeNode();
+      const childnode = new TreeNode();
       childnode.label = data[i].areaName;
       childnode.id = data[i].id;
       childnode.areaCode = data[i].areaCode;
@@ -502,10 +551,11 @@ export class CashComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceArea(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       childnode.administrativeAreaId = data[i].administrativeAreaId;
@@ -513,11 +563,12 @@ export class CashComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeServiceAreaDirec(data): any {
     const oneChild = [];
     if (data) {
       for (let i = 0; i < data.length; i++) {
-        const childnode =  new SelectItem();
+        const childnode = new SelectItem();
         childnode.name = data[i].flagName + '：' + data[i].source + '—>' + data[i].destination;
         childnode.code = data[i].flag;
         childnode.destination = data[i].id;
@@ -530,10 +581,11 @@ export class CashComponent implements OnInit {
     }
     return oneChild;
   }
+
   public initializeStore(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].storeName;
       childnode.id = data[i].id;
       childnode.categoryCode = data[i].categoryCode;
@@ -541,4 +593,5 @@ export class CashComponent implements OnInit {
     }
     return oneChild;
   }
+
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
-import {AddSerarea, Serarea} from '../../../common/model/serarea-model';
+import {AddSerarea, ModifySerarea, Serarea} from '../../../common/model/serarea-model';
 import {AddTreeArea, SelectItem} from '../../../common/model/shared-model';
 import {TreeNode} from '../../../common/model/cash-model';
 
@@ -37,7 +37,7 @@ export class SerareaSernumComponent implements OnInit {
   public downDestination: string;  // 下行终点
   // 修改
   public revampDialog: boolean; // 修改弹窗
-  public revampSerArea: any;
+  public revampSerArea: ModifySerarea = new ModifySerarea();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -180,6 +180,8 @@ export class SerareaSernumComponent implements OnInit {
   }
   // 删除
   public deleteFirm(): void {
+    console.log(this.selectedSerAreas);
+
     if (this.selectedSerAreas === undefined || this.selectedSerAreas.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -314,6 +316,13 @@ export class SerareaSernumComponent implements OnInit {
       this.msgs.push({severity: 'error', summary: '操作错误', detail: '修改只能选择一项'});
       this.revampDialog = false;
     } else if (this.selectedSerAreas.length === 1) {
+      this.revampDialog = true;
+
+      this.revampSerArea.administrativeAreaId = this.selectedSerAreas[0].administrativeAreaId;
+      this.revampSerArea.id = this.selectedSerAreas[0].id;
+      this.revampSerArea.idt = this.selectedSerAreas[0].idt;
+      this.revampSerArea.chiefName = this.selectedSerAreas[0].chiefName;
+      // this.revampSerArea.administrativeAreaName = this.selectedSerAreas[0].administrativeAreaName;
       // this.globalService.eventSubject.next({display: true});
       this.serareaService.searchSerAraListItem({id: this.serArea.id}).subscribe(
         (val) => {
@@ -334,13 +343,27 @@ export class SerareaSernumComponent implements OnInit {
 
   }
   public revampSave(): void {
+    this.revampSerArea.commonAttributeValues = this.commonAttributeValues;
+    // 上行
+    this.revampSerArea.upAttributeValues.source = this.upSource;
+    this.revampSerArea.upAttributeValues.destination = this.upDestination;
+    this.revampSerArea.upAttributeValues.flag = '2';
+    this.revampSerArea.upAttributeValues.flagName = '上行';
+    this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
+    // 下行
+    this.revampSerArea.downAttributeValues.source = this.downSource;
+    this.revampSerArea.downAttributeValues.destination = this.downDestination;
+    this.revampSerArea.downAttributeValues.flag = '3';
+    this.revampSerArea.downAttributeValues.flagName = '下行';
+    this.revampSerArea.downAttributeValues.attributeValues = this.downAttribute;
+
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
       header: '修改提醒',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.globalService.eventSubject.next({display: true});
-        this.serareaService.modifySerAraItem({}).subscribe(
+        this.serareaService.modifySerAraItem(this.revampSerArea).subscribe(
           (value) => {
             if (value.state) {
               setTimeout(() => {

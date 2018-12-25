@@ -58,8 +58,8 @@ export class ModifyStore {
   storeName?: string; // 店铺名称
   electricityAccount?: null; // 电费账号
   waterAccount?: null; // 水费账号
-  buildAera?: null; // 建组面积
-  usableArea?: null; // 实用面积
+  buildAera?: number; // 建组面积
+  usableArea?: number; // 实用面积
   industryCode?: null; // 行业编码
   industryName?: null; // 行业名称
   principal?: null; // 负责人姓名

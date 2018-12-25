@@ -12,7 +12,13 @@ export class AddDictList {
   dictionaryCode?: string;
   dictionaryName?: string;
 }
-
+export class ModifyDictList {
+  dictionaryCode?: string;
+  dictionaryName?: string;
+  enabled?: any;
+  id?: null;
+  idt?: string;
+}
 // 字典词条
 export class DictWord {
   dictionaryCode?: string; // 字典编码
@@ -30,4 +36,13 @@ export class AddDictWord {
   entryCode?: string; // 词条编码
   entryValue?: string; // 词条值
   sequence?: number; // 序列
+}
+export class ModifyDictWord {
+  dictionaryCode?: string; // 字典编码
+  entryCode?: string; // 词条编码
+  entryValue?: string; // 词条值
+  sequence?: number; // 序列
+  id?: number;
+  idt?: string;
+  enabled?: boolean;
 }
