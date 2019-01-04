@@ -24,7 +24,9 @@ export class VideoGroupComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
-
+  //分页相关
+  public nowPage: any;
+  public option: any;
   //修改相关
   public modifyDialog: boolean; //添加弹窗显示控制
   public modifyVideoGroup: ModifyVideoGroup = new ModifyVideoGroup();
@@ -49,9 +51,10 @@ export class VideoGroupComponent implements OnInit {
   }
 
   public updateCashDate(): void {
-    this.videoGroupService.searchList({page: 1, nums: 100}).subscribe(
+    this.videoGroupService.searchList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videoGroups = value.data.contents;
       }
     );
@@ -388,11 +391,12 @@ export class VideoGroupComponent implements OnInit {
     );
   }
 
-  public clearDown():void{
+  public clearDown(): void {
     this.addAreaTree.label = null;
     this.addServicesAreas = null;
     this.highsdData = null;
   }
+
   // 选择上下行
   public directionChange(e): void {
     this.addVideoGroup.saOrientationId = e.value.id;
@@ -453,5 +457,18 @@ export class VideoGroupComponent implements OnInit {
       }
     }
     return oneChild;
+  }
+
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.videoGroupService.searchList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.videoGroups = value.data.contents;
+      }
+    );
   }
 }

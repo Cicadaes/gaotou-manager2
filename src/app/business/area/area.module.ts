@@ -15,13 +15,14 @@ import {
 } from 'primeng/primeng';
 import {AreaService} from '../../common/services/area.service';
 import {FormsModule} from '@angular/forms';
+import {PagingComponent} from '../../common/components/paging/paging.component';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     AreaRoutersModule,
-
     TreeTableModule,
     ButtonModule,
     SharedModule,
@@ -31,7 +32,8 @@ import {FormsModule} from '@angular/forms';
     ConfirmDialogModule,
     TreeModule,
     ScrollPanelModule,
-    RadioButtonModule
+    RadioButtonModule,
+    PagingModule
   ],
   declarations: [AreaComponent],
   providers: [AreaService, MessageService, ConfirmationService, DatePipe]

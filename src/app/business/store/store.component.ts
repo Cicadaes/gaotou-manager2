@@ -17,6 +17,9 @@ export class StoreComponent implements OnInit {
   public cols: any[]; // 表头
   public store: any; // 接收选中的值
   public selectedstores: Store[]; // 多个选择
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addStore: AddStore = new AddStore(); // 添加参数字段
@@ -61,9 +64,10 @@ export class StoreComponent implements OnInit {
   }
 
   public updateCashDate(): void {
-    this.storeService.searchList({page: 1, nums: 1000}).subscribe(
+    this.storeService.searchList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.stores = value.data.contents;
       }
     );
@@ -508,5 +512,17 @@ export class StoreComponent implements OnInit {
       }
     }
     return oneChild;
+  }
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.storeService.searchList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.stores = value.data.contents;
+      }
+    );
   }
 }

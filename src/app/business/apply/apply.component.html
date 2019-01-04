@@ -4,7 +4,7 @@
 <p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
 <app-s-loation locationTitle="应用访问控制"></app-s-loation>
 <div class="serarea-manage">
-  <h4 class="text-center">应用访问控制</h4>
+  <h1 class="text-center">应用访问控制</h1>
   <!--按钮-->
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
@@ -127,4 +127,6 @@
       </div>
     </p-footer>
   </p-dialog>
+  <app-paging [option]="option" (pageClick)="nowpageEventHandle($event)"></app-paging>
+
 </div>

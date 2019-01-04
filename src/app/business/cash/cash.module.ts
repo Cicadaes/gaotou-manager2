@@ -18,6 +18,7 @@ import {
   TreeModule, TreeTableModule
 } from 'primeng/primeng';
 import {TableModule} from 'primeng/table';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import {TableModule} from 'primeng/table';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [CashComponent],
   providers: [CashService, MessageService, ConfirmationService]

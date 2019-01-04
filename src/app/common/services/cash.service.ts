@@ -17,20 +17,20 @@ export class CashService {
   // 删除单个
   public deleteItem(id): Observable<any> {
     console.log(id);
-    return this.http.get(`${this.globalService.url}/cashRegister/delete/${id}`);
+    return this.http.get(`${this.globalService.urls}/cashRegister/delete/${id}`);
   }
   // 删除多个
   public deleteList(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/cashRegister/delete`, params);
+    return this.http.post(`${this.globalService.urls}/cashRegister/delete`, params);
   }
   // 修改
   public modifyItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/cashRegister/update`, params);
+    return this.http.post(`${this.globalService.urls}/cashRegister/update`, params);
   }
   // 收银设备分页查询
   public searchList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.url}/cashRegister/queryByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.urls}/cashRegister/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /**********************数据联动*****************************/

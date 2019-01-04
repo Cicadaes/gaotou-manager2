@@ -6,7 +6,7 @@
 <div class="user-manage">
   <!--按钮-->
   <div class="btn-manner">
-    <h4 class="text-center">区域管理</h4>
+    <h1 class="text-center">区域管理</h1>
     <button class="btn btn-primary" (click)="addDialog=true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
 <!--    <button class="btn btn-info" (click)="revampClick()">修改</button>
@@ -102,5 +102,6 @@
       </div>
     </p-footer>-->
   </p-dialog>
+  <app-paging [option]="option" (pageClick)="nowpageEventHandle($event)"></app-paging>
 </div>
 

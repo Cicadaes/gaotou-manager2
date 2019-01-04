@@ -19,6 +19,7 @@ import {
 } from 'primeng/primeng';
 import { EventTypeComponent } from './event-type/event-type.component';
 import {SystemComponent} from './system.component';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {SystemComponent} from './system.component';
     DropdownModule,
     RadioButtonModule,
     CalendarModule,
+    PagingModule
   ],
   declarations: [EventTypeComponent, SystemComponent],
   providers: [SystemService, MessageService, ConfirmationService]

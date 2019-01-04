@@ -18,6 +18,9 @@ export class EventTypeComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addEventType: AddEventType = new AddEventType();
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
   public modifyEventType: ModifyEventType = new ModifyEventType();
@@ -43,9 +46,10 @@ export class EventTypeComponent implements OnInit {
   }
 
   public updateEventTypeDate(): void {
-    this.systemService.searchEventTypeList({page: 1, nums: 1000}).subscribe(
+    this.systemService.searchEventTypeList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.eventTypes = value.data.contents;
       }
     );
@@ -340,5 +344,17 @@ export class EventTypeComponent implements OnInit {
       reject: () => {
       }
     });
+  }
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.systemService.searchEventTypeList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.eventTypes = value.data.contents;
+      }
+    );
   }
 }

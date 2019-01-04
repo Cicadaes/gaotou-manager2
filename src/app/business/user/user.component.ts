@@ -24,6 +24,9 @@ export class UserComponent implements OnInit {
   public addCompanySelect: SelectItem[]; // 公司列表
   public addDepSelect: SelectItem[]; // 部门列表
   public addDepTopDutySelect: SelectItem[]; // 职务
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyUser: modifyUser = new modifyUser();
@@ -53,9 +56,10 @@ export class UserComponent implements OnInit {
   }
 
   public updateUserDate(): void {
-    this.userService.searchList({page: 1, nums: 1000}).subscribe(
+    this.userService.searchList({page: 1, nums: 15}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
@@ -289,10 +293,10 @@ export class UserComponent implements OnInit {
       this.modifyUser.email = this.selectedUsers[0].email;
       this.modifyUser.address = this.selectedUsers[0].address;
       this.modifyUser.idt = this.selectedUsers[0].idt;
-      if (this.selectedUsers[0].gender=='女'){
-        this.modifyUser.gender=2;
-      }else {
-        this.modifyUser.gender=1;
+      if (this.selectedUsers[0].gender == '女') {
+        this.modifyUser.gender = 2;
+      } else {
+        this.modifyUser.gender = 1;
       }
       this.modifyUser.enabled = this.selectedUsers[0].enabled;
       this.modifyUser.birthday = this.selectedUsers[0].birthday;
@@ -446,5 +450,20 @@ export class UserComponent implements OnInit {
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.userService.searchList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.users = value.data.contents;
+        this.users.map((val, index) => {
+          val.gender = this.sex[val.gender - 1];
+        });
+      }
+    );
   }
 }

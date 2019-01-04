@@ -17,6 +17,7 @@ import {
 } from 'primeng/primeng';
 import {TableModule} from 'primeng/table';
 import {DictService} from '../../common/services/dict.service';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import {DictService} from '../../common/services/dict.service';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [DictListComponent, DictWordComponent],
   providers: [DictService, MessageService, ConfirmationService, DatePipe]

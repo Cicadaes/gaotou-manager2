@@ -19,6 +19,9 @@ export class ApplyComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addApply: AddApply = new AddApply();
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean;
   public modifyApply: ModifyApply = new ModifyApply();
@@ -44,9 +47,10 @@ export class ApplyComponent implements OnInit {
   }
 
   public updateApplyListData(): void {
-    this.applyService.searchList({page: 1, nums: 1000}).subscribe(
+    this.applyService.searchList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.applies = value.data.contents;
       }
     );
@@ -344,5 +348,18 @@ export class ApplyComponent implements OnInit {
       }
     });
 
+  }
+
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.applyService.searchList({page: 1, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.applies = value.data.contents;
+      }
+    );
   }
 }

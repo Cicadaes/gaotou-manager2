@@ -18,7 +18,9 @@ export class LimitRoleComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addRole: AddRole = new AddRole();
-
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean;//控制显示弹窗显示
   public modifyRole: modifyRole = new modifyRole();
@@ -44,9 +46,10 @@ export class LimitRoleComponent implements OnInit {
   }
 
   public uploadRoleData(): void {
-    this.limitService.searchRoleList({page: 1, nums: 1000}).subscribe(
+    this.limitService.searchRoleList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
         this.roles = value.data.contents;
       }
     );
@@ -279,7 +282,7 @@ export class LimitRoleComponent implements OnInit {
   }
 
   // 修改确认
-  public modifySure(): void{
+  public modifySure(): void {
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
       header: '修改提醒',
@@ -336,5 +339,18 @@ export class LimitRoleComponent implements OnInit {
       }
     });
 
+  }
+
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.limitService.searchRoleList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
+        this.roles = value.data.contents;
+      }
+    );
   }
 }

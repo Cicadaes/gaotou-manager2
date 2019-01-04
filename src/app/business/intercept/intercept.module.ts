@@ -16,6 +16,7 @@ import {
   MessagesModule, ProgressSpinnerModule, RadioButtonModule, ScrollPanelModule, TreeModule, TreeTableModule
 } from 'primeng/primeng';
 import { InterceptService } from '../../common/services/intercept.service';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { InterceptService } from '../../common/services/intercept.service';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [InterceptComponent],
   providers: [InterceptService, ConfirmationService, MessageService, DatePipe]

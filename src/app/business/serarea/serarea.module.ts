@@ -19,6 +19,7 @@ import {
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { SerareaService } from '../../common/services/serarea.service';
 import { SerareaFieldtypeComponent } from './serarea-fieldtype/serarea-fieldtype.component';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { SerareaFieldtypeComponent } from './serarea-fieldtype/serarea-fieldtype
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [SerareaComponent, SerareaSernumComponent, SerareaFieldsComponent, SerareaFieldtypeComponent],
   providers: [SerareaService, MessageService, ConfirmationService, DatePipe]

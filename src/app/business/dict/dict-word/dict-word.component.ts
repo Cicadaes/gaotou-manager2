@@ -20,6 +20,9 @@ export class DictWordComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addDictWord: AddDictWord = new AddDictWord(); // 添加参数字段
   public addDictListSelect: SelectItem[]; // 字典列表
+  //分页相关
+  public nowPage: any;
+  public option1: any;
   // 修改相关
   public modifyDialog: boolean;
   public modifyDictWord: ModifyDictWord = new ModifyDictWord();
@@ -53,9 +56,10 @@ export class DictWordComponent implements OnInit {
   }
 
   public updateDictWordsata(): void {
-    this.dictService.searchDictWordList({page: 1, nums: 100}).subscribe(
+    this.dictService.searchDictWordList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option1 = {total: value.data.totalRecord, row: value.data.pageSize};
         this.dictWords = value.data.contents;
       }
     );
@@ -381,5 +385,17 @@ export class DictWordComponent implements OnInit {
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.dictService.searchDictWordList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.dictWords = value.data.contents;
+      }
+    );
   }
 }

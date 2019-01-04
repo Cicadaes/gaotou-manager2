@@ -18,7 +18,9 @@ export class DictListComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addDictList: AddDictList = new AddDictList();
-
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean;
   public modifyDictList: ModifyDictList = new ModifyDictList();
@@ -43,9 +45,10 @@ export class DictListComponent implements OnInit {
   }
 
   public updateDictListData(): void {
-    this.dictService.searchDictList({page: 1, nums: 1000}).subscribe(
+    this.dictService.searchDictList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.dictLists = value.data.contents;
       }
     );
@@ -333,5 +336,17 @@ export class DictListComponent implements OnInit {
       }
     });
 
+  }
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.dictService.searchDictList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.dictLists = value.data.contents;
+      }
+    );
   }
 }

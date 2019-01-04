@@ -14,6 +14,7 @@ import {
   ProgressSpinnerModule, RadioButtonModule, ScrollPanelModule, TreeModule, TreeTableModule
 } from 'primeng/primeng';
 import { VideomService } from '../../common/services/videom.service';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { VideomService } from '../../common/services/videom.service';
     MessagesModule,
     ScrollPanelModule,
     DropdownModule,
-    RadioButtonModule
+    RadioButtonModule,
+    PagingModule
   ],
   declarations: [VideomComponent],
   providers: [VideomService, MessageService, ConfirmationService]

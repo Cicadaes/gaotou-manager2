@@ -17,6 +17,7 @@ import {
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from 'primeng/table';
 import {SharedModule} from '../../common/shared.module';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import {SharedModule} from '../../common/shared.module';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [WifiComponent],
   providers: [WifiService, MessageService, ConfirmationService, DatePipe]

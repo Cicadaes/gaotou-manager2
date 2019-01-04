@@ -26,6 +26,9 @@ export class CashComponent implements OnInit {
   public addServicesAreaTrees: AddTreeArea[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: AddTreeArea[]; // 店铺列表
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
   public modifyCash: ModifyCash = new ModifyCash();
@@ -53,8 +56,9 @@ export class CashComponent implements OnInit {
   }
 
   public updateCashDate(): void {
-    this.cashService.searchList({page: 1, nums: 100}).subscribe(
+    this.cashService.searchList({page: 1, nums: 14}).subscribe(
       (value) => {
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.cashs = value.data.contents;
       }
     );
@@ -593,5 +597,15 @@ export class CashComponent implements OnInit {
     }
     return oneChild;
   }
-
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.cashService.searchList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        this.cashs = value.data.contents;
+      }
+    );
+  }
 }

@@ -4,7 +4,7 @@
 <p-confirmDialog acceptLabel="确认" rejectLabel="取消"></p-confirmDialog>
 <app-s-loation locationTitle="角色管理"></app-s-loation>
 <div class="user-manage">
-  <h4 class="text-center">角色管理</h4>
+  <h1 class="text-center">角色管理</h1>
   <!--按钮-->
   <div class="btn-manner">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
@@ -105,3 +105,4 @@
     </p-footer>
   </p-dialog>
 </div>
+<app-paging [option]="option" (pageClick)="nowpageEventHandle($event)"></app-paging>

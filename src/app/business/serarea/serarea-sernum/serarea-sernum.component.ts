@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
@@ -35,6 +35,9 @@ export class SerareaSernumComponent implements OnInit {
   public upDestination: string;  // 上行终点
   public downSource: string;  // 下行起始点
   public downDestination: string;  // 下行终点
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改
   public revampDialog: boolean; // 修改弹窗
   public revampSerArea: ModifySerarea = new ModifySerarea();
@@ -46,7 +49,8 @@ export class SerareaSernumComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private serareaService: SerareaService,
     private globalService: GlobalService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.cols = [
@@ -74,33 +78,37 @@ export class SerareaSernumComponent implements OnInit {
         console.log(value.data);
         value.data.commonAttribute.map((val, index) => {
           this.commonAttributeValues.push(
-            {attributeName: val.attributeDesc, value: '',attributeDesc:val.attributeName}
+            {attributeName: val.attributeDesc, value: '', attributeDesc: val.attributeName}
           );
         });
         value.data.hasOrientationAttribute.map((val, index) => {
           this.upAttribute.push(
-            {attributeName: val.attributeDesc, value: '',attributeDesc: val.attributeDesc}
+            {attributeName: val.attributeDesc, value: '', attributeDesc: val.attributeDesc}
           );
           this.downAttribute.push(
-            {attributeName: val.attributeDesc, value: '',attributeDesc: val.attributeDesc}
+            {attributeName: val.attributeDesc, value: '', attributeDesc: val.attributeDesc}
           );
         });
       }
     );
     console.log(this.commonAttributeValues);
   }
+
   public updateApplyListData(): void {
-    this.serareaService.searchSerAraList({page: 1, nums: 1000}).subscribe(
+    this.serareaService.searchSerAraList({page: 1, nums: 14}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         console.log(value);
       }
     );
   }
+
   // 选中后赋值
   public onRowSelect(event): void {
     this.serArea = this.cloneCar(event.data);
   }
+
   // 遍历修改后的数据，并把它赋值给car1
   public cloneCar(c: any): any {
     const car = {};
@@ -111,6 +119,7 @@ export class SerareaSernumComponent implements OnInit {
     }
     return car;
   }
+
   // 增加
   public addsSave(): void {
     this.addSerarea.commonAttributeValues = this.commonAttributeValues;
@@ -177,9 +186,11 @@ export class SerareaSernumComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
   }
+
   // 删除
   public deleteFirm(): void {
     console.log(this.selectedSerAreas);
@@ -245,7 +256,7 @@ export class SerareaSernumComponent implements OnInit {
             );
           } else {
             const ids = [];
-            for (let i = 0; i < this.selectedSerAreas.length; i ++) {
+            for (let i = 0; i < this.selectedSerAreas.length; i++) {
               ids.push(this.selectedSerAreas[i].id);
             }
             this.serareaService.deleteSerAraList(ids).subscribe(
@@ -292,10 +303,12 @@ export class SerareaSernumComponent implements OnInit {
             );
           }
         },
-        reject: () => {}
+        reject: () => {
+        }
       });
     }
   }
+
   // 修改、保存修改
   public revampClick() {
     if (this.selectedSerAreas === undefined || this.selectedSerAreas.length === 0) {
@@ -335,10 +348,10 @@ export class SerareaSernumComponent implements OnInit {
             this.revampSerArea.upAttributeValues.attributeValues = val.data.upAttributeValues.attributeValues;
             this.revampSerArea.downAttributeValues.attributeValues = val.data.downAttributeValues.attributeValues;
 
-            if (this.revampSerArea.upAttributeValues.attributeValues.length ===0){
-               this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
+            if (this.revampSerArea.upAttributeValues.attributeValues.length === 0) {
+              this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
             }
-            if(this.revampSerArea.downAttributeValues.attributeValues.length === 0){
+            if (this.revampSerArea.downAttributeValues.attributeValues.length === 0) {
               this.revampSerArea.downAttributeValues.attributeValues = this.downAttribute;
             }
             this.globalService.eventSubject.next({display: false});
@@ -364,6 +377,7 @@ export class SerareaSernumComponent implements OnInit {
     }
 
   }
+
   public revampSave(): void {
     // 上行
     this.revampSerArea.upAttributeValues.source = this.upSource;
@@ -429,10 +443,12 @@ export class SerareaSernumComponent implements OnInit {
           }
         );
       },
-      reject: () => {}
+      reject: () => {
+      }
     });
 
   }
+
   // 选择公司
   public companyChange(e): void {
     this.addSerarea.organizationName = e.value.name;
@@ -446,6 +462,7 @@ export class SerareaSernumComponent implements OnInit {
       }
     );
   }
+
   // 选择部门
   public orgsChange(e): void {
     this.addSerarea.deptName = e.value.name;
@@ -453,6 +470,7 @@ export class SerareaSernumComponent implements OnInit {
     this.revampSerArea.deptName = e.value.name;
     this.revampSerArea.deptId = e.value.id;
   }
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -462,14 +480,16 @@ export class SerareaSernumComponent implements OnInit {
       }
     );
   }
+
   public treeOnNodeSelect(event) {
     // this.areaDialog = false;
     // this.addAreaTreeSelect.push(event.node);
     // console.log(this.addAreaTree);
   }
+
   public treeSelectAreaClick(): void {
     const a = parseFloat(this.addAreaTree.level);
-    if (a >= 2 ) {
+    if (a >= 2) {
       this.addSerarea.administrativeAreaId = this.addAreaTree.id;
       this.addSerarea.administrativeAreaName = this.addAreaTree.label;
       this.revampSerArea.administrativeAreaId = this.addAreaTree.id;
@@ -483,6 +503,7 @@ export class SerareaSernumComponent implements OnInit {
       }, 3000);
     }
   }
+
   // 选择用户
   public userTreeClick(): void {
     this.userDialog = true;
@@ -492,6 +513,7 @@ export class SerareaSernumComponent implements OnInit {
       }
     );
   }
+
   public userTreeOnNodeSelect() {
     this.userDialog = false;
     this.addSerarea.chiefUserId = this.addUserTree.id;
@@ -502,45 +524,50 @@ export class SerareaSernumComponent implements OnInit {
     this.revampSerArea.chiefPhone = this.addUserTree.areaCode;
 
   }
+
   // 上行下属性删除
   public upAttributeDelete(i): void {
     this.upAttribute = this.upAttribute.filter((item, index) => {
       return i !== index;
     });
   }
+
   public downAttributeDelete(i): void {
     this.downAttribute = this.upAttribute.filter((item, index) => {
       return i !== index;
     });
   }
+
   /************************数据格式化**************************/
- // 公司数据格式化
+  // 公司数据格式化
   public initializeSelectCompany(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].name;
       childnode.id = data[i].id;
       oneChild.push(childnode);
     }
     return oneChild;
   }
+
   // 组织数据格式化
   public initializeSelectOrg(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new SelectItem();
+      const childnode = new SelectItem();
       childnode.name = data[i].deptName;
       childnode.id = data[i].id;
       oneChild.push(childnode);
     }
     return oneChild;
   }
+
   // 格式区划树
   public initializeTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new TreeNode();
+      const childnode = new TreeNode();
       childnode.label = data[i].areaName;
       childnode.id = data[i].id;
       childnode.areaCode = data[i].areaCode;
@@ -557,16 +584,30 @@ export class SerareaSernumComponent implements OnInit {
     }
     return oneChild;
   }
+
   // 格式化用户树
   public initializeUserTree(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {
-      const childnode =  new TreeNode();
+      const childnode = new TreeNode();
       childnode.label = data[i].realName;
       childnode.id = data[i].id;
       childnode.areaCode = data[i].telNumber;
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.serareaService.searchSerAraList({page:this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        this.serAreas = value.data.contents;
+        console.log(value);
+      }
+    );
   }
 }

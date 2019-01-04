@@ -25,11 +25,11 @@ export class DictService {
   }
   // 修改
   public modifyDictItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/dictionary/update`, params);
+    return this.http.post(`${this.globalService.urls}/dictionary/update`, params);
   }
   // 查询
   public searchDictList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/dictionary/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/dictionary/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*****************************字典词条**************************/
@@ -47,11 +47,11 @@ export class DictService {
   }
   // 修改
   public modifyDictWordItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/dictionaryEntry/update`, params);
+    return this.http.post(`${this.globalService.urls}/dictionaryEntry/update`, params);
   }
   // 查询
   public searchDictWordList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/dictionaryEntry/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/dictionaryEntry/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 指定查询
   public searchDictWordItem(item): Observable<any> {

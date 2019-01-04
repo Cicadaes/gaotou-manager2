@@ -25,7 +25,9 @@ export class WifiComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
-
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean;
   public modifyWifi: ModifyWifi = new ModifyWifi();
@@ -52,9 +54,10 @@ export class WifiComponent implements OnInit {
   }
 
   public updateWifiDate(): void {
-    this.wifiService.searchList({page: 1, nums: 1000}).subscribe(
+    this.wifiService.searchList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value.data.contents);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.wifis = value.data.contents;
       }
     );
@@ -473,5 +476,18 @@ export class WifiComponent implements OnInit {
       }
     }
     return oneChild;
+  }
+
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.wifiService.searchList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value.data.contents);
+        this.wifis = value.data.contents;
+      }
+    );
   }
 }

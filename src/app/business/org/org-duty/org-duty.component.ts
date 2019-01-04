@@ -22,6 +22,9 @@ export class OrgDutyComponent implements OnInit {
   public addCompanySelect: SelectItem[]; // 公司列表
   public addDepSelect: SelectItem[]; // 部门列表
   public addDepTopDutySelect: SelectItem[]; // 上级职务
+  // 分页相关
+  public option: any;
+  public nowPage: any;
   // 修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDuty: ModifyDuty = new ModifyDuty();
@@ -53,15 +56,11 @@ export class OrgDutyComponent implements OnInit {
   }
 
   public updateDutyDate(): void {
-    /* this.orgService.searchDepartList({page: 1, nums: 100}).subscribe(
-       (val) => {
-         this.orgs = val.data.contents;
-       }
-     );*/
-    this.orgService.searchDutyList({page: 1, nums: 100}).subscribe(
+    this.orgService.searchDutyList({page: 1, nums: 14}).subscribe(
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize};
       }
     );
   }
@@ -344,7 +343,7 @@ export class OrgDutyComponent implements OnInit {
                 clearTimeout(this.cleanTimer);
               }
               this.msgs = [];
-              this.selectedDuties=undefined;
+              this.selectedDuties = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
               this.updateDutyDate();
               this.cleanTimer = setTimeout(() => {
@@ -462,5 +461,18 @@ export class OrgDutyComponent implements OnInit {
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.orgService.searchDutyList({page: this.nowPage, nums: 14}).subscribe(
+      (val) => {
+        console.log(val);
+        this.duties = val.data.contents;
+        // this.option = {total: val.data.totalRecord, row: val.data.pageSize};
+      }
+    );
   }
 }

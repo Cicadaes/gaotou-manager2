@@ -24,12 +24,12 @@ export class AreaService {
   }
    // 修改接口
   public modifyItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/administrativeArea/update`, params);
+    return this.http.post(`${this.globalService.urls}/administrativeArea/update`, params);
   }
   // 分页查询
   public searchList(num, body): Observable<any> {
     return this.http.post(
-      `${this.globalService.url}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, body);
+      `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, body);
   }
   // 单条查询
   public searchItem(id): Observable<any> {

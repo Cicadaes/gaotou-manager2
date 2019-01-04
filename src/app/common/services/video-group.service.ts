@@ -26,12 +26,12 @@ export class VideoGroupService {
   }
   // 修改
   public modifyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/cameraGroup/update`, params);
+    return this.http.post(`${this.globalService.urls}/cameraGroup/update`, params);
   }
   // 查询
   public searchList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.url}/cameraGroup/queryByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.urls}/cameraGroup/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {

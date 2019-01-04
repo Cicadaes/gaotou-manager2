@@ -2,7 +2,6 @@ export class Area {
   data?: any;
   children?: Area[];
 }
-
 /*export class AddTreeArea {
   id?: number;
   label?: string;

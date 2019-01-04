@@ -16,6 +16,7 @@ import {
   ProgressSpinnerModule, RadioButtonModule, ScrollPanelModule, TreeModule, TreeTableModule
 } from 'primeng/primeng';
 import { StoreService } from '../../common/services/store.service';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { StoreService } from '../../common/services/store.service';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [StoreComponent],
   providers: [StoreService, MessageService, ConfirmationService, DatePipe]

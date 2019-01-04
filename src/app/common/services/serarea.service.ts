@@ -31,7 +31,7 @@ export class SerareaService {
   }
   // 查询
   public searchSaFieldTypeList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/serviceArea/attributeCategory/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/serviceArea/attributeCategory/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*****************************字段管理**************************/
@@ -49,11 +49,11 @@ export class SerareaService {
   }
   // 修改
   public modifySaFieldItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/serviceArea/attribute/update`, params);
+    return this.http.post(`${this.globalService.urls}/serviceArea/attribute/update`, params);
   }
   // 查询
   public searchSaFieldList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/serviceArea/attribute/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/serviceArea/attribute/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*****************************服务区**************************/
@@ -71,15 +71,15 @@ export class SerareaService {
   }
   // 修改
   public modifySerAraItem(item): Observable<any> {
-    return this.http.post(`${this.globalService.url}/serviceArea/update`, item);
+    return this.http.post(`${this.globalService.urls}/serviceArea/update`, item);
   }
   // 单个id指定查询
   public searchSerAraListItem(params): Observable<any> {
-    return this.http.get(`${this.globalService.url}/serviceArea/queryById/${params.id}`);
+    return this.http.get(`${this.globalService.urls}/serviceArea/queryById/${params.id}`);
   }
   // 查询
   public searchSerAraList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/serviceArea/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/serviceArea/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*************************数据联动查询*******************************/

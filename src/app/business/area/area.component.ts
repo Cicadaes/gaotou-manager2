@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AreaService} from '../../common/services/area.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -24,6 +24,9 @@ export class AreaComponent implements OnInit {
   public addAreaTrees: AddTreeArea[];
   public addAreaTree: AddTreeArea;
   public addAreaTreeSelect = [];
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 提示弹窗相关
   public areaDialog: boolean; // 区域弹窗
   public msgs: Message[] = []; // 消息弹窗
@@ -45,14 +48,15 @@ export class AreaComponent implements OnInit {
       {field: 'id', header: '区域ID'},
       {field: 'idt', header: '添加时间'},
     ];
-    this.updateAreaDate();
+    this.updateAreaDate(1);
+    // console.log(this.option)
   }
 
   // 获取生效的服务区
-  public updateAreaDate(): void {
-    this.areaService.searchList({page: '1', nums: '100'}, {}).subscribe(
+  public updateAreaDate(page): void {
+    this.areaService.searchList({page: page, nums: 14}, {}).subscribe(
       (value) => {
-        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.areas = this.tableTreeInitialize(value.data.contents);
       }
     );
@@ -61,8 +65,9 @@ export class AreaComponent implements OnInit {
 
   // 选中后赋值
   public onNodeSelect(event): void {
-    console.log(event.data);
-    this.area = this.cloneCar(event.data);
+    console.log(event.node.data);
+    this.area = this.cloneCar(event.node.data);
+
   }
 
   // 遍历修改后的数据，并把它赋值给car1
@@ -95,7 +100,7 @@ export class AreaComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.msg});
-              this.updateAreaDate();
+              this.updateAreaDate(1);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -165,7 +170,7 @@ export class AreaComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateAreaDate();
+                  this.updateAreaDate(1);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -209,7 +214,7 @@ export class AreaComponent implements OnInit {
                   }
                   this.msgs = [];
                   this.selectAreas = undefined;
-                  this.updateAreaDate();
+                  this.updateAreaDate(1);
                   this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.msg});
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
@@ -357,5 +362,18 @@ export class AreaComponent implements OnInit {
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+
+
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.areaService.searchList({page: this.nowPage, nums: 14}, {}).subscribe(
+      (value) => {
+        this.areas = this.tableTreeInitialize(value.data.contents);
+      }
+    );
   }
 }

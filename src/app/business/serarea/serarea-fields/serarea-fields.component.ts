@@ -16,6 +16,9 @@ export class SerareaFieldsComponent implements OnInit {
   public cols: any[]; // 表头
   public field: any; // 接收选中的值
   public selectedfields: Field[]; // 多个选择
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addField: AddField = new AddField();
@@ -52,9 +55,10 @@ export class SerareaFieldsComponent implements OnInit {
   }
 
   public uploadFieldData(): void {
-    this.serareaService.searchSaFieldList({page: 1, nums: 100}).subscribe(
+    this.serareaService.searchSaFieldList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.fields = value.data.contents;
       }
     );
@@ -379,5 +383,16 @@ export class SerareaFieldsComponent implements OnInit {
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.serareaService.searchSaFieldList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value);
+        this.fields = value.data.contents;
+      }
+    );
   }
 }

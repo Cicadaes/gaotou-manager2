@@ -16,6 +16,7 @@ import {
 } from 'primeng/primeng';
 import {ApplyService } from '../../common/services/apply.service';
 import {SharedModule} from '../../common/shared.module';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import {SharedModule} from '../../common/shared.module';
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [ApplyComponent],
   providers: [ApplyService, MessageService, ConfirmationService]

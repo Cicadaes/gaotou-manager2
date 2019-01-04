@@ -28,6 +28,10 @@ export class OrgCompanyComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
   public modifyCompany: modifydCompany = new modifydCompany();
+
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -48,13 +52,14 @@ export class OrgCompanyComponent implements OnInit {
       {field: 'address', header: '公司地址'},
       {field: 'idt', header: '创建时间'},
     ];
-    this.updateCompanyDate();
+    this.updateCompanyDate(1);
   }
 
-  public updateCompanyDate(): void {
-    this.orgService.searchCompanyList({page: 1, nums: 100}).subscribe(
+  public updateCompanyDate(page): void {
+    this.orgService.searchCompanyList({page: page, nums: 14}).subscribe(
       (value) => {
         this.companies = value.data.contents;
+        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
         console.log(value);
       }
     );
@@ -83,7 +88,7 @@ export class OrgCompanyComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateCompanyDate();
+              this.updateCompanyDate(1);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -166,7 +171,7 @@ export class OrgCompanyComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateCompanyDate();
+                    this.updateCompanyDate(1);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -215,7 +220,7 @@ export class OrgCompanyComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedcompanies = undefined;
-                    this.updateCompanyDate();
+                    this.updateCompanyDate(1);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -289,7 +294,7 @@ export class OrgCompanyComponent implements OnInit {
       this.modifyCompany.pid = this.selectedcompanies[0].pid;
       this.modifyCompany.idt = this.selectedcompanies[0].idt;
       this.modifyCompany.id = this.selectedcompanies[0].id;
-    }else {
+    } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
       }
@@ -302,7 +307,7 @@ export class OrgCompanyComponent implements OnInit {
   }
 
   // 修改确认
-  public modifySure(): void{
+  public modifySure(): void {
     console.log(this.modifyCompany);
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
@@ -321,7 +326,7 @@ export class OrgCompanyComponent implements OnInit {
               this.selectedcompanies = undefined;
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateCompanyDate();
+              this.updateCompanyDate(1);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -408,4 +413,16 @@ export class OrgCompanyComponent implements OnInit {
     return oneChild;
   }
 
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.orgService.searchCompanyList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        this.companies = value.data.contents;
+        console.log(value);
+      }
+    );
+  }
 }

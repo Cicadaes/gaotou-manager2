@@ -21,6 +21,9 @@ import {
   TreeModule,
   TreeTableModule
 } from 'primeng/primeng';
+import {OrgCompanyComponent} from '../org/org-company/org-company.component';
+import {PagingComponent} from '../../common/components/paging/paging.component';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 
 @NgModule({
@@ -41,7 +44,8 @@ import {
     ScrollPanelModule,
     DropdownModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    PagingModule
   ],
   declarations: [
     LimitComponent,

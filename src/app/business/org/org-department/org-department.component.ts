@@ -23,6 +23,9 @@ export class OrgDepartmentComponent implements OnInit {
   public addCompanySelect: SelectItem[]; // 公司列表
   public addOrgSelect: SelectItem[]; // 部门列表
 
+  //分页相关
+  public nowPage: any;
+  public option: any;
   //修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDepartment: ModifyDepartment = new ModifyDepartment();
@@ -63,14 +66,17 @@ export class OrgDepartmentComponent implements OnInit {
   }
 
   public updateOrgDate(): void {
-    this.orgService.searchDepartList({page: 1, nums: 100}).subscribe(
+    this.orgService.searchDepartList({page: 1, nums: 14}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
+        this.option = {total:val.data.totalRecord,row:val.data.pageSize}
+
       }
     );
     this.orgService.searchCompanyList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addCompanySelect = this.initializeSelectCompany(val.data.contents);
+
       }
     );
   }
@@ -407,4 +413,14 @@ export class OrgDepartmentComponent implements OnInit {
     return oneChild;
   }
 
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.orgService.searchDepartList({page:this.nowPage, nums: 14}).subscribe(
+      (val) => {
+        this.orgs = val.data.contents;
+      }
+    );
+  }
 }

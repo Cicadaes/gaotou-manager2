@@ -15,6 +15,7 @@ import {
 } from 'primeng/primeng';
 import { VideoGroupService } from '../../common/services/video-group.service';
 import {SharedModule} from '../../common/shared.module';
+import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import {SharedModule} from '../../common/shared.module';
     MessagesModule,
     ScrollPanelModule,
     DropdownModule,
-    RadioButtonModule
+    RadioButtonModule,
+    PagingModule
   ],
   declarations: [VideoGroupComponent],
   providers: [VideoGroupService, MessageService, ConfirmationService]

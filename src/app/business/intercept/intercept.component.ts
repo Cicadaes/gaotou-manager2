@@ -25,7 +25,9 @@ export class InterceptComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
-
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean;//增加弹窗显示控制
   public modifyIntercept: ModifyIntercept = new ModifyIntercept();//增加弹窗显示控制
@@ -52,9 +54,10 @@ export class InterceptComponent implements OnInit {
   }
 
   public updateInterceptDate(): void {
-    this.interceptService.searchList({page: 1, nums: 1000, bayonetType: '2'}).subscribe(
+    this.interceptService.searchList({page: 1, nums: 14, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.intercepts = value.data.contents;
       }
     );
@@ -480,5 +483,18 @@ export class InterceptComponent implements OnInit {
       }
     }
     return oneChild;
+  }
+
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.interceptService.searchList({page: this.nowPage, nums: 14, bayonetType: '2'}).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.intercepts = value.data.contents;
+      }
+    );
   }
 }

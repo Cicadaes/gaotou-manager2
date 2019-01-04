@@ -26,11 +26,11 @@ export class VideomService {
   }
   // 修改
   public modifyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/camera/update`, params);
+    return this.http.post(`${this.globalService.urls}/camera/update`, params);
   }
   // 查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/camera/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/camera/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {

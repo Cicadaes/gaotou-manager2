@@ -27,11 +27,11 @@ export class UserService {
   }
   // 删除多个
   public modifyUser(params): Observable<any> {
-    return this.http.post(`${this.globalService.url}/user/update`, params);
+    return this.http.post(`${this.globalService.urls}/user/update`, params);
   }
   // 分页查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.url}/user/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/user/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*************************数据联动查询*******************************/

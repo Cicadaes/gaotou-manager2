@@ -26,7 +26,9 @@ export class VideomComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: SelectItem[]; // 店铺列表
   public videoGroupList: SelectItem[]; // 分组列表
-
+  //分页相关
+  public nowPage: any;
+  public option: any;
   // 修改相关
   public modifyDialog: boolean; //修改弹窗显示
   public modifyVideo: ModifyVideo = new ModifyVideo();
@@ -53,9 +55,10 @@ export class VideomComponent implements OnInit {
   }
 
   public updateVideoData(): void {
-    this.videomService.searchList({page: 1, nums: 100}).subscribe(
+    this.videomService.searchList({page: 1, nums: 14}).subscribe(
       (value) => {
         console.log(value.data.contents);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videos = value.data.contents;
       }
     );
@@ -519,5 +522,17 @@ export class VideomComponent implements OnInit {
       oneChild.push(childnode);
     }
     return oneChild;
+  }
+  //分页查询
+  public nowpageEventHandle(event: any) {
+    this.nowPage = event;
+    console.log('我是父组件');
+    console.log(this.nowPage);
+    this.videomService.searchList({page: this.nowPage, nums: 14}).subscribe(
+      (value) => {
+        console.log(value.data.contents);
+        this.videos = value.data.contents;
+      }
+    );
   }
 }
