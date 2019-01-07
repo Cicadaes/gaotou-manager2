@@ -24,11 +24,11 @@ export class VideoGroupComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
-  //分页相关
+  // 分页相关
   public nowPage: any;
   public option: any;
-  //修改相关
-  public modifyDialog: boolean; //添加弹窗显示控制
+  // 修改相关
+  public modifyDialog: boolean; // 添加弹窗显示控制
   public modifyVideoGroup: ModifyVideoGroup = new ModifyVideoGroup();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟

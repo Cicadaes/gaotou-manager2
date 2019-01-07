@@ -27,7 +27,7 @@ export class CashComponent implements OnInit {
   public addServicesAreaTrees: AddTreeArea[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: AddTreeArea[]; // 店铺列表
-  //分页相关
+  // 分页相关
   public nowPage: any;
   public option: any;
   // 修改相关

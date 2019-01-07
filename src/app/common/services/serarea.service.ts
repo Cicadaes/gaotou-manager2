@@ -29,7 +29,7 @@ export class SerareaService {
   public modifySaFieldTypeItem(params): Observable<any> {
     return this.http.post(`${this.globalService.urls}/serviceArea/attributeCategory/update`, params);
   }
-  // 查询
+  // 查询s
   public searchSaFieldTypeList(num): Observable<any> {
     return this.http.post(`${this.globalService.urls}/serviceArea/attributeCategory/queryByPaging/${num.page}/${num.nums}`, {});
   }
