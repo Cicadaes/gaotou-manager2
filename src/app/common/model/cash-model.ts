@@ -2,13 +2,17 @@
 export class Cash {
   administrativeAreaId?: number;
   cashRegisterCode?: string;
+  serviceAreaName?: string;
   enabled?: boolean;
   idt?: string;
+  administrativeAreaName?: string;
   saOrientationId?: number;
   serviceAreaId?: number;
   storeId?: number;
   udt?: any;
   id?: number;
+  orientationFlag: number;
+  storeName?: string;
 }
 
 // 添加泛型
@@ -17,15 +21,18 @@ export class AddCashProvince {
   administrativeAreaName?: string;
   level?: string;
 }
+
 export class AddCashCity {
   administrativeAreaId?: number;
   administrativeAreaName?: string;
   level?: string;
 }
+
 export class AddCashServiceArea {
   serviceAreaId?: number;
-  serviceName?: string;
+  serviceAreaName?: string;
 }
+
 export class AddCashSaOrientation {
   destination?: string;
   flag?: string;
@@ -33,11 +40,13 @@ export class AddCashSaOrientation {
   orientaionId?: number;
   source?: string;
 }
+
 export class AddCashStore {
   categoryCode?: string;
   storeId?: number;
   storeName?: string;
 }
+
 export class AddCash {
   // 区划
   province: AddCashProvince = new AddCashProvince();
@@ -47,11 +56,12 @@ export class AddCash {
   // 上下行
   saOrientation: AddCashSaOrientation = new AddCashSaOrientation();
   // 店铺
-  store: AddCashStore =  new AddCashStore();
+  store: AddCashStore = new AddCashStore();
   cashRegisterCode: string; // 收银机编号
   idt?: string; // 创建时间
   udt?: any; // 修改时间
 }
+
 export class ModifyCash {
   // 区划
   province: AddCashProvince = new AddCashProvince();
@@ -61,11 +71,12 @@ export class ModifyCash {
   // 上下行
   saOrientation: AddCashSaOrientation = new AddCashSaOrientation();
   // 店铺
-  store: AddCashStore =  new AddCashStore();
+  store: AddCashStore = new AddCashStore();
   cashRegisterCode: string; // 收银机编号
   idt?: string; // 创建时间
   id?: number;
 }
+
 // 上下行方向泛型
 export class HighSpeedDirection {
   label?: string;
@@ -89,6 +100,7 @@ export class HighSpeedDirection {
   source?: string;
   categoryCode?: string;
 }*/
+
 // 区域树泛型
 export class TreeNode {
   id?: number;

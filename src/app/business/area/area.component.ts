@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {AreaService} from '../../common/services/area.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -9,7 +9,8 @@ import {AddTreeArea} from '../../common/model/shared-model';
 @Component({
   selector: 'app-area',
   templateUrl: './area.component.html',
-  styleUrls: ['./area.component.css']
+  styleUrls: ['./area.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class AreaComponent implements OnInit {
@@ -54,7 +55,7 @@ export class AreaComponent implements OnInit {
 
   // 获取生效的服务区
   public updateAreaDate(page): void {
-    this.areaService.searchList({page: page, nums: 14}, {}).subscribe(
+    this.areaService.searchList({page: page, nums: 10}, {}).subscribe(
       (value) => {
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.areas = this.tableTreeInitialize(value.data.contents);
@@ -370,7 +371,7 @@ export class AreaComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.areaService.searchList({page: this.nowPage, nums: 14}, {}).subscribe(
+    this.areaService.searchList({page: this.nowPage, nums: 10}, {}).subscribe(
       (value) => {
         this.areas = this.tableTreeInitialize(value.data.contents);
       }

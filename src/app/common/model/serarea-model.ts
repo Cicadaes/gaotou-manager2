@@ -131,7 +131,7 @@ export class ModifySerarea {
 
 // 上下行属性
 export class AddUpDownAttribute {
-  source: string; // 起始点
+  source?: string; // 起始点
   destination: string; // 终点
   flag: string; // 上下行标识
   flagName: string; // 上下行

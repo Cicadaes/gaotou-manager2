@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {CashService} from '../../common/services/cash.service';
 import {GlobalService} from '../../common/services/global.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -8,7 +8,8 @@ import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
 @Component({
   selector: 'app-cash',
   templateUrl: './cash.component.html',
-  styleUrls: ['./cash.component.css']
+  styleUrls: ['./cash.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CashComponent implements OnInit {
   // table显示相关
@@ -32,6 +33,7 @@ export class CashComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
   public modifyCash: ModifyCash = new ModifyCash();
+  public modifyhighsdData: any;
   // public modifyDialog: boolean; // 修改弹窗显示控制
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
@@ -47,16 +49,19 @@ export class CashComponent implements OnInit {
   ngOnInit() {
     this.cols = [
       {field: 'administrativeAreaId', header: '区划ID'},
+      {field: 'administrativeAreaName', header: '区划名称'},
       {field: 'serviceAreaId', header: '服务区ID'},
+      {field: 'serviceAreaName', header: '服务区名称'},
       {field: 'storeId', header: '店铺ID'},
+      {field: 'storeName', header: '店铺名称'},
       {field: 'cashRegisterCode', header: '收银机编号'},
-      {field: 'idt', header: '添加时间'}
+      {field: 'idt', header: '添加时间'},
     ];
     this.updateCashDate();
   }
 
   public updateCashDate(): void {
-    this.cashService.searchList({page: 1, nums: 14}).subscribe(
+    this.cashService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.cashs = value.data.contents;
@@ -283,6 +288,11 @@ export class CashComponent implements OnInit {
       this.modifyCash.cashRegisterCode = this.selectedCashs[0].cashRegisterCode;
       this.modifyCash.id = this.selectedCashs[0].id;
       this.modifyCash.idt = this.selectedCashs[0].idt;
+      this.modifyCash.province.administrativeAreaName = this.selectedCashs[0].administrativeAreaName;
+      this.modifyCash.serviceArea.serviceAreaName = this.selectedCashs[0].serviceAreaName;
+      this.modifyCash.store.storeName = this.selectedCashs[0].storeName
+      this.modifyhighsdData = this.selectedCashs[0].orientationFlag===2?'遵义-贵阳':'贵阳-遵义';
+      console.log(this.modifyCash.serviceArea.serviceAreaName);
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -294,7 +304,6 @@ export class CashComponent implements OnInit {
       }, 3000);
     }
   }
-
   //修改确认
   public modifySure(): void {
     this.confirmationService.confirm({
@@ -351,15 +360,17 @@ export class CashComponent implements OnInit {
       reject: () => {
       }
     });
-
+    // console.log(this.modifyCash.serviceArea.serviceAreaName);
+    // console.log(this.modifyCash.province.administrativeAreaName);
   }
 
   public clearDown(): void {
-      this.addAreaTree.label = null;
-      this.addServicesAreaTrees = null;
-      this.highsdData = null;
-      this.storeList = null;
+    this.addAreaTree.label = null;
+    this.addServicesAreaTrees = null;
+    this.highsdData = null;
+    this.storeList = null;
   }
+
   // onHide(e):void{
   //   console.log(123);
   // }
@@ -472,6 +483,7 @@ export class CashComponent implements OnInit {
       this.modifyCash.city.administrativeAreaId = this.addAreaTree.parent.id;
       this.modifyCash.city.administrativeAreaName = this.addAreaTree.parent.label;
       this.modifyCash.city.level = this.addAreaTree.parent.level;
+
       this.areaDialog = false;
       this.cashService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -491,9 +503,9 @@ export class CashComponent implements OnInit {
   public serviceChange(e): void {
     this.servicesAreaDialog = false;
     this.addCash.serviceArea.serviceAreaId = e.value.id;
-    this.addCash.serviceArea.serviceName = e.value.name;
+    this.addCash.serviceArea.serviceAreaName = e.value.name;
     this.modifyCash.serviceArea.serviceAreaId = e.value.id;
-    this.modifyCash.serviceArea.serviceName = e.value.name;
+    this.modifyCash.serviceArea.serviceAreaName = e.value.name;
     this.cashService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -597,12 +609,13 @@ export class CashComponent implements OnInit {
     }
     return oneChild;
   }
+
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.cashService.searchList({page: this.nowPage, nums: 14}).subscribe(
+    this.cashService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         this.cashs = value.data.contents;
       }
