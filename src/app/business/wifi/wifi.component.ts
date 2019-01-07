@@ -31,6 +31,7 @@ export class WifiComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean;
   public modifyWifi: ModifyWifi = new ModifyWifi();
+  public modifyhighsdData = null;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -54,7 +55,7 @@ export class WifiComponent implements OnInit {
   }
 
   public updateWifiDate(): void {
-    this.wifiService.searchList({page: 1, nums: 14}).subscribe(
+    this.wifiService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.contents);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -66,6 +67,10 @@ export class WifiComponent implements OnInit {
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
+    this.modifyhighsdData = null;
+    this.modifyWifi.province.administrativeAreaName = null;
+    this.addServicesAreas = null;
+    this.modifyWifi.serviceArea.serviceAreaName = null;
     this.wifi = this.cloneCar(event.data);
   }
 
@@ -272,6 +277,12 @@ export class WifiComponent implements OnInit {
       }, 3000);
     } else if (this.selectedwifis.length === 1) {
       this.modifyDialog = true;
+      // this.wifiService.QuryHighDirection(this.selectedwifis[0].orientationFlag).subscribe(
+      //   (value) => {
+      //     console.log(value);
+      //     this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+      //   }
+      // );
       this.modifyWifi.deviceCode = this.selectedwifis[0].deviceCode;
       this.modifyWifi.id = this.selectedwifis[0].id;
       this.modifyWifi.idt = this.selectedwifis[0].idt;
@@ -382,6 +393,7 @@ export class WifiComponent implements OnInit {
       this.modifyWifi.city.administrativeAreaName = this.addAreaTree.parent.label;
       this.modifyWifi.city.level = this.addAreaTree.parent.level;
       this.areaDialog = false;
+      this.modifyWifi.serviceArea.serviceAreaName = '请选择服务区';
       this.wifiService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
           this.addServicesAreas = this.initializeServiceArea(value.data);
@@ -402,6 +414,7 @@ export class WifiComponent implements OnInit {
     this.addWifi.serviceArea.serviceAreaName = e.value.name;
     this.modifyWifi.serviceArea.serviceAreaId = e.value.id;
     this.modifyWifi.serviceArea.serviceAreaName = e.value.name;
+    this.modifyhighsdData = '请选择高速方向';
     this.wifiService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -483,11 +496,12 @@ export class WifiComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.wifiService.searchList({page: this.nowPage, nums: 14}).subscribe(
+    this.wifiService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.contents);
         this.wifis = value.data.contents;
       }
     );
+    this.selectedwifis = null;
   }
 }

@@ -46,4 +46,9 @@ export class InterceptService {
   public searchHighDirection(id): Observable<any> {
     return this.http.get(`${this.globalService.urls}/serviceArea/orientation/queryByServiceAreaId/${id}`);
   }
+  // 根据服务区方向查询店铺
+  public QuryHighDirection(id): Observable<any> {
+    return this.http.get(
+      `${this.globalService.urls}/serviceArea/orientation/queryById/${id}`);
+  }
 }

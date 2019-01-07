@@ -1,15 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {AddSerarea, ModifySerarea, Serarea} from '../../../common/model/serarea-model';
 import {AddTreeArea, SelectItem} from '../../../common/model/shared-model';
 import {TreeNode} from '../../../common/model/cash-model';
+import {e} from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-serarea-sernum',
   templateUrl: './serarea-sernum.component.html',
-  styleUrls: ['./serarea-sernum.component.css']
+  styleUrls: ['./serarea-sernum.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class SerareaSernumComponent implements OnInit {
   // table显示相关
@@ -95,7 +98,7 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   public updateApplyListData(): void {
-    this.serareaService.searchSerAraList({page: 1, nums: 14}).subscribe(
+    this.serareaService.searchSerAraList({page: 1, nums: 10}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -107,6 +110,7 @@ export class SerareaSernumComponent implements OnInit {
   // 选中后赋值
   public onRowSelect(event): void {
     this.serArea = this.cloneCar(event.data);
+    console.log(event.data);
   }
 
   // 遍历修改后的数据，并把它赋值给car1
@@ -347,7 +351,7 @@ export class SerareaSernumComponent implements OnInit {
             this.revampSerArea.downAttributeValues = val.data.downAttributeValues;
             this.revampSerArea.upAttributeValues.attributeValues = val.data.upAttributeValues.attributeValues;
             this.revampSerArea.downAttributeValues.attributeValues = val.data.downAttributeValues.attributeValues;
-
+            this.revampSerArea.createUserName = this.selectedSerAreas[0].createUserName;
             if (this.revampSerArea.upAttributeValues.attributeValues.length === 0) {
               this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
             }
@@ -603,11 +607,12 @@ export class SerareaSernumComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.serareaService.searchSerAraList({page:this.nowPage, nums: 14}).subscribe(
+    this.serareaService.searchSerAraList({page:this.nowPage, nums: 10}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
         console.log(value);
       }
     );
+    this.selectedSerAreas =null;
   }
 }

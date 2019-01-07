@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddStore, ModifyStore, Store} from '../../common/model/store-model';
 import {StoreService} from '../../common/services/store.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -9,7 +9,9 @@ import {DatePipe} from '@angular/common';
 @Component({
   selector: 'app-store',
   templateUrl: './store.component.html',
-  styleUrls: ['./store.component.css']
+  styleUrls: ['./store.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class StoreComponent implements OnInit {
   // table显示相关
@@ -64,7 +66,7 @@ export class StoreComponent implements OnInit {
   }
 
   public updateCashDate(): void {
-    this.storeService.searchList({page: 1, nums: 14}).subscribe(
+    this.storeService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -377,6 +379,7 @@ export class StoreComponent implements OnInit {
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
+    this.modifyStore.serviceAreaName = '请选择服务区';
     this.storeService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
@@ -518,11 +521,12 @@ export class StoreComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.storeService.searchList({page: this.nowPage, nums: 14}).subscribe(
+    this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.stores = value.data.contents;
       }
     );
+    this.selectedstores = null;
   }
 }

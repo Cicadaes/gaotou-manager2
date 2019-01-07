@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddIntercept, Intercept, ModifyIntercept} from '../../common/model/intercept-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -9,7 +9,8 @@ import {TreeNode} from '../../common/model/cash-model';
 @Component({
   selector: 'app-intercept',
   templateUrl: './intercept.component.html',
-  styleUrls: ['./intercept.component.css']
+  styleUrls: ['./intercept.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class InterceptComponent implements OnInit {
   // table显示相关
@@ -31,6 +32,7 @@ export class InterceptComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean;//增加弹窗显示控制
   public modifyIntercept: ModifyIntercept = new ModifyIntercept();//增加弹窗显示控制
+  public modifyhighsdData: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -54,7 +56,7 @@ export class InterceptComponent implements OnInit {
   }
 
   public updateInterceptDate(): void {
-    this.interceptService.searchList({page: 1, nums: 14, bayonetType: '2'}).subscribe(
+    this.interceptService.searchList({page: 1, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -66,6 +68,10 @@ export class InterceptComponent implements OnInit {
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
+    this.modifyhighsdData = null;
+    this.modifyIntercept.province.administrativeAreaName = null;
+    this.modifyIntercept.serviceArea.serviceAreaName = null;
+    this.addServicesAreas = null;
     this.intercept = this.cloneCar(event.data);
   }
 
@@ -272,6 +278,12 @@ export class InterceptComponent implements OnInit {
       }, 3000);
     } else if (this.selectedintercepts.length === 1) {
       this.modifyDialog = true;
+      this.interceptService.QuryHighDirection(this.selectedintercepts[0].orientationFlag).subscribe(
+        (value) => {
+          console.log(value);
+          this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+        }
+      );
       this.modifyIntercept.bayonetCode = this.selectedintercepts[0].bayonetCode;
       this.modifyIntercept.bayonetName = this.selectedintercepts[0].bayonetName;
       this.modifyIntercept.bayonetType = this.selectedintercepts[0].bayonetType;
@@ -355,6 +367,7 @@ export class InterceptComponent implements OnInit {
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
+    this.modifyIntercept.serviceArea.serviceAreaName = '请选择服务区';
     this.interceptService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
@@ -371,19 +384,19 @@ export class InterceptComponent implements OnInit {
   public treeSelectAreaClick(): void {
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
-      this.addIntercept.province.administrativeAreaId = this.addAreaTree.id;
-      this.addIntercept.province.administrativeAreaName = this.addAreaTree.label;
-      this.addIntercept.province.level = this.addAreaTree.level;
-      this.addIntercept.city.administrativeAreaId = this.addAreaTree.parent.id;
-      this.addIntercept.city.administrativeAreaName = this.addAreaTree.parent.label;
-      this.addIntercept.city.level = this.addAreaTree.parent.level;
+      this.addIntercept.city.administrativeAreaId = this.addAreaTree.id;
+      this.addIntercept.city.administrativeAreaName = this.addAreaTree.label;
+      this.addIntercept.city.level = this.addAreaTree.level;
+      this.addIntercept.province.administrativeAreaId = this.addAreaTree.parent.id;
+      this.addIntercept.province.administrativeAreaName = this.addAreaTree.parent.label;
+      this.addIntercept.province.level = this.addAreaTree.parent.level;
 
-      this.modifyIntercept.province.administrativeAreaId = this.addAreaTree.id;
-      this.modifyIntercept.province.administrativeAreaName = this.addAreaTree.label;
-      this.modifyIntercept.province.level = this.addAreaTree.level;
-      this.modifyIntercept.city.administrativeAreaId = this.addAreaTree.parent.id;
-      this.modifyIntercept.city.administrativeAreaName = this.addAreaTree.parent.label;
-      this.modifyIntercept.city.level = this.addAreaTree.parent.level;
+      this.modifyIntercept.city.administrativeAreaId = this.addAreaTree.id;
+      this.modifyIntercept.city.administrativeAreaName = this.addAreaTree.label;
+      this.modifyIntercept.city.level = this.addAreaTree.level;
+      this.modifyIntercept.province.administrativeAreaId = this.addAreaTree.parent.id;
+      this.modifyIntercept.province.administrativeAreaName = this.addAreaTree.parent.label;
+      this.modifyIntercept.province.level = this.addAreaTree.parent.level;
       this.areaDialog = false;
       this.interceptService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -409,6 +422,7 @@ export class InterceptComponent implements OnInit {
 
     this.modifyIntercept.serviceArea.serviceAreaId = e.value.id;
     this.modifyIntercept.serviceArea.serviceAreaName = e.value.name;
+    this.modifyhighsdData = '请选择上下行';
     this.interceptService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -489,12 +503,13 @@ export class InterceptComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.interceptService.searchList({page: this.nowPage, nums: 14, bayonetType: '2'}).subscribe(
+    this.interceptService.searchList({page: this.nowPage, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.intercepts = value.data.contents;
       }
     );
+    this.selectedintercepts = null;
   }
 }

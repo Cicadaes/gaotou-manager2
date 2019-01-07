@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {SystemService} from '../../../common/services/system.service';
@@ -7,7 +7,8 @@ import {AddEventType, EventType, ModifyEventType} from '../../../common/model/sy
 @Component({
   selector: 'app-event-type',
   templateUrl: './event-type.component.html',
-  styleUrls: ['./event-type.component.css']
+  styleUrls: ['./event-type.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EventTypeComponent implements OnInit {
   // table显示相关
@@ -46,7 +47,7 @@ export class EventTypeComponent implements OnInit {
   }
 
   public updateEventTypeDate(): void {
-    this.systemService.searchEventTypeList({page: 1, nums: 14}).subscribe(
+    this.systemService.searchEventTypeList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -350,11 +351,12 @@ export class EventTypeComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.systemService.searchEventTypeList({page: this.nowPage, nums: 14}).subscribe(
+    this.systemService.searchEventTypeList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.eventTypes = value.data.contents;
       }
     );
+    this.selecteEventTypes = null;
   }
 }

@@ -13,6 +13,7 @@ export class Cash {
   id?: number;
   orientationFlag: number;
   storeName?: string;
+  level?: string;
 }
 
 // 添加泛型
@@ -30,7 +31,7 @@ export class AddCashCity {
 
 export class AddCashServiceArea {
   serviceAreaId?: number;
-  serviceAreaName?: string;
+  serviceName?: string;
 }
 
 export class AddCashSaOrientation {

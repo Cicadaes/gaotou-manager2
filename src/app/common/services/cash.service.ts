@@ -54,4 +54,9 @@ export class CashService {
     return this.http.get(
       `${this.globalService.urls}/storeInfo/queryByOrientationId/${id}`);
   }
+  // 根据服务区方向查询店铺
+  public QuryHighDirection(id): Observable<any> {
+    return this.http.get(
+      `${this.globalService.urls}/serviceArea/orientation/queryById/${id}`);
+  }
 }

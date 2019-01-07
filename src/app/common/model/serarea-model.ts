@@ -125,6 +125,7 @@ export class ModifySerarea {
   commonAttributeValues: any[]; // 公共属性：经纬度及面积
   upAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
   downAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
+  createUserName: string;
   id?: number;
   idt?: string;
 }

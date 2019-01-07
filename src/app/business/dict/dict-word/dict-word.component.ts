@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DictService} from '../../../common/services/dict.service';
@@ -8,7 +8,9 @@ import {SelectItem} from '../../../common/model/shared-model';
 @Component({
   selector: 'app-dict-word',
   templateUrl: './dict-word.component.html',
-  styleUrls: ['./dict-word.component.css']
+  styleUrls: ['./dict-word.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class DictWordComponent implements OnInit {
   // table显示相关
@@ -56,7 +58,7 @@ export class DictWordComponent implements OnInit {
   }
 
   public updateDictWordsata(): void {
-    this.dictService.searchDictWordList({page: 1, nums: 14}).subscribe(
+    this.dictService.searchDictWordList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option1 = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -391,11 +393,12 @@ export class DictWordComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.dictService.searchDictWordList({page: this.nowPage, nums: 14}).subscribe(
+    this.dictService.searchDictWordList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.dictWords = value.data.contents;
       }
     );
+    this.selectedDictWords = null;
   }
 }

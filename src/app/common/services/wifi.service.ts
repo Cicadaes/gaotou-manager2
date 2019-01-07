@@ -52,4 +52,9 @@ export class WifiService {
   public searchUserList(num): Observable<any> {
     return this.http.post(`${this.globalService.urls}/user/queryByPaging/${num.page}/${num.nums}`, {});
   }
+  // 根据服务区方向查询店铺
+  public QuryHighDirection(id): Observable<any> {
+    return this.http.get(
+      `${this.globalService.urls}/serviceArea/orientation/queryById/${id}`);
+  }
 }

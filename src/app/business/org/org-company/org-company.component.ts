@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddTreeArea, TreeNode} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
@@ -9,7 +9,8 @@ import {AddCompany, Company, modifydCompany} from '../../../common/model/org-mod
 @Component({
   selector: 'app-org-company',
   templateUrl: './org-company.component.html',
-  styleUrls: ['./org-company.component.css']
+  styleUrls: ['./org-company.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OrgCompanyComponent implements OnInit {
 
@@ -56,7 +57,7 @@ export class OrgCompanyComponent implements OnInit {
   }
 
   public updateCompanyDate(page): void {
-    this.orgService.searchCompanyList({page: page, nums: 14}).subscribe(
+    this.orgService.searchCompanyList({page: page, nums: 10}).subscribe(
       (value) => {
         this.companies = value.data.contents;
         this.option = {total:value.data.totalRecord,row:value.data.pageSize};
@@ -67,7 +68,7 @@ export class OrgCompanyComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
-    console.log(event.data);
+    console.log(event);
   }
 
   // 增加
@@ -418,11 +419,12 @@ export class OrgCompanyComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.orgService.searchCompanyList({page: this.nowPage, nums: 14}).subscribe(
+    this.orgService.searchCompanyList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         this.companies = value.data.contents;
         console.log(value);
       }
     );
+    this.selectedcompanies = null;
   }
 }

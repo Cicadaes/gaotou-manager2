@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {LimitService} from '../../../common/services/limit.service';
 import {AddRole, modifyRole, Role} from '../../../common/model/limit-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -7,7 +7,9 @@ import {GlobalService} from '../../../common/services/global.service';
 @Component({
   selector: 'app-limit-role',
   templateUrl: './limit-role.component.html',
-  styleUrls: ['./limit-role.component.css']
+  styleUrls: ['./limit-role.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class LimitRoleComponent implements OnInit {
   // table显示相关
@@ -46,7 +48,7 @@ export class LimitRoleComponent implements OnInit {
   }
 
   public uploadRoleData(): void {
-    this.limitService.searchRoleList({page: 1, nums: 14}).subscribe(
+    this.limitService.searchRoleList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row:value.data.pageSize};
@@ -345,12 +347,13 @@ export class LimitRoleComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.limitService.searchRoleList({page: this.nowPage, nums: 14}).subscribe(
+    this.limitService.searchRoleList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row:value.data.pageSize};
         this.roles = value.data.contents;
       }
     );
+    this.selectedRoles = null;
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddUser, modifyUser, User} from '../../common/model/user-model';
 import {UserService} from '../../common/services/user.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -9,7 +9,8 @@ import {DatePipe} from '@angular/common';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  styleUrls: ['./user.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class UserComponent implements OnInit {
   // table显示相关
@@ -56,7 +57,7 @@ export class UserComponent implements OnInit {
   }
 
   public updateUserDate(): void {
-    this.userService.searchList({page: 1, nums: 15}).subscribe(
+    this.userService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total:value.data.totalRecord,row:value.data.pageSize};
@@ -75,7 +76,7 @@ export class UserComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
-    // console.log(event);
+    console.log(event);
   }
 
   // 增加
@@ -456,7 +457,7 @@ export class UserComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.userService.searchList({page: this.nowPage, nums: 14}).subscribe(
+    this.userService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.users = value.data.contents;
@@ -465,5 +466,6 @@ export class UserComponent implements OnInit {
         });
       }
     );
+    this.selectedUsers = null;
   }
 }

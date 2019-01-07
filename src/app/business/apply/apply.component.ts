@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddApply, Apply, ModifyApply} from '../../common/model/apply-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -8,7 +8,8 @@ import {ApplyService} from '../../common/services/apply.service';
 @Component({
   selector: 'app-apply',
   templateUrl: './apply.component.html',
-  styleUrls: ['./apply.component.css']
+  styleUrls: ['./apply.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ApplyComponent implements OnInit {
   // table显示相关
@@ -47,7 +48,7 @@ export class ApplyComponent implements OnInit {
   }
 
   public updateApplyListData(): void {
-    this.applyService.searchList({page: 1, nums: 14}).subscribe(
+    this.applyService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -355,11 +356,12 @@ export class ApplyComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.applyService.searchList({page: 1, nums: 14}).subscribe(
+    this.applyService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.applies = value.data.contents;
       }
     );
+    this.selectedApplies = null;
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {GlobalService} from '../../../common/services/global.service';
@@ -7,7 +7,9 @@ import {AddFieldType, FieldType, ModifyFieldType} from '../../../common/model/se
 @Component({
   selector: 'app-serarea-fieldtype',
   templateUrl: './serarea-fieldtype.component.html',
-  styleUrls: ['./serarea-fieldtype.component.css']
+  styleUrls: ['./serarea-fieldtype.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class SerareaFieldtypeComponent implements OnInit {
   // table显示相关
@@ -46,7 +48,7 @@ export class SerareaFieldtypeComponent implements OnInit {
   }
 
   public updateFieldTypeData(): void {
-    this.serareaService.searchSaFieldTypeList({page: 1, nums: 14}).subscribe(
+    this.serareaService.searchSaFieldTypeList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -342,12 +344,13 @@ export class SerareaFieldtypeComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.serareaService.searchSaFieldTypeList({page: this.nowPage, nums: 14}).subscribe(
+    this.serareaService.searchSaFieldTypeList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.fieldTypes = value.data.contents;
       }
     );
+    this.selectedfieldTypes = null;
   }
 
 }

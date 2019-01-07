@@ -11,23 +11,25 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="revampClick()">修改</button>
   </div>
-  <!--数据-->
-  <p-table [columns]="cols" [value]="serAreas" selectionMode="multiple" [(selection)]="selectedSerAreas" (onRowSelect)="onRowSelect($event)">
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th *ngFor="let col of columns">
-          {{col.header}}
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr [pSelectableRow]="rowData">
-        <td *ngFor="let col of columns">
-          {{rowData[col.field]}}
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
+    <!--数据-->
+    <p-table [columns]="cols" [value]="serAreas" selectionMode="multiple" [(selection)]="selectedSerAreas" (onRowSelect)="onRowSelect($event)">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+          <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-scrollPanel>
   <!--增加弹框-->
   <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" blockScroll="true" [modal]="true" [width]="900">
     <div class="ui-g ui-fluid">
@@ -176,7 +178,7 @@
           <label for="addorganizationName1">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addorganizationName1" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属公司..."></p-dropdown>
+          <p-dropdown id="addorganizationName1" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.revampSerArea.organizationName"></p-dropdown>
         </div>
       </div>
       <!--所属部门-->
@@ -185,7 +187,7 @@
           <label for="adddeptName1">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="adddeptName1" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+          <p-dropdown id="adddeptName1" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.revampSerArea.deptName"></p-dropdown>
         </div>
       </div>
       <!--区划-->
@@ -203,7 +205,7 @@
           <label for="chiefName1">创建人：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="chiefName1" placeholder="请选择创建人..." (click)="userTreeClick()" [(ngModel)]="addUserTree.label"/>
+          <input pInputText id="chiefName1" placeholder="请选择创建人..." (click)="userTreeClick()" [(ngModel)]="addUserTree.label" ([value])="this.revampSerArea.createUserName"/>
         </div>
       </div>
       <!--创建人电话-->

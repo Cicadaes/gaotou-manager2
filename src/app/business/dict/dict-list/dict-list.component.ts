@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DictService} from '../../../common/services/dict.service';
@@ -7,7 +7,9 @@ import {AddDictList, DictList, ModifyDictList} from '../../../common/model/dict.
 @Component({
   selector: 'app-dict-list',
   templateUrl: './dict-list.component.html',
-  styleUrls: ['./dict-list.component.css']
+  styleUrls: ['./dict-list.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class DictListComponent implements OnInit {
 // table显示相关
@@ -45,7 +47,7 @@ export class DictListComponent implements OnInit {
   }
 
   public updateDictListData(): void {
-    this.dictService.searchDictList({page: 1, nums: 14}).subscribe(
+    this.dictService.searchDictList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -342,11 +344,12 @@ export class DictListComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.dictService.searchDictList({page: this.nowPage, nums: 14}).subscribe(
+    this.dictService.searchDictList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.dictLists = value.data.contents;
       }
     );
+    this.modifyDictList = null;
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
@@ -8,7 +8,8 @@ import {SelectItem} from '../../../common/model/shared-model';
 @Component({
   selector: 'app-org-duty',
   templateUrl: './org-duty.component.html',
-  styleUrls: ['./org-duty.component.css']
+  styleUrls: ['./org-duty.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OrgDutyComponent implements OnInit {
 // table显示相关
@@ -56,7 +57,7 @@ export class OrgDutyComponent implements OnInit {
   }
 
   public updateDutyDate(): void {
-    this.orgService.searchDutyList({page: 1, nums: 14}).subscribe(
+    this.orgService.searchDutyList({page: 1, nums: 10}).subscribe(
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
@@ -323,6 +324,7 @@ export class OrgDutyComponent implements OnInit {
 
   // 修改确认
   public modifySure(): void {
+    console.log(this.modifyDuty);
     if (this.modifyDuty.boss === '1') {
       this.modifyDuty.boss = false;
     } else {
@@ -394,6 +396,7 @@ export class OrgDutyComponent implements OnInit {
     this.addDuty.organizationId = e.value.id;
     this.modifyDuty.organizationName = e.value.name;
     this.modifyDuty.organizationId = e.value.id;
+    this.modifyDuty.deptName = '选择所属部门...';
     this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -414,6 +417,7 @@ export class OrgDutyComponent implements OnInit {
     this.addDuty.deptId = e.value.id;
     this.modifyDuty.deptName = e.value.name;
     this.modifyDuty.deptId = e.value.id;
+    // this.modifyDuty.dutyName = '请选择所属职务...';
     this.orgService.searchCompanyIdDepIdDutyList({companyId: this.addDuty.organizationId, depId: e.value.id}).subscribe(
       (val) => {
         console.log(val);
@@ -467,12 +471,13 @@ export class OrgDutyComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.orgService.searchDutyList({page: this.nowPage, nums: 14}).subscribe(
+    this.orgService.searchDutyList({page: this.nowPage, nums: 10}).subscribe(
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
         // this.option = {total: val.data.totalRecord, row: val.data.pageSize};
       }
     );
+    this.selectedDuties = null;
   }
 }

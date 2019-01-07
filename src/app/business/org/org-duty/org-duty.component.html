@@ -11,23 +11,26 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
-  <!--数据-->
-  <p-table [columns]="cols" [value]="duties" selectionMode="multiple" [(selection)]="selectedDuties" (onRowSelect)="onRowSelect($event)">
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th *ngFor="let col of columns">
-          {{col.header}}
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr [pSelectableRow]="rowData">
-        <td *ngFor="let col of columns">
-          {{rowData[col.field]}}
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <p-scrollPanel [style]="{width: 'auto', height: '50vh'}">
+    <!--数据-->
+    <p-table [columns]="cols" [value]="duties" selectionMode="multiple" [(selection)]="selectedDuties" (onRowSelect)="onRowSelect($event)">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+          <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-scrollPanel>
+
   <!--增加弹框-->
   <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="cleanData()">
     <div class="ui-g ui-fluid">
@@ -113,7 +116,7 @@
     </p-footer>
   </p-dialog>
 
-  <!--增加弹框-->
+  <!--修改弹框-->
   <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="cleanData()">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
@@ -122,7 +125,7 @@
           <label for="addCompany1">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addCompany1" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属公司..."></p-dropdown>
+          <p-dropdown id="addCompany1" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyDuty.organizationName"></p-dropdown>
         </div>
       </div>
       <!--所属部门-->
@@ -131,7 +134,7 @@
           <label for="addDep1">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addDep1" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+          <p-dropdown id="addDep1" [options]="addDepSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyDuty.deptName"></p-dropdown>
         </div>
       </div>
       <!--上级职务-->
@@ -140,7 +143,7 @@
           <label for="addpid1">上级职务：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addpid1" [options]="addDepTopDutySelect" (onChange)="topDutyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+          <p-dropdown id="addpid1" [options]="addDepTopDutySelect" (onChange)="topDutyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyDuty.dutyName"></p-dropdown>
         </div>
       </div>
       <!--职务名称-->

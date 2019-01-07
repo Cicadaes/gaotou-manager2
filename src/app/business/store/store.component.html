@@ -11,29 +11,32 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
   </div>
-  <!--数据-->
-  <p-table [columns]="cols" [value]="stores" selectionMode="multiple" [(selection)]="selectedstores" (onRowSelect)="onRowSelect($event)">
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <!-- <th style="width: 3em">
-           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-         </th>-->
-        <th *ngFor="let col of columns">
-          {{col.header}}
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr [pSelectableRow]="rowData">
-        <!-- <td>
-           <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-         </td>-->
-        <td *ngFor="let col of columns">
-          {{rowData[col.field]}}
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+
+  <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
+    <!--数据-->
+    <p-table [columns]="cols" [value]="stores" selectionMode="multiple" [(selection)]="selectedstores" (onRowSelect)="onRowSelect($event)">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <!-- <th style="width: 3em">
+             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+           </th>-->
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+          <!-- <td>
+             <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+           </td>-->
+          <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-scrollPanel>
   <!--增加弹框-->
   <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
     <div class="ui-g ui-fluid">
@@ -264,7 +267,7 @@
           <label for="modifyserviceAreaId">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyStore.serviceAreaName"></p-dropdown>
         </div>
       </div>
       <!--上下行-->

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddDepartment, Department, ModifyDepartment} from '../../../common/model/org-model';
 import {SelectItem} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -9,7 +9,8 @@ import {e} from '@angular/core/src/render3';
 @Component({
   selector: 'app-department',
   templateUrl: './org-department.component.html',
-  styleUrls: ['./org-department.component.css']
+  styleUrls: ['./org-department.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OrgDepartmentComponent implements OnInit {
 // table显示相关
@@ -29,7 +30,6 @@ export class OrgDepartmentComponent implements OnInit {
   //修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDepartment: ModifyDepartment = new ModifyDepartment();
-  public option1: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -66,7 +66,7 @@ export class OrgDepartmentComponent implements OnInit {
   }
 
   public updateOrgDate(): void {
-    this.orgService.searchDepartList({page: 1, nums: 14}).subscribe(
+    this.orgService.searchDepartList({page: 1, nums: 10}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
         this.option = {total:val.data.totalRecord,row:val.data.pageSize}
@@ -80,7 +80,10 @@ export class OrgDepartmentComponent implements OnInit {
       }
     );
   }
-
+  // 选中后赋值
+  public onRowSelect(event): void {
+    console.log(event.data);
+  }
   // 增加
   public addsSave(): void {
     console.log(this.addOrg);
@@ -292,6 +295,7 @@ export class OrgDepartmentComponent implements OnInit {
       this.modifyDepartment.endFlag = this.selectedorgs[0].endFlag;
       this.modifyDepartment.pid = this.selectedorgs[0].pid;
       this.modifyDepartment.idt = this.selectedorgs[0].idt;
+      console.log(this.modifyDepartment.organizationName);
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -303,7 +307,6 @@ export class OrgDepartmentComponent implements OnInit {
       }, 3000);
     }
   }
-
   //修改确认
   public modifySure(): void {
     console.log(this.modifyDepartment);
@@ -371,7 +374,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.addOrg.organizationId = e.value.id;
     this.modifyDepartment.organizationName = e.value.name;
     this.modifyDepartment.organizationId = e.value.id;
-
+    this.modifyDepartment.pDeptName = '请选择部门';
     this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
       (value) => {
         this.addOrgSelect = this.initializeSelectOrg(value.data);
@@ -417,10 +420,11 @@ export class OrgDepartmentComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.orgService.searchDepartList({page:this.nowPage, nums: 14}).subscribe(
+    this.orgService.searchDepartList({page:this.nowPage, nums: 10}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
       }
     );
+    this.selectedorgs = null;
   }
 }

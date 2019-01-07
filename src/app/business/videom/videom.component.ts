@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideomService} from '../../common/services/videom.service';
@@ -8,7 +8,8 @@ import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model
 @Component({
   selector: 'app-videom',
   templateUrl: './videom.component.html',
-  styleUrls: ['./videom.component.css']
+  styleUrls: ['./videom.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class VideomComponent implements OnInit {
   // table显示相关
@@ -55,7 +56,7 @@ export class VideomComponent implements OnInit {
   }
 
   public updateVideoData(): void {
-    this.videomService.searchList({page: 1, nums: 14}).subscribe(
+    this.videomService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.contents);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -528,11 +529,12 @@ export class VideomComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.videomService.searchList({page: this.nowPage, nums: 14}).subscribe(
+    this.videomService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.contents);
         this.videos = value.data.contents;
       }
     );
+    this.selectedvideos = null;
   }
 }

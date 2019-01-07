@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideoGroupService} from '../../common/services/video-group.service';
@@ -8,7 +8,8 @@ import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model
 @Component({
   selector: 'app-video-group',
   templateUrl: './video-group.component.html',
-  styleUrls: ['./video-group.component.css']
+  styleUrls: ['./video-group.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class VideoGroupComponent implements OnInit {
   // table显示相关
@@ -51,7 +52,7 @@ export class VideoGroupComponent implements OnInit {
   }
 
   public updateCashDate(): void {
-    this.videoGroupService.searchList({page: 1, nums: 14}).subscribe(
+    this.videoGroupService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -464,11 +465,12 @@ export class VideoGroupComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.videoGroupService.searchList({page: this.nowPage, nums: 14}).subscribe(
+    this.videoGroupService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.videoGroups = value.data.contents;
       }
     );
+    this.selectedVideoGroups = null;
   }
 }
