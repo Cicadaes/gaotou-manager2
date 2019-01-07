@@ -278,7 +278,7 @@ export class InterceptComponent implements OnInit {
       }, 3000);
     } else if (this.selectedintercepts.length === 1) {
       this.modifyDialog = true;
-      this.interceptService.QuryHighDirection(this.selectedintercepts[0].orientationFlag).subscribe(
+      this.interceptService.QuryHighDirection(this.selectedintercepts[0].saOrientationId).subscribe(
         (value) => {
           console.log(value);
           this.modifyhighsdData = value.data.source + '-' + value.data.destination;
