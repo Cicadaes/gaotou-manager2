@@ -296,6 +296,24 @@ export class OrgDutyComponent implements OnInit {
     } else if (this.selectedDuties.length === 1) {
 
       this.modifyDialog = true;
+      this.orgService.searchCompanyIdDepList(this.selectedDuties[0].id).subscribe(
+        (value) => {
+          console.log(value);
+          this.addDepSelect = this.initializeSelectOrg(value.data);
+        }
+      );
+      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].id, depId: null}).subscribe(
+        (val) => {
+          console.log(val);
+          this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+        }
+      );
+      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.addDuty.organizationId, depId: this.selectedDuties[0].id}).subscribe(
+        (val) => {
+          console.log(val);
+          this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+        }
+      );
       this.modifyDuty.id = this.selectedDuties[0].id;
       this.modifyDuty.pid = this.selectedDuties[0].pid;
       this.modifyDuty.deptId = this.selectedDuties[0].deptId;

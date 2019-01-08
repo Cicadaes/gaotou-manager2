@@ -15,6 +15,8 @@ export class Video {
   udt: string; // 修改时间
   videoUrl: string; // 视频源地址
   saOrientationId: number; // 服务区方向2
+  cameraType: string; // 摄像头类型
+
 }
 export class AddVideo {
   saOrientationId: number; // 服务区方向2
@@ -28,6 +30,7 @@ export class AddVideo {
   outUrl: string; // 外网地址 8
   showLocation: number; // 页面监视窗口位置 6
   videoUrl: string; // 视频源地址 7
+  cameraType: string; // 摄像头类型
   // enabled: any; // 摄像头是否可用
 }
 export class ModifyVideo {
@@ -44,4 +47,5 @@ export class ModifyVideo {
   id: number;
   idt: string; // 创建时间
   enabled: any; // 摄像头是否可用
+  cameraType: string; // 摄像头类型
 }

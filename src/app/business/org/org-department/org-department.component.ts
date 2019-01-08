@@ -282,6 +282,11 @@ export class OrgDepartmentComponent implements OnInit {
       }, 3000);
     } else if (this.selectedorgs.length === 1) {
       this.modifyDialog = true;
+      this.orgService.searchCompanyIdDepList(this.selectedorgs[0].id).subscribe(
+        (value) => {
+          this.addOrgSelect = this.initializeSelectOrg(value.data);
+        }
+      );
       this.modifyDepartment.id = this.selectedorgs[0].id;
       this.modifyDepartment.organizationId = this.selectedorgs[0].organizationId;
       this.modifyDepartment.organizationName = this.selectedorgs[0].organizationName;

@@ -31,6 +31,8 @@ export class VideoGroupComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean; // 添加弹窗显示控制
   public modifyVideoGroup: ModifyVideoGroup = new ModifyVideoGroup();
+  public modifyhighsdData: any;
+  public col: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -54,9 +56,10 @@ export class VideoGroupComponent implements OnInit {
   public updateCashDate(): void {
     this.videoGroupService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
+        console.log(value.data.contents);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videoGroups = value.data.contents;
+
       }
     );
   }
@@ -276,6 +279,12 @@ export class VideoGroupComponent implements OnInit {
       }, 3000);
     } else if (this.selectedVideoGroups.length === 1) {
       this.modifyDialog = true;
+      this.videoGroupService.QuryHighDirection(this.selectedVideoGroups[0].saOrientationId).subscribe(
+        (value) => {
+          console.log(value);
+          this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+        }
+      );
       this.modifyVideoGroup.groupCode = this.selectedVideoGroups[0].groupCode;
       this.modifyVideoGroup.groupName = this.selectedVideoGroups[0].groupName;
       this.modifyVideoGroup.id = this.selectedVideoGroups[0].id;

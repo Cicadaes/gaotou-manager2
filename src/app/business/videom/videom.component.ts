@@ -292,6 +292,8 @@ export class VideomComponent implements OnInit {
       this.modifyVideo.enabled = this.selectedvideos[0].enabled;
       this.modifyVideo.id = this.selectedvideos[0].id;
       this.modifyVideo.idt = this.selectedvideos[0].idt;
+      this.modifyVideo.cameraType = this.selectedvideos[0].cameraType;
+      console.log(this.modifyVideo.showLocation);
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
