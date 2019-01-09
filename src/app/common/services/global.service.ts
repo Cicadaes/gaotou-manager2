@@ -6,6 +6,7 @@ export class GlobalService {
   public eventSubject: Subject<any> = new Subject<any>(); // 控制全局加载动画
   public urls = `http://120.78.137.182:8888/highway-management`;
   // public urls = `http://123.249.28.108:8082/highway-management`;
+  public url = `http://120.77.171.73:8080/highway-authentication`;
   // public url = `http://192.168.28.7:8080/highway-management`;
   // sessionStorage临时存储
   public sessionStorage: any;

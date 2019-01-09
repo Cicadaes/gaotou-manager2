@@ -7,8 +7,8 @@
       <form class="form-horizontal"  [formGroup]="myFromModule" (submit)="onSubmit()">
         <!--账号-->
         <div class="form-group ">
-          <label for="username" class="control-label">账号</label>
-          <input type="text" formControlName="username" class="form-control" id="username" placeholder="请输入账号" name="userN" autocomplete="off">
+          <label for="userName" class="control-label">账号</label>
+          <input type="text" formControlName="userName" class="form-control" id="userName" placeholder="请输入账号" name="userN" autocomplete="off">
           <div *ngIf="formUsername.invalid && (formUsername.dirty || formUsername.touched)" class="text-danger ">
             <div *ngIf="formUsername.errors.required">
               账号是必填项
