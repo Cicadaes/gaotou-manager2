@@ -56,7 +56,51 @@ export class SelectItem {
   pid?: number;
   pids?: number;
 }
+export class CompanyTree {
+  id?: number;
+  areaName?: string;
+  areaCode?: string;
+  postcode?: string;
+  regNo?: string;
+  latitude?: string;
+  longitude?: string;
+  legalPerson?: string;
+  address?: string;
+  name?: string;
+  foundDate?: any;
+  fax?: string;
+  telNumber?: string;
+  email?: string;
+  scale?: string;
+  category?: string;
+  introduction?: string;
+  list?: any;
+  pid?: string;
+}
+// 区域树泛型
+export class CompanyTreeNode {
+  id?: number;
+  areaName?: string;
+  areaCode?: string;
+  postcode?: string;
+  regNo?: string;
+  latitude?: string;
+  longitude?: string;
+  legalPerson?: string;
+  address?: string;
+  name?: string;
+  foundDate?: any;
+  fax?: string;
+  telNumber?: string;
+  email?: string;
+  scale?: string;
+  category?: string;
+  introduction?: string;
+  list?: any;
+  pid?: string;
+  children?: CompanyTreeNode[];
 
+}
 // 添加泛型
 // 省
 export class AddProvince {

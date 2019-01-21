@@ -50,7 +50,10 @@ export class OrgService {
   public searchDepartList(num): Observable<any> {
     return this.http.post(`${this.globalService.urls}/department/queryByPaging/${num.page}/${num.nums}`, {});
   }
-
+  // 部门查询
+  public searchDepart(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urls}/department/queryByPaging/${num.page}/${num.nums}`, body);
+  }
   /*************************职位*******************************/
   // 职位增加
   public addDutyItem(params): Observable<any> {
@@ -95,11 +98,20 @@ export class OrgService {
       return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}`);
     }
   }
+  //条件查询
+  public searchCompany(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urls}/organization/queryByPaging/${num.page}/${num.nums}`, body);
+  }
 
   public searchIdDepIdDutyList(params): Observable<any> {
     // if (params.depId) {
     //   return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}/${params.depId}`);
     // } else {
       return this.http.get(`${this.globalService.urls}/duty/queryById/${params}`);
+  }
+
+  // 查询公司树
+  public searchCompanyTree(): Observable<any> {
+    return this.http.get(`${this.globalService.urlt}/organization/query2Tree`, {});
   }
 }

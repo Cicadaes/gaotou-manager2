@@ -4,7 +4,7 @@ import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DatePipe} from '@angular/common';
 import {OrgService} from '../../../common/services/org.service';
-import {AddCompany, Company, modifydCompany} from '../../../common/model/org-model';
+import {AddCompany, Company, modifydCompany, queryCompany} from '../../../common/model/org-model';
 
 @Component({
   selector: 'app-org-company',
@@ -30,6 +30,8 @@ export class OrgCompanyComponent implements OnInit {
   public modifyDialog: boolean; // 修改弹窗显示控制
   public modifyCompany: modifydCompany = new modifydCompany();
 
+  // 条件查询相关
+  public queryCompany: queryCompany = new queryCompany();
   //分页相关
   public nowPage: any;
   public option: any;
@@ -53,6 +55,9 @@ export class OrgCompanyComponent implements OnInit {
       {field: 'address', header: '公司地址'},
       {field: 'idt', header: '创建时间'},
     ];
+    this.queryCompany.name = '';
+    this.queryCompany.regNo = '';
+    this.queryCompany.pid = null;
     this.updateCompanyDate(1);
   }
 
@@ -368,12 +373,25 @@ export class OrgCompanyComponent implements OnInit {
 
   }
 
+  //条件查询
+  public  conditionQuery(): void {
+   console.log(this.queryCompany);
+   this.orgService.searchCompany({page: 1, nums: 10},this.queryCompany).subscribe(
+     (value) => {
+       this.companies = value.data.contents;
+       console.log(value);
+
+     }
+   );
+  }
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
     this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
+        console.log(val);
       }
     );
   }
@@ -388,6 +406,7 @@ export class OrgCompanyComponent implements OnInit {
     this.areaDialog = false;
     this.addCompany.areaCode = this.addAreaTree.areaCode;
     this.addCompany.areaName = this.addAreaTree.label;
+    this.queryCompany.name = this.addAreaTree.label;
     this.modifyCompany.areaCode = this.addAreaTree.areaCode;
     this.modifyCompany.areaName = this.addAreaTree.label;
   }

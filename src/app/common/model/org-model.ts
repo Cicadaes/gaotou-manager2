@@ -68,6 +68,16 @@ export class modifydCompany {
   idt?: string; // 节点路径
 }
 
+
+
+// 条件查询
+export class queryCompany {
+  name?: string;
+  regNo?: string;
+  pid?: number;
+}
+
+
 // 部门table数据泛型
 export class Department {
   deptCategory?: number;
@@ -116,7 +126,14 @@ export class ModifyDepartment {
   telNumber?: string; // 部门电话
   pDeptName: string; //上级部门
 }
-
+// 条件查询
+export class queryDepartment {
+  deptName?: string;
+  deptCode?: string;
+  organizationId?: number;
+  deptCategory?: any;
+  pids?: string; // 上级部门
+}
 // 职位数据泛型
 export class Duty {
   boss?: any; // 一把手

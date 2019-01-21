@@ -279,7 +279,31 @@ export class UserComponent implements OnInit {
       this.cleanTimer = setTimeout(() => {
         this.msgs = [];
       }, 3000);
-    } else if (this.selectedUsers.length > 0 && this.selectedUsers.length <= 1) {
+    } else if (this.selectedUsers.length === 1) {
+      this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
+        (val) => {
+          console.log(val);
+          this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+        }
+      );
+      this.userService.searchCompanyIdDepList(this.selectedUsers[0].organizationId).subscribe(
+        (value) => {
+          console.log(value);
+          this.addDepSelect = this.initializeSelectOrg(value.data);
+        }
+      );
+      this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: null}).subscribe(
+        (val) => {
+          console.log(val);
+          this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+        }
+      );
+      // this.userService.searchCompanyIdDepIdDutyList({companyId:this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
+      //   (val) => {
+      //     console.log(val);
+      //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+      //   }
+      // );
       this.modifyDialog = true;
       this.modifyUser.id = this.selectedUsers[0].id;
       this.modifyUser.organizationId = this.selectedUsers[0].organizationId;

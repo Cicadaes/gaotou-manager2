@@ -1,10 +1,11 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AddDepartment, Department, ModifyDepartment} from '../../../common/model/org-model';
-import {SelectItem} from '../../../common/model/shared-model';
+import {AddDepartment, Department, ModifyDepartment, queryCompany, queryDepartment} from '../../../common/model/org-model';
+import {AddTreeArea, CompanyTree, CompanyTreeNode, SelectItem, TreeNode} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
 import {e} from '@angular/core/src/render3';
+import {number} from 'ng4-validators/src/app/number/validator';
 
 @Component({
   selector: 'app-department',
@@ -23,7 +24,16 @@ export class OrgDepartmentComponent implements OnInit {
   public addOrg: AddDepartment = new AddDepartment(); // 添加参数字段
   public addCompanySelect: SelectItem[]; // 公司列表
   public addOrgSelect: SelectItem[]; // 部门列表
+  public CompanyTrees: CompanyTree[];
+  public companyDialog: boolean;// 公司树弹窗
+  public CompanyTree: CompanyTree = new CompanyTree(); // 区域树选择
 
+
+  //条件查询
+  public addAreaTrees: AddTreeArea[]; // 区域树结构
+  public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
+  public areaDialog: boolean; // 区域树弹窗
+  public queryDepartment: queryDepartment = new queryDepartment();
   //分页相关
   public nowPage: any;
   public option: any;
@@ -62,6 +72,11 @@ export class OrgDepartmentComponent implements OnInit {
       {field: 'idt', header: '创建时间'},
 
     ];
+    this.queryDepartment.deptCategory = null;
+    this.queryDepartment.deptCode = null;
+    this.queryDepartment.organizationId = null;
+    this.queryDepartment.deptName = null;
+    this.queryDepartment.pids = null;
     this.updateOrgDate();
   }
 
@@ -372,6 +387,92 @@ export class OrgDepartmentComponent implements OnInit {
     });
   }
 
+  //条件查询
+  public conditionQuery(): void {
+    console.log(this.queryDepartment);
+    this.orgService.searchDepart({page: 1, nums: 10},this.queryDepartment).subscribe(
+      (val) => {
+        this.orgs = val.data.contents;
+        console.log(val);
+      }
+    );
+  }
+
+  //选择区域
+  public AreaTreeClick(): void {
+    this.areaDialog = true;
+    this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
+      (val) => {
+        this.addAreaTrees = this.initializeTree(val.data.contents);
+        // console.log(this.addAreaTrees[0].label);
+      }
+    );
+  }
+  //选择公司
+  public CompanyTreeClick(): void {
+    this.companyDialog = true;
+    this.orgService.searchCompanyTree().subscribe(
+      (val) => {
+        console.log(val);
+        this.CompanyTrees = this.initializeCompanyTree(val.data);
+        // console.log( this.CompanyTrees[0].name);
+      }
+    );
+  }
+  public treeOnNodeSelect(event) {
+    // this.areaDialog = false;
+    // this.addAreaTreeSelect.push(event.node);
+    // console.log(this.addAreaTree);
+  }
+  public treeSelectAreaClick(): void {
+    this.areaDialog = false;
+  }
+  public treeSelectCompanyClick(): void {
+    this.companyDialog = false;
+  }
+  // 公司数据格式化
+  public initializeCompanyTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new CompanyTreeNode();
+      childnode1.areaCode = data[i].areaCode;
+      childnode1.areaName = data[i].areaName;
+      childnode1.name = data[i].name;
+      childnode1.id = data[i].id;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeCompanyTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+
+  // 区划数据格式化
+  public initializeTree(data): any {
+    const oneChild = [];
+    for (let i = 0; i < data.length; i++) {
+      const childnode = new TreeNode();
+      childnode.label = data[i].areaName;
+      childnode.id = data[i].id;
+      childnode.areaCode = data[i].areaCode;
+      childnode.parentId = data[i].parentId;
+      childnode.enabled = data[i].enabled;
+      childnode.cityType = data[i].cityType;
+      childnode.level = data[i].level;
+      if (childnode === null) {
+        childnode.children = [];
+      } else {
+        childnode.children = this.initializeTree(data[i].administrativeAreaTree);
+      }
+      oneChild.push(childnode);
+    }
+    console.log(oneChild);
+    return oneChild;
+  }
   // 选择公司
   public companyChange(e): void {
     console.log(e);
@@ -380,6 +481,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.modifyDepartment.organizationName = e.value.name;
     this.modifyDepartment.organizationId = e.value.id;
     this.modifyDepartment.pDeptName = '请选择部门';
+    this.queryDepartment.organizationId = e.value.id;
     this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
       (value) => {
         this.addOrgSelect = this.initializeSelectOrg(value.data);
@@ -407,6 +509,7 @@ export class OrgDepartmentComponent implements OnInit {
     }
     return oneChild;
   }
+
 
   public initializeSelectOrg(data): any {
     const oneChild = [];

@@ -6,10 +6,15 @@
 <h1 class="text-center">公司管理</h1>
 <div class="company">
   <!--按钮-->
-  <div class="btn-manner">
+  <div class="btn-manner" style="line-height: 2vh">
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
+    <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem" >所属区划：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+    <label  style="margin-left: 0.5vw;font-size: 1.5rem">公司名称：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"  (ngModel)="this.queryCompany.name"/>
+    <button class="btn" type="button" style="margin: 0;padding: 0;width: 3vw;height: 3.5vh" (click)="conditionQuery()">查询</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '50vh'}">
     <!--数据-->
