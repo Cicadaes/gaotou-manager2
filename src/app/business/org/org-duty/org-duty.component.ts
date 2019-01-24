@@ -3,7 +3,16 @@ import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
 import {AddDuty, Duty, ModifyDuty} from '../../../common/model/org-model';
-import {SelectItem} from '../../../common/model/shared-model';
+import {
+  AddTreeArea,
+  CompanyTree,
+  CompanyTreeNode,
+  DepartmentTree,
+  DepartmentTreeNode,
+  DutyTree,
+  DutyTreeNode,
+  SelectItem, TreeNode
+} from '../../../common/model/shared-model';
 
 @Component({
   selector: 'app-org-duty',
@@ -23,12 +32,35 @@ export class OrgDutyComponent implements OnInit {
   public addCompanySelect: SelectItem[]; // 公司列表
   public addDepSelect: SelectItem[]; // 部门列表
   public addDepTopDutySelect: SelectItem[]; // 上级职务
+
+  //树结构相关
+
+  public CompanyTrees: CompanyTree[];
+  public companyDialog: boolean;// 公司树弹窗
+  public CompanyTree: CompanyTree = new CompanyTree(); // 公司树选择
+
+  public DepartmentTrees:  DepartmentTree[];
+  public departmentDialog: boolean;// 公司树弹窗
+  public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 区域树选择
+  public CompanyId: number; // 区域查询的公司ID
+
+  public DutyTrees:  DutyTree[];
+  public dutyDialog: boolean;// 公司树弹窗
+  public DutyTree:  DutyTree = new  DutyTree(); // 区域树选择
+  // public DepartmentId: number; // 区域查询的公司ID
   // 分页相关
   public option: any;
   public nowPage: any;
+
+  //条件查询
+  public addAreaTrees: AddTreeArea[]; // 区域树结构
+  public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
+  public areaDialog: boolean; // 区域树弹窗
+
   // 修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDuty: ModifyDuty = new ModifyDuty();
+  public modifyFlag = 0; //判断树形结构是修改还是删除
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -93,7 +125,8 @@ export class OrgDutyComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    console.log(this.modifyDuty);
+    this.modifyFlag = 0;
+    console.log(this.modifyFlag);
     if (this.addDuty.boss === '1') {
       this.addDuty.boss = false;
     } else {
@@ -284,6 +317,8 @@ export class OrgDutyComponent implements OnInit {
 
   //修改
   public modifyBtn(): void {
+    this.modifyFlag = 1;
+    console.log(this.modifyFlag);
     if (this.selectedDuties === undefined || this.selectedDuties.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -296,24 +331,24 @@ export class OrgDutyComponent implements OnInit {
     } else if (this.selectedDuties.length === 1) {
 
       this.modifyDialog = true;
-      this.orgService.searchCompanyIdDepList(this.selectedDuties[0].organizationId).subscribe(
+     /* this.orgService.searchCompanyIdDepList(this.selectedDuties[0].organizationId).subscribe(
         (value) => {
           console.log(value);
           this.addDepSelect = this.initializeSelectOrg(value.data);
         }
       );
-      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, depId: null}).subscribe(
+      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, deptId: null}).subscribe(
         (val) => {
           console.log(val);
           this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
         }
       );
-      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, depId: this.selectedDuties[0].deptId}).subscribe(
+      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, deptId: this.selectedDuties[0].deptId}).subscribe(
         (val) => {
           console.log(val);
           this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
         }
-      );
+      );*/
       this.modifyDuty.id = this.selectedDuties[0].id;
       this.modifyDuty.pid = this.selectedDuties[0].pid;
       this.modifyDuty.deptId = this.selectedDuties[0].deptId;
@@ -407,49 +442,256 @@ export class OrgDutyComponent implements OnInit {
       }
     });
   }
-
-  // 选择公司
-  public companyChange(e): void {
-    this.addDuty.organizationName = e.value.name;
-    this.addDuty.organizationId = e.value.id;
-    this.modifyDuty.organizationName = e.value.name;
-    this.modifyDuty.organizationId = e.value.id;
-    this.modifyDuty.deptName = '选择所属部门...';
-    this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
-      (value) => {
-        console.log(value);
-        this.addDepSelect = this.initializeSelectOrg(value.data);
-      }
-    );
-    this.orgService.searchCompanyIdDepIdDutyList({companyId: e.value.id, depId: null}).subscribe(
+  //选择区域
+  public AreaTreeClick(): void {
+    this.areaDialog = true;
+    this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
-        console.log(val);
-        this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+        this.addAreaTrees = this.initializeTree(val.data.contents);
+        console.log(this.addAreaTrees);
       }
     );
   }
-
-  // 选择部门
-  public orgsChange(e): void {
-    this.addDuty.deptName = e.value.name;
-    this.addDuty.deptId = e.value.id;
-    this.modifyDuty.deptName = e.value.name;
-    this.modifyDuty.deptId = e.value.id;
-    // this.modifyDuty.dutyName = '请选择所属职务...';
-    this.orgService.searchCompanyIdDepIdDutyList({companyId: this.addDuty.organizationId, depId: e.value.id}).subscribe(
+  public treeOnNodeSelect(event): void {
+    this.areaDialog = false;
+    // this.addAreaTreeSelect.push(event.node);
+    // console.log(this.addAreaTree);
+  }
+  public treeSelectAreaClick(): void {
+    this.areaDialog = false;
+  }
+// 区划数据格式化
+  public initializeTree(data): any {
+    const oneChild = [];
+    for (let i = 0; i < data.length; i++) {
+      const childnode = new TreeNode();
+      childnode.label = data[i].areaName;
+      childnode.id = data[i].id;
+      childnode.areaCode = data[i].areaCode;
+      childnode.parentId = data[i].parentId;
+      childnode.enabled = data[i].enabled;
+      childnode.cityType = data[i].cityType;
+      childnode.level = data[i].level;
+      if (childnode === null) {
+        childnode.children = [];
+      } else {
+        childnode.children = this.initializeTree(data[i].administrativeAreaTree);
+      }
+      oneChild.push(childnode);
+    }
+    console.log(oneChild);
+    return oneChild;
+  }
+  //选择公司
+  public CompanyTreeClick(): void {
+    this.companyDialog = true;
+    this.orgService.searchCompanyTree().subscribe(
       (val) => {
-        console.log(val);
-        this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+        this.CompanyTrees = this.initializeCompanyTree(val.data);
       }
     );
   }
 
-  // 选择上级职务
-  public topDutyChange(e): void {
-    console.log(e);
-    this.addDuty.pid = e.value.id;
-    this.modifyDuty.pid = e.value.id;
+  //选择部门
+  public  departmentTreeClick(): void {
+    if (this.modifyFlag === 1){
+      this.departmentDialog = true;
+      console.log(this.modifyDuty.organizationId);
+      this.orgService.searchDepartmentTree(this.modifyDuty.organizationId).subscribe(
+        (val) => {
+          console.log(val);
+          this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+          // console.log( this.CompanyTrees);
+        }
+      );
+    } else {
+      if (this.CompanyId === undefined) {
+        if (this.cleanTimer) {
+          clearTimeout(this.cleanTimer);
+        }
+        this.msgs = [];
+        this.msgs.push({severity: 'error', summary: '操作错误', detail: '请先选择公司'});
+        this.cleanTimer = setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }else {
+        this.departmentDialog = true;
+        console.log(this.CompanyId);
+        this.orgService.searchDepartmentTree(this.CompanyId).subscribe(
+          (val) => {
+            console.log(val);
+            this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+            // console.log( this.CompanyTrees);
+          }
+        );
+      }
+    }
+
   }
+  //选择部门
+  public  dutyTreeClick(): void {
+    if (this.modifyFlag === 1){
+      this.dutyDialog = true;
+      console.log(this.CompanyId);
+      this.orgService.searchCompanyIdDepIdDutyList({companyId:this.modifyDuty.organizationId,deptId:this.modifyDuty.deptId}).subscribe(
+        (val) => {
+          console.log(val);
+          this.DutyTrees = this.initializeDutyTree(val.data);
+          // console.log( this.CompanyTrees);
+        }
+      );
+    }else {
+      if (this.CompanyId === undefined) {
+        if (this.cleanTimer) {
+          clearTimeout(this.cleanTimer);
+        }
+        this.msgs = [];
+        this.msgs.push({severity: 'error', summary: '操作错误', detail: '请先选择公司'});
+        this.cleanTimer = setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }else {
+        this.dutyDialog = true;
+        console.log(this.CompanyId);
+        this.orgService.searchCompanyIdDepIdDutyList({companyId:this.CompanyId,deptId:this.DepartmentTree.id}).subscribe(
+          (val) => {
+            console.log(val);
+            this.DutyTrees = this.initializeDutyTree(val.data);
+            // console.log( this.CompanyTrees);
+          }
+        );
+      }
+    }
+  }
+
+  public treeSelectCompanyClick(): void {
+    this.companyDialog = false;
+    this.CompanyId = this.CompanyTree.id;
+    this.addDuty.organizationName = this.CompanyTree.label;
+    this.addDuty.organizationId = this.CompanyTree.id;
+
+    this.modifyDuty.organizationName =  this.CompanyTree.label;
+    this.modifyDuty.organizationId =  this.CompanyTree.id;
+    // this.queryDepartment.organizationId =  this.CompanyTree.id;
+  }
+  public treeSelectDepartmentClick (): void {
+    this.departmentDialog = false;
+    this.addDuty.pid = this.DepartmentTree.pid;
+    this.addDuty.deptName = this.DepartmentTree.label;
+    this.modifyDuty.deptName = this.DepartmentTree.label;
+    this.modifyDuty.id = this.DepartmentTree.pid;
+
+  }
+  public treeSelectDutyClick (): void {
+    this.dutyDialog = false;
+    this.addDuty.pid = this.DutyTree.pid;
+    this.modifyDuty.pid = this.DutyTree.pid;
+  }
+  // 公司数据格式化
+  public initializeCompanyTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new CompanyTreeNode();
+      childnode1.areaCode = data[i].areaCode;
+      childnode1.areaName = data[i].areaName;
+      childnode1.label = data[i].name;
+      childnode1.id = data[i].id;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeCompanyTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+  // 部门数据格式化
+  public initializeDepartmentTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new DepartmentTreeNode();
+      childnode1.label = data[i].deptName;
+      childnode1.telNumber = data[i].telNumber;
+      childnode1.id = data[i].id;
+      childnode1.pid = data[i].pid;
+      childnode1.pids = data[i].pids;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeDepartmentTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+
+  public initializeDutyTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new DutyTreeNode();
+      childnode1.label = data[i].dutyName;
+      childnode1.id = data[i].id;
+      childnode1.pid = data[i].pid;
+      if (data[i].dutys === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeDutyTree(data[i].dutys);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+
+
+
+  // // 选择公司
+  // public companyChange(e): void {
+  //   this.addDuty.organizationName = e.value.name;
+  //   this.addDuty.organizationId = e.value.id;
+  //   this.modifyDuty.organizationName = e.value.name;
+  //   this.modifyDuty.organizationId = e.value.id;
+  //   this.modifyDuty.deptName = '选择所属部门...';
+  //   this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
+  //     (value) => {
+  //       console.log(value);
+  //       this.addDepSelect = this.initializeSelectOrg(value.data);
+  //     }
+  //   );
+  //   this.orgService.searchCompanyIdDepIdDutyList({companyId: e.value.id, depId: null}).subscribe(
+  //     (val) => {
+  //       console.log(val);
+  //       this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+  //     }
+  //   );
+  // }
+  //
+  // // 选择部门
+  // public orgsChange(e): void {
+  //   this.addDuty.deptName = e.value.name;
+  //   this.addDuty.deptId = e.value.id;
+  //   this.modifyDuty.deptName = e.value.name;
+  //   this.modifyDuty.deptId = e.value.id;
+  //   // this.modifyDuty.dutyName = '请选择所属职务...';
+  //   this.orgService.searchCompanyIdDepIdDutyList({companyId: this.addDuty.organizationId, depId: e.value.id}).subscribe(
+  //     (val) => {
+  //       console.log(val);
+  //       this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+  //     }
+  //   );
+  // }
+  //
+  // // 选择上级职务
+  // public topDutyChange(e): void {
+  //   console.log(e);
+  //   this.addDuty.pid = e.value.id;
+  //   this.modifyDuty.pid = e.value.id;
+  // }
 
   // 数据格式化
   public initializeSelectCompany(data): any {

@@ -1,3 +1,11 @@
 .role-manage{
   padding: 0 15px
 }
+.btn-manner .addAreaNamelabel{
+  margin-left: 1vw;
+  font-size: 1.5rem;
+}
+.btn-manner .addAreaNameInput{
+  height: 3vh;
+  width: 7vw;
+}

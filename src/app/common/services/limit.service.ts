@@ -31,4 +31,18 @@ export class LimitService {
   public searchRoleList(num): Observable<any> {
     return this.http.post(`${this.globalService.urls}/role/queryByPaging/${num.page}/${num.nums}`, {});
   }
+
+  public searchArea(num): Observable<any> {
+    return this.http.post(
+      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
+  }
+
+  // 查询公司树
+  public searchCompanyTree(): Observable<any> {
+    return this.http.get(`${this.globalService.urlt}/organization/query2Tree`, {});
+  }
+  //查询部门树
+  public searchDepartmentTree(params): Observable<any> {
+    return this.http.get(`${this.globalService.urlt}/department/queryTreeByOrganizationId/${params}`);
+  }
 }

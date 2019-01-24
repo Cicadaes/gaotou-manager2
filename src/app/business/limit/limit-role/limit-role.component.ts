@@ -3,6 +3,15 @@ import {LimitService} from '../../../common/services/limit.service';
 import {AddRole, modifyRole, Role} from '../../../common/model/limit-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
+import {
+  AddTreeArea,
+  CompanyTree,
+  CompanyTreeNode,
+  DepartmentTree,
+  DepartmentTreeNode,
+  DutyTreeNode,
+  TreeNode
+} from '../../../common/model/shared-model';
 
 @Component({
   selector: 'app-limit-role',
@@ -26,6 +35,21 @@ export class LimitRoleComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean;//控制显示弹窗显示
   public modifyRole: modifyRole = new modifyRole();
+
+  //树形结构相关
+  public addAreaTrees: AddTreeArea[]; // 区域树结构
+  public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
+  public areaDialog: boolean; // 区域树弹窗
+
+  public CompanyTrees: CompanyTree[];
+  public companyDialog: boolean;// 公司树弹窗
+  public CompanyTree: CompanyTree = new CompanyTree(); // 公司树选择
+
+  public DepartmentTrees:  DepartmentTree[];
+  public departmentDialog: boolean;// 部门树弹窗
+  public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 部门树选择
+  public CompanyId: number; // 区域查询的公司ID
+
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -343,10 +367,137 @@ export class LimitRoleComponent implements OnInit {
 
   }
 
+
+  //选择区域
+  public AreaTreeClick(): void {
+    this.areaDialog = true;
+    this.limitService.searchArea({page: 1, nums: 100}).subscribe(
+      (val) => {
+        this.addAreaTrees = this.initializeTree(val.data.contents);
+        console.log(this.addAreaTrees);
+      }
+    );
+  }
+  public treeOnNodeSelect(event): void {
+    this.areaDialog = false;
+    // this.addAreaTreeSelect.push(event.node);
+    // console.log(this.addAreaTree);
+  }
+  public treeSelectAreaClick(): void {
+    this.areaDialog = false;
+  }
+  // 区划数据格式化
+  public initializeTree(data): any {
+    const oneChild = [];
+    for (let i = 0; i < data.length; i++) {
+      const childnode = new TreeNode();
+      childnode.label = data[i].areaName;
+      childnode.id = data[i].id;
+      childnode.areaCode = data[i].areaCode;
+      childnode.parentId = data[i].parentId;
+      childnode.enabled = data[i].enabled;
+      childnode.cityType = data[i].cityType;
+      childnode.level = data[i].level;
+      if (childnode === null) {
+        childnode.children = [];
+      } else {
+        childnode.children = this.initializeTree(data[i].administrativeAreaTree);
+      }
+      oneChild.push(childnode);
+    }
+    console.log(oneChild);
+    return oneChild;
+  }
+
+  //选择公司
+  public CompanyTreeClick(): void {
+    this.companyDialog = true;
+    this.limitService.searchCompanyTree().subscribe(
+      (val) => {
+        this.CompanyTrees = this.initializeCompanyTree(val.data);
+      }
+    );
+  }
+
+  //选择部门
+  public  departmentTreeClick(): void {
+      if (this.CompanyId === undefined) {
+        if (this.cleanTimer) {
+          clearTimeout(this.cleanTimer);
+        }
+        this.msgs = [];
+        this.msgs.push({severity: 'error', summary: '操作错误', detail: '请先选择公司'});
+        this.cleanTimer = setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }else {
+        this.departmentDialog = true;
+        console.log(this.CompanyId);
+        this.limitService.searchDepartmentTree(this.CompanyId).subscribe(
+          (val) => {
+            console.log(val);
+            this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+            // console.log( this.CompanyTrees);
+          }
+        );
+      }
+  }
+
+  public treeSelectCompanyClick(): void {
+    this.companyDialog = false;
+    this.CompanyId = this.CompanyTree.id;  //根据公司id查部门
+
+  }
+  public treeSelectDepartmentClick (): void {
+    this.departmentDialog = false;
+  }
+
+  // 公司数据格式化
+  public initializeCompanyTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new CompanyTreeNode();
+      childnode1.areaCode = data[i].areaCode;
+      childnode1.areaName = data[i].areaName;
+      childnode1.label = data[i].name;
+      childnode1.id = data[i].id;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeCompanyTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+  // 部门数据格式化
+  public initializeDepartmentTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new DepartmentTreeNode();
+      childnode1.label = data[i].deptName;
+      childnode1.telNumber = data[i].telNumber;
+      childnode1.id = data[i].id;
+      childnode1.pid = data[i].pid;
+      childnode1.pids = data[i].pids;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeDepartmentTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+  //分页组件
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
+    // console.log('我是父组件');
+    // console.log(this.nowPage);
     this.limitService.searchRoleList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);

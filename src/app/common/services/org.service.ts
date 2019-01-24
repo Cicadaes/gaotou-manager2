@@ -15,103 +15,107 @@ export class OrgService {
   /*************************公司*******************************/
   // 公司增加
   public addCompanyItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/add`, params);
+    return this.http.post(`${this.globalService.urlt}/organization/add`, params);
   }
   // 公司删除单个
   public deleteCompanyItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/organization/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/organization/delete/${id}`);
   }
   // 公司删除多个
   public deleteCompanyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/organization/delete`, params);
   }
   // 公司修改接口
   public modifyCompanyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/update`, params);
+    return this.http.post(`${this.globalService.urlt}/organization/update`, params);
   }
   /*************************部门*******************************/
   // 部门增加
   public addDepartItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/department/add`, params);
+    return this.http.post(`${this.globalService.urlt}/department/add`, params);
   }
   // 部门删除单个
   public deleteDepartItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/department/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/department/delete/${id}`);
   }
   // 部门删除多个
   public deleteDepartList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/department/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/department/delete`, params);
   }
   // 部门修改接口
   public modifyDepartList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/department/update`, params);
+    return this.http.post(`${this.globalService.urlt}/department/update`, params);
   }
   // 部门查询
   public searchDepartList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/department/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/department/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 部门查询
   public searchDepart(num,body): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/department/queryByPaging/${num.page}/${num.nums}`, body);
+    return this.http.post(`${this.globalService.urlt}/department/queryByPaging/${num.page}/${num.nums}`, body);
   }
   /*************************职位*******************************/
   // 职位增加
   public addDutyItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/duty/add`, params);
+    return this.http.post(`${this.globalService.urlt}/duty/add`, params);
   }
   // 职位删除单个
   public deleteDutyItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/duty/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/duty/delete/${id}`);
   }
   // 职位删除多个
   public deleteDutyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/duty/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/duty/delete`, params);
   }
   // 职位修改接口
   public modifyDutyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/duty/update`, params);
+    return this.http.post(`${this.globalService.urlt}/duty/update`, params);
   }
   // 职位查询
   public searchDutyList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/duty/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/duty/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   /*************************数据联动查询*******************************/
   // 查询激活区域
   public searchAreaList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询所有公司
   public searchCompanyList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/organization/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 根据公司id查询部门
   public searchCompanyIdDepList(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/department/queryTreeByOrganizationId/${id}`);
+    return this.http.get(`${this.globalService.urlt}/department/queryTreeByOrganizationId/${id}`);
   }
   // 查询上级职务；根据公司或者部门id
   public searchCompanyIdDepIdDutyList(params): Observable<any> {
     if (params.depId) {
-      return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}/${params.depId}`);
+      return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}/${params.deptId}`);
     } else {
-      return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}`);
+      return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}`);
     }
   }
   //条件查询
   public searchCompany(num,body): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/queryByPaging/${num.page}/${num.nums}`, body);
+    return this.http.post(`${this.globalService.urlt}/organization/queryByPaging/${num.page}/${num.nums}`, body);
   }
 
   public searchIdDepIdDutyList(params): Observable<any> {
     // if (params.depId) {
-    //   return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}/${params.depId}`);
+    //   return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}/${params.depId}`);
     // } else {
-      return this.http.get(`${this.globalService.urls}/duty/queryById/${params}`);
+      return this.http.get(`${this.globalService.urlt}/duty/queryById/${params}`);
   }
 
   // 查询公司树
   public searchCompanyTree(): Observable<any> {
     return this.http.get(`${this.globalService.urlt}/organization/query2Tree`, {});
+  }
+  //查询部门树
+  public searchDepartmentTree(params): Observable<any> {
+    return this.http.get(`${this.globalService.urlt}/department/queryTreeByOrganizationId/${params}`);
   }
 }

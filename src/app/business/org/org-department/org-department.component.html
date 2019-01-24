@@ -10,15 +10,15 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifybtn()">修改</button>
-    <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
-    <label for="addCompany" style="margin-left:  0.5vw;font-size: 1.5rem">所属公司：</label>
-    <p-dropdown id="addCompany" [options]="addCompanySelect"  [style]="{'width':'9vw','margin-bottom':'3px'}" scrollHeight="120px" optionLabel="name"  placeholder="请选择所属公司..."></p-dropdown>
-    <label style="margin-left: 0.5vw;font-size: 1.5rem">部门编号：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.queryDepartment.deptCode"/>
-    <label  style="margin-left:  0.5vw;font-size: 1.5rem">部门名称：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.queryDepartment.deptName"/>
-    <button class="btn" type="button" style="margin: 0;padding: 0;width: 3vw;height: 3.5vh" (click)="conditionQuery()">查询</button>
+    <label for="addAreaName" class="addAreaNamelabel" style="">所属区划：</label>
+    <input pInputText id="addAreaName" class="addAreaNameInput"  (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <label for="addCompany" class="addCompanylabel">所属公司：</label>
+    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+    <label class="department">部门编号：</label>
+    <input pInputText id="addAreaName" class="addAreaNameInput" [(ngModel)]="this.queryDepartment.deptCode"/>
+    <label  class="department">部门名称：</label>
+    <input pInputText id="addAreaName" class="addAreaNameInput" [(ngModel)]="this.queryDepartment.deptName"/>
+    <button class="btn querybtn" type="button"  (click)="conditionQuery()">查询</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '50vh'}">
     <!--数据-->
@@ -48,15 +48,15 @@
           <label for="addCompany">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addCompany" (click)="CompanyTreeClick()" [(ngModel)]="CompanyTree.name"  placeholder="请选择所属公司...">
+          <input pInputText  id="addCompany" (click)="CompanyTreeClick()" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
         </div>
       </div>
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addOrgs">所属部门：</label>
+          <label for="addCompany">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addOrgs" [options]="addOrgSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+          <input pInputText  id="addCompany" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label"  placeholder="请选择所属部门...">
         </div>
       </div>
       <div class="ui-g-6">
@@ -161,6 +161,28 @@
       </div>
     </p-footer>
   </p-dialog>
+  <p-dialog header="请选择部门" [(visible)]="departmentDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <!--(onNodeUnselect)="nodeUnselect($event)"-->
+        <p-scrollPanel [style]="{width: '100%', height: '300px'}">
+          <p-tree
+            [value]="DepartmentTrees"
+            selectionMode="single"
+            [(selection)]="DepartmentTree"
+            (onNodeSelect)="treeOnNodeSelect($event)"
+          >
+          </p-tree>
+        </p-scrollPanel>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button class="btn btn-success" type="button" (click)="treeSelectDepartmentClick()">确定</button>
+        <button class="btn btn-warning" type="button" (click)="departmentDialog=false">取消</button>
+      </div>
+    </p-footer>
+  </p-dialog>
   <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
     <div class="ui-g ui-fluid">
       <div class="ui-g-6">
@@ -168,7 +190,7 @@
           <label for="addCompany1">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addCompany1" [options]="addCompanySelect" (onChange)="companyChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name"  [placeholder]="this.modifyDepartment.organizationName"></p-dropdown>
+          <input pInputText  id="addCompany1" (click)="CompanyTreeClick()" [(ngModel)]="CompanyTree.label"  [placeholder]="this.modifyDepartment.organizationName">
         </div>
       </div>
       <div class="ui-g-6">
@@ -176,7 +198,7 @@
           <label for="addOrgs1">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addOrgs1" [options]="addOrgSelect" (onChange)="orgsChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyDepartment.pDeptName" ></p-dropdown>
+          <input pInputText  id="addOrgs1" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label"  [placeholder]="this.modifyDepartment.pDeptName">
         </div>
       </div>
       <div class="ui-g-6">

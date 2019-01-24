@@ -1,6 +1,14 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AddDepartment, Department, ModifyDepartment, queryCompany, queryDepartment} from '../../../common/model/org-model';
-import {AddTreeArea, CompanyTree, CompanyTreeNode, SelectItem, TreeNode} from '../../../common/model/shared-model';
+import {
+  AddTreeArea,
+  CompanyTree,
+  CompanyTreeNode,
+  DepartmentTree,
+  DepartmentTreeNode,
+  SelectItem,
+  TreeNode
+} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
@@ -27,6 +35,11 @@ export class OrgDepartmentComponent implements OnInit {
   public CompanyTrees: CompanyTree[];
   public companyDialog: boolean;// 公司树弹窗
   public CompanyTree: CompanyTree = new CompanyTree(); // 区域树选择
+
+  public DepartmentTrees:  DepartmentTree[];
+  public departmentDialog: boolean;// 公司树弹窗
+  public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 区域树选择
+  public CompanyId: number; // 区域查询的公司ID
 
 
   //条件查询
@@ -404,7 +417,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
-        // console.log(this.addAreaTrees[0].label);
+        console.log(this.addAreaTrees);
       }
     );
   }
@@ -413,12 +426,35 @@ export class OrgDepartmentComponent implements OnInit {
     this.companyDialog = true;
     this.orgService.searchCompanyTree().subscribe(
       (val) => {
-        console.log(val);
         this.CompanyTrees = this.initializeCompanyTree(val.data);
-        // console.log( this.CompanyTrees[0].name);
       }
     );
   }
+
+  //选择部门
+  public  departmentTreeClick(): void {
+    if (this.CompanyId === undefined) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请先选择公司'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }else {
+      this.departmentDialog = true;
+      console.log(this.CompanyId);
+      this.orgService.searchDepartmentTree(this.CompanyId).subscribe(
+        (val) => {
+          console.log(val);
+          this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+          // console.log( this.CompanyTrees);
+        }
+      );
+    }
+  }
+
   public treeOnNodeSelect(event) {
     // this.areaDialog = false;
     // this.addAreaTreeSelect.push(event.node);
@@ -429,6 +465,20 @@ export class OrgDepartmentComponent implements OnInit {
   }
   public treeSelectCompanyClick(): void {
     this.companyDialog = false;
+    this.CompanyId = this.CompanyTree.id;
+    this.addOrg.organizationName = this.CompanyTree.label;
+    this.addOrg.organizationId = this.CompanyTree.id;
+
+    this.modifyDepartment.organizationName =  this.CompanyTree.label;
+    this.modifyDepartment.organizationId =  this.CompanyTree.id;
+    this.queryDepartment.organizationId =  this.CompanyTree.id;
+  }
+  public treeSelectDepartmentClick (): void {
+    this.departmentDialog = false;
+    this.addOrg.pid = this.DepartmentTree.pid;
+    this.addOrg.pids = `/${this.DepartmentTree.pid}/${this.DepartmentTree.pids}`;
+    this.modifyDepartment.pDeptName = this.DepartmentTree.label;
+
   }
   // 公司数据格式化
   public initializeCompanyTree(data): any {
@@ -438,12 +488,33 @@ export class OrgDepartmentComponent implements OnInit {
       const childnode1 = new CompanyTreeNode();
       childnode1.areaCode = data[i].areaCode;
       childnode1.areaName = data[i].areaName;
-      childnode1.name = data[i].name;
+      childnode1.label = data[i].name;
       childnode1.id = data[i].id;
       if (data[i].list === null) {
         childnode1.children = [];
       } else {
         childnode1.children = this.initializeCompanyTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
+
+  // 部门数据格式化
+  public initializeDepartmentTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new DepartmentTreeNode();
+      childnode1.label = data[i].deptName;
+      childnode1.telNumber = data[i].telNumber;
+      childnode1.id = data[i].id;
+      childnode1.pid = data[i].pid;
+      childnode1.pids = data[i].pids;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeDepartmentTree(data[i].list);
       }
       oneChild1.push(childnode1);
     }
@@ -474,29 +545,29 @@ export class OrgDepartmentComponent implements OnInit {
     return oneChild;
   }
   // 选择公司
-  public companyChange(e): void {
-    console.log(e);
-    this.addOrg.organizationName = e.value.name;
-    this.addOrg.organizationId = e.value.id;
-    this.modifyDepartment.organizationName = e.value.name;
-    this.modifyDepartment.organizationId = e.value.id;
-    this.modifyDepartment.pDeptName = '请选择部门';
-    this.queryDepartment.organizationId = e.value.id;
-    this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
-      (value) => {
-        this.addOrgSelect = this.initializeSelectOrg(value.data);
-      }
-    );
-  }
+  // public companyChange(e): void {
+  //   console.log(e);
+  //   this.addOrg.organizationName = e.value.name;
+  //   this.addOrg.organizationId = e.value.id;
+  //   this.modifyDepartment.organizationName = e.value.name;
+  //   this.modifyDepartment.organizationId = e.value.id;
+  //   this.modifyDepartment.pDeptName = '请选择部门';
+  //   this.queryDepartment.organizationId = e.value.id;
+  //   this.orgService.searchCompanyIdDepList(e.value.id).subscribe(
+  //     (value) => {
+  //       this.addOrgSelect = this.initializeSelectOrg(value.data);
+  //     }
+  //   );
+  // }
 
   // 选择部门
-  public orgsChange(e): void {
-    console.log(e);
-    this.addOrg.pid = e.value.pid;
-    this.addOrg.pids = `/${e.value.pid}/${e.value.pids}`;
-    this.modifyDepartment.pid = e.value.pid;
-    this.modifyDepartment.pDeptName = e.value.name;
-  }
+  // public orgsChange(e): void {
+  //   console.log(e);
+  //   this.addOrg.pid = e.value.pid;
+  //   this.addOrg.pids = `/${e.value.pid}/${e.value.pids}`;
+  //   this.modifyDepartment.pid = e.value.pid;
+  //   this.modifyDepartment.pDeptName = e.value.name;
+  // }
 
   // 数据格式化
   public initializeSelectCompany(data): any {

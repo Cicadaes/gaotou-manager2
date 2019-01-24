@@ -51,9 +51,25 @@ export class UserService {
   // 查询上级职务；根据公司或者部门id
   public searchCompanyIdDepIdDutyList(params): Observable<any> {
     if (params.depId) {
-      return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}/${params.depId}`);
+      return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}/${params.deptId}`);
     } else {
-      return this.http.get(`${this.globalService.urls}/duty/queryByOrg/${params.companyId}`);
+      return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}`);
     }
+  }
+
+  // 查询区域树
+  // 查询激活区域
+  public searchArea(num): Observable<any> {
+    return this.http.post(
+      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
+  }
+
+  // 查询公司树
+  public searchCompanyTree(): Observable<any> {
+    return this.http.get(`${this.globalService.urlt}/organization/query2Tree`, {});
+  }
+  //查询部门树
+  public searchDepartmentTree(params): Observable<any> {
+    return this.http.get(`${this.globalService.urlt}/department/queryTreeByOrganizationId/${params}`);
   }
 }

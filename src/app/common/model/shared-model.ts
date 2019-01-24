@@ -66,7 +66,7 @@ export class CompanyTree {
   longitude?: string;
   legalPerson?: string;
   address?: string;
-  name?: string;
+  label?: string;
   foundDate?: any;
   fax?: string;
   telNumber?: string;
@@ -84,11 +84,11 @@ export class CompanyTreeNode {
   areaCode?: string;
   postcode?: string;
   regNo?: string;
+  label?:string;
   latitude?: string;
   longitude?: string;
   legalPerson?: string;
   address?: string;
-  name?: string;
   foundDate?: any;
   fax?: string;
   telNumber?: string;
@@ -100,6 +100,87 @@ export class CompanyTreeNode {
   pid?: string;
   children?: CompanyTreeNode[];
 
+}
+
+
+export class DepartmentTree {
+  id?: number;
+  label?: string;
+  organizationName?: string;
+  organizationId?: string;
+  pDeptName?: string;
+  deptCode?: string;
+  deptCategory?: string;
+  description?: string;
+  pid?: number;
+  pids?: string;
+  fax?: string;
+  telNumber?: string;
+  list?: any;
+}
+export class DepartmentTreeNode {
+  id?: number;
+  deptName?: string;
+  organizationName?: string;
+  organizationId?: string;
+  pDeptName?: string;
+  deptCode?: string;
+  deptCategory?: string;
+  description?: string;
+  pid?: number;
+  pids?: string;
+  label?: string;
+  fax?: string;
+  telNumber?: string;
+  list?: any;
+  children?: DepartmentTreeNode[];
+}
+
+export class DutyTree {
+  id?: number;
+  areaName?: string;
+  areaCode?: string;
+  postcode?: string;
+  dutyName?: string;
+  deptId?: any;
+  regNo?: string;
+  label?:string;
+  latitude?: string;
+  longitude?: string;
+  legalPerson?: string;
+  address?: string;
+  foundDate?: any;
+  fax?: string;
+  telNumber?: string;
+  email?: string;
+  scale?: string;
+  category?: string;
+  introduction?: string;
+  list?: any;
+  pid?: number;
+  children?: CompanyTreeNode[];
+}
+export class DutyTreeNode {
+  id?: number;
+  areaName?: string;
+  areaCode?: string;
+  postcode?: string;
+  regNo?: string;
+  label?:string;
+  latitude?: string;
+  longitude?: string;
+  legalPerson?: string;
+  address?: string;
+  foundDate?: any;
+  fax?: string;
+  telNumber?: string;
+  email?: string;
+  scale?: string;
+  category?: string;
+  introduction?: string;
+  list?: any;
+  pid?: string;
+  children?: CompanyTreeNode[];
 }
 // 添加泛型
 // 省
