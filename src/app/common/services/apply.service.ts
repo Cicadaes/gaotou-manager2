@@ -14,28 +14,28 @@ export class ApplyService {
   ) { }
   // 增加
   public addItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/app/add`, params);
+    return this.http.post(`${this.globalService.urls}/app/add`, params);
   }
   // 删除单个
   public deleteItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/app/delete/${id}`);
+    return this.http.get(`${this.globalService.urls}/app/delete/${id}`);
   }
   // 删除多个
   public deleteList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/app/delete`, params);
+    return this.http.post(`${this.globalService.urls}/app/delete`, params);
   }
   // 修改
   public modifyList(item): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/app/update`, item);
+    return this.http.post(`${this.globalService.urls}/app/update`, item);
   }
   // 查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/app/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urls}/app/queryByPaging/${num.page}/${num.nums}`, {});
   }
 
   // 生成密钥
   public  getAppKey(): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/app/getAppKey`);
+    return this.http.get(`${this.globalService.urls}/app/getAppKey`);
   }
 
 }

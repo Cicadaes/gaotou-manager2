@@ -12,33 +12,33 @@ export class AreaService {
   ) { }
   // 增加接口
   public addItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/administrativeArea/addById/${id}`);
+    return this.http.get(`${this.globalService.urls}/administrativeArea/addById/${id}`);
   }
   // 删除一个
   public deleteItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/administrativeArea/delete/${id}`);
+    return this.http.get(`${this.globalService.urls}/administrativeArea/delete/${id}`);
   }
   // 删除多个
   public deleteList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/administrativeArea/delete`, params);
+    return this.http.post(`${this.globalService.urls}/administrativeArea/delete`, params);
   }
    // 修改接口
   public modifyItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/administrativeArea/update`, params);
+    return this.http.post(`${this.globalService.urls}/administrativeArea/update`, params);
   }
   // 分页查询
   public searchList(num, body): Observable<any> {
     return this.http.post(
-      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, body);
+      `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, body);
   }
   // 单条查询
   public searchItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/administrativeArea/queryById/${id}`);
+    return this.http.get(`${this.globalService.urls}/administrativeArea/queryById/${id}`);
   }
 
   /**************************数据联动*****************************/
   // 查询接口行政区划
   public getAllList(): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/administrativeArea/queryAll`);
+    return this.http.get(`${this.globalService.urls}/administrativeArea/queryAll`);
   }
 }

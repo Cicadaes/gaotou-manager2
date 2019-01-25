@@ -14,45 +14,45 @@ export class InterceptService {
   ) { }
   // 增加
   public addItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/bayonet/add`, params);
+    return this.http.post(`${this.globalService.urls}/bayonet/add`, params);
   }
   // 删除单个
   public deleteItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/bayonet/delete/${id}`);
+    return this.http.get(`${this.globalService.urls}/bayonet/delete/${id}`);
   }
   // 删除多个
   public deleteList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/bayonet/delete`, params);
+    return this.http.post(`${this.globalService.urls}/bayonet/delete`, params);
   }
   // 修改
   public modifyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/bayonet/update`, params);
+    return this.http.post(`${this.globalService.urls}/bayonet/update`, params);
   }
   // 查询卡口出口1进
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/bayonet/queryByPaging/${num.page}/${num.nums}`, {bayonet_type: num.bayonetType});
+    return this.http.post(`${this.globalService.urls}/bayonet/queryByPaging/${num.page}/${num.nums}`, {bayonet_type: num.bayonetType});
   }
   // 条件查询
   public searchIntercept(num,body): Observable<any> {
-    return this.http.post(`${this.globalService.urlt}/bayonet/queryByPaging/${num.page}/${num.nums}`, body);
+    return this.http.post(`${this.globalService.urls}/bayonet/queryByPaging/${num.page}/${num.nums}`, body);
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
   }
   // 根据区域查询所属服务区
   public searchServiceAreaList(id): Observable<any> {
     return this.http.get(
-      `${this.globalService.urlt}/common/config/getServiceAreaByAdministrativeAreaId/${id}`, {});
+      `${this.globalService.urls}/common/config/getServiceAreaByAdministrativeAreaId/${id}`, {});
   }
   // 根据服务区查询服务区方向
   public searchHighDirection(id): Observable<any> {
-    return this.http.get(`${this.globalService.urlt}/serviceArea/orientation/queryByServiceAreaId/${id}`);
+    return this.http.get(`${this.globalService.urls}/serviceArea/orientation/queryByServiceAreaId/${id}`);
   }
   // 根据服务区方向查询店铺
   public QuryHighDirection(id): Observable<any> {
     return this.http.get(
-      `${this.globalService.urlt}/serviceArea/orientation/queryById/${id}`);
+      `${this.globalService.urls}/serviceArea/orientation/queryById/${id}`);
   }
 }
