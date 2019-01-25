@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {SystemService} from '../../../common/services/system.service';
-import {AddEventType, EventType, ModifyEventType} from '../../../common/model/system-model';
+import {AddEventType, EventType, ModifyEventType, QueryEventType} from '../../../common/model/system-model';
 
 @Component({
   selector: 'app-event-type',
@@ -22,6 +22,8 @@ export class EventTypeComponent implements OnInit {
   //分页相关
   public nowPage: any;
   public option: any;
+  // 条件查询相关
+  public queryEventType: QueryEventType = new QueryEventType();
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
   public modifyEventType: ModifyEventType = new ModifyEventType();
@@ -44,6 +46,8 @@ export class EventTypeComponent implements OnInit {
       {field: 'idt', header: '创建时间'},
     ];
     this.updateEventTypeDate();
+    this.queryEventType.categoryCode = null;
+    this.queryEventType.eventCategoryName = null;
   }
 
   public updateEventTypeDate(): void {
@@ -346,6 +350,24 @@ export class EventTypeComponent implements OnInit {
       }
     });
   }
+  
+  //条件查询
+  public queryEventTypeData(): void {
+    this.systemService.searchEventType({page: 1, nums: 10},this.queryEventType).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.eventTypes = value.data.contents;
+      }
+    );
+  }
+  // 重置
+  public  resetQueryEventType(): void {
+    this.updateEventTypeDate();
+    this.queryEventType.categoryCode = null;
+    this.queryEventType.eventCategoryName = null;
+  }
+
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;

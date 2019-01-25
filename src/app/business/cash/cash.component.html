@@ -10,6 +10,18 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
+    <label for="addAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">所属区化：</label>
+    <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <label for="addserviceAreaId" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
+    <p-dropdown id="addserviceAreaId" [options]="addServicesAreaTrees" (onChange)="serviceChange($event)" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="this.ServiceDown"></p-dropdown>
+    <label for="addsaOrientationId" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
+    <p-dropdown id="addsaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择高速方向..." [(ngModel)]="this.orientationDown"></p-dropdown>
+    <label for="addAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">店铺分类：</label>
+    <p-dropdown [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择店铺..."  [(ngModel)]="this.StoreType"></p-dropdown>
+    <label for="addAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">商店名：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryCash.storeName"/>
+    <button class="btn querybtn" type="button" (click)="queryCashData()">查询</button>
+    <button class="btn querybtn" type="button" (click)="resetQueryCash()">重置</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '50vh'}">
     <!--数据-->

@@ -15,42 +15,46 @@ export class UserService {
   ) { }
   // 增加
   public addItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/user/add`, params);
+    return this.http.post(`${this.globalService.urlt}/user/add`, params);
   }
   // 删除一个
   public deleteItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/user/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/user/delete/${id}`);
   }
   // 删除多个
   public deleteList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/user/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/user/delete`, params);
   }
   // 删除多个
   public modifyUser(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/user/update`, params);
+    return this.http.post(`${this.globalService.urlt}/user/update`, params);
   }
   // 分页查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/user/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/user/queryByPaging/${num.page}/${num.nums}`, {});
+  }
+  // 条件查询
+  public searchUser(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urlt}/user/queryByPaging/${num.page}/${num.nums}`, body);
   }
 
   /*************************数据联动查询*******************************/
   // 查询激活区域
   public searchAreaList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询所有公司
   public searchCompanyList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/organization/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/organization/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 根据公司id查询部门
   public searchCompanyIdDepList(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/department/queryTreeByOrganizationId/${id}`);
+    return this.http.get(`${this.globalService.urlt}/department/queryTreeByOrganizationId/${id}`);
   }
   // 查询上级职务；根据公司或者部门id
   public searchCompanyIdDepIdDutyList(params): Observable<any> {
-    if (params.depId) {
+    if (params.deptId) {
       return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}/${params.deptId}`);
     } else {
       return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}`);

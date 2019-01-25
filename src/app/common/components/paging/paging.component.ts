@@ -24,7 +24,7 @@ export class PagingComponent implements OnInit, OnChanges {
         return;
       }
       this.totalPage = Math.ceil(this.option.total / this.option.row);
-      if ((this.option.total / this.option.row) > 1) {
+      if ( Math.ceil(this.option.total / this.option.row) >= 1) {
         this.showPaging = true;
       }
     }

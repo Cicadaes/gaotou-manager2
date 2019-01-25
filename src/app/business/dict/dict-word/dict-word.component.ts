@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DictService} from '../../../common/services/dict.service';
-import {AddDictWord, DictWord, ModifyDictWord} from '../../../common/model/dict.model';
+import {AddDictWord, DictWord, ModifyDictWord, QueryDictWord} from '../../../common/model/dict.model';
 import {SelectItem} from '../../../common/model/shared-model';
 
 @Component({
@@ -25,6 +25,9 @@ export class DictWordComponent implements OnInit {
   //分页相关
   public nowPage: any;
   public option1: any;
+
+  //条件查询
+  public queryDictWord: QueryDictWord = new QueryDictWord();
   // 修改相关
   public modifyDialog: boolean;
   public modifyDictWord: ModifyDictWord = new ModifyDictWord();
@@ -55,6 +58,9 @@ export class DictWordComponent implements OnInit {
         this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
       }
     );
+    this.queryDictWord.dictionaryCode = null;
+    this.queryDictWord.entryCode = null;
+    this.queryDictWord.entryValue = null;
   }
 
   public updateDictWordsata(): void {
@@ -364,12 +370,23 @@ export class DictWordComponent implements OnInit {
       }
     });
   }
-
-
-  // public clearDown(): void {
-  //   this.addDictListSelect =null;
-  // }
-
+  //条件查询
+  public  queryDictWordData(): void {
+    this.dictService.searchDictWord({page: 1, nums: 10},this.queryDictWord).subscribe(
+      (value) => {
+        console.log(value);
+        this.option1 = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.dictWords = value.data.contents;
+      }
+    );
+  }
+  //重置
+  public  resetQueryDictWord(): void {
+    this.queryDictWord.dictionaryCode = null;
+    this.queryDictWord.entryCode = null;
+    this.queryDictWord.entryValue = null;
+    this.updateDictWordsata();
+  }
 
   // 选择字典
   public dictChange(e): void {

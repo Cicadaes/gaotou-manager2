@@ -2,7 +2,7 @@ import {Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@a
 import {CashService} from '../../common/services/cash.service';
 import {GlobalService} from '../../common/services/global.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
-import {AddCash, Cash, ModifyCash, TreeNode} from '../../common/model/cash-model';
+import {AddCash, Cash, ModifyCash, QueryCash, TreeNode} from '../../common/model/cash-model';
 import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
 
 @Component({
@@ -27,6 +27,12 @@ export class CashComponent implements OnInit {
   public addServicesAreaTrees: AddTreeArea[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: AddTreeArea[]; // 店铺列表
+
+  //条件查询相关
+  public ServiceDown: any; //选择服务区
+  public orientationDown: any; //选择上下行
+  public StoreType: any; // 选择店铺分类
+  public queryCash: QueryCash = new QueryCash();
   // 分页相关
   public nowPage: any;
   public option: any;
@@ -59,6 +65,10 @@ export class CashComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.updateCashDate();
+    this.queryCash.orientationDO = null;
+    this.queryCash.serviceAreaId = null;
+    this.queryCash.storeName = null;
+    this.queryCash.storeId = null;
   }
 
   public updateCashDate(): void {
@@ -89,59 +99,59 @@ export class CashComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    // this.confirmationService.confirm({
-    //   message: `确定要增加吗？`,
-    //   header: '增加提醒',
-    //   icon: 'pi pi-exclamation-triangle',
-    //   accept: () => {
-    //     this.globalService.eventSubject.next({display: true});
-    //     this.cashService.addItem(this.addCash).subscribe(
-    //       (value) => {
-    //         if (value.status === '200') {
-    //           this.globalService.eventSubject.next({display: false});
-    //           if (this.cleanTimer) {
-    //             clearTimeout(this.cleanTimer);
-    //           }
-    //           this.msgs = [];
-    //           this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-    //           this.updateCashDate();
-    //           this.cleanTimer = setTimeout(() => {
-    //             this.msgs = [];
-    //           }, 3000);
-    //           this.addDialog = false;
-    //         } else {
-    //           setTimeout(() => {
-    //             this.globalService.eventSubject.next({display: false});
-    //             if (this.cleanTimer) {
-    //               clearTimeout(this.cleanTimer);
-    //             }
-    //             this.msgs = [];
-    //             this.msgs.push({severity: 'error', summary: '增加提醒', detail: '服务器处理失败'});
-    //             this.cleanTimer = setTimeout(() => {
-    //               this.msgs = [];
-    //             }, 3000);
-    //           }, 3000);
-    //         }
-    //       },
-    //       (err) => {
-    //         console.log(err);
-    //         setTimeout(() => {
-    //           this.globalService.eventSubject.next({display: false});
-    //           if (this.cleanTimer) {
-    //             clearTimeout(this.cleanTimer);
-    //           }
-    //           this.msgs = [];
-    //           this.msgs.push({severity: 'error', summary: '增加提醒', detail: '连接服务器失败'});
-    //           this.cleanTimer = setTimeout(() => {
-    //             this.msgs = [];
-    //           }, 3000);
-    //         }, 3000);
-    //       }
-    //     );
-    //   },
-    //   reject: () => {
-    //   }
-    // });
+    this.confirmationService.confirm({
+      message: `确定要增加吗？`,
+      header: '增加提醒',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.globalService.eventSubject.next({display: true});
+        this.cashService.addItem(this.addCash).subscribe(
+          (value) => {
+            if (value.status === '200') {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
+              this.updateCashDate();
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+              this.addDialog = false;
+            } else {
+              setTimeout(() => {
+                this.globalService.eventSubject.next({display: false});
+                if (this.cleanTimer) {
+                  clearTimeout(this.cleanTimer);
+                }
+                this.msgs = [];
+                this.msgs.push({severity: 'error', summary: '增加提醒', detail: '服务器处理失败'});
+                this.cleanTimer = setTimeout(() => {
+                  this.msgs = [];
+                }, 3000);
+              }, 3000);
+            }
+          },
+          (err) => {
+            console.log(err);
+            setTimeout(() => {
+              this.globalService.eventSubject.next({display: false});
+              if (this.cleanTimer) {
+                clearTimeout(this.cleanTimer);
+              }
+              this.msgs = [];
+              this.msgs.push({severity: 'error', summary: '增加提醒', detail: '连接服务器失败'});
+              this.cleanTimer = setTimeout(() => {
+                this.msgs = [];
+              }, 3000);
+            }, 3000);
+          }
+        );
+      },
+      reject: () => {
+      }
+    });
     console.log(this.addCash);
   }
 
@@ -394,6 +404,33 @@ export class CashComponent implements OnInit {
     this.storeList = null;
   }
 
+  // 条件查询
+  public  queryCashData(): void {
+    this.cashService.searchCash({page: 1, nums: 10},this.queryCash).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.cashs = value.data.contents;
+      }
+    );
+  }
+  //重置
+  public  resetQueryCash(): void {
+    this.updateCashDate();
+    this.queryCash.orientationDO = null;
+    this.queryCash.serviceAreaId = null;
+    this.queryCash.storeName = null;
+    this.queryCash.storeId = null;
+    this.ServiceDown = null;
+    this.orientationDown = null;
+    this.StoreType = null;
+    this.addAreaTree.label = null;
+    this.addServicesAreaTrees = null;
+    this.highsdData = null;
+    this.storeList = null;
+  }
+
+
   // onHide(e):void{
   //   console.log(123);
   // }
@@ -529,6 +566,7 @@ export class CashComponent implements OnInit {
     this.addCash.serviceArea.serviceName = e.value.name;
     this.modifyCash.serviceArea.serviceAreaId = e.value.id;
     this.modifyCash.serviceArea.serviceName = e.value.name;
+    this.queryCash.serviceAreaId = e.value.id;
     this.modifyhighsdData = '请选择上下行';
     this.cashService.searchHighDirection(e.value.id).subscribe(
       (value) => {
@@ -551,6 +589,8 @@ export class CashComponent implements OnInit {
     this.modifyCash.saOrientation.flagName = e.value.flagName;
     this.modifyCash.saOrientation.orientaionId = e.value.orientaionId;
     this.modifyCash.saOrientation.source = e.value.source;
+
+    this.queryCash.orientationDO = e.value.orientaionId;
     this.modifyCash.store.storeName = '请选择店铺';
     this.cashService.searchStoreItem(e.value.orientaionId).subscribe(
       (value) => {
@@ -569,6 +609,8 @@ export class CashComponent implements OnInit {
     this.modifyCash.store.categoryCode = e.value.categoryCode;
     this.modifyCash.store.storeId = e.value.id;
     this.modifyCash.store.storeName = e.value.name;
+
+    this.queryCash.storeId = e.value.id;
   }
 
   // 数据格式化

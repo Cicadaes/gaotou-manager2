@@ -19,6 +19,13 @@ export class ModifyDictList {
   id?: null;
   idt?: string;
 }
+
+//条件查询
+export class QueryDict {
+  dictionaryName?: string;
+  dictionaryCode?: string;
+}
+
 // 字典词条
 export class DictWord {
   dictionaryCode?: string; // 字典编码
@@ -45,4 +52,11 @@ export class ModifyDictWord {
   id?: number;
   idt?: string;
   enabled?: boolean;
+}
+
+//条件查询
+export class QueryDictWord {
+  dictionaryCode?: string;
+  entryValue?: string;
+  entryCode?: string;
 }

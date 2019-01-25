@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideoGroupService} from '../../common/services/video-group.service';
-import {AddVideoGroup, ModifyVideoGroup, VideoGroup} from '../../common/model/video-group-model';
+import {AddVideoGroup, ModifyVideoGroup, QueryVideoGroup, VideoGroup} from '../../common/model/video-group-model';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 
 @Component({
@@ -28,6 +28,11 @@ export class VideoGroupComponent implements OnInit {
   // 分页相关
   public nowPage: any;
   public option: any;
+  //条件查询相关
+  public queryVideoGroup: QueryVideoGroup = new QueryVideoGroup();
+  public  ServiceName: any;
+  public  orientationName: any;
+
   // 修改相关
   public modifyDialog: boolean; // 添加弹窗显示控制
   public modifyVideoGroup: ModifyVideoGroup = new ModifyVideoGroup();
@@ -51,6 +56,8 @@ export class VideoGroupComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.updateCashDate();
+    this.queryVideoGroup.orientationDO = null;
+    this.queryVideoGroup.serviceAreaId = null;
   }
 
   public updateCashDate(): void {
@@ -362,6 +369,31 @@ export class VideoGroupComponent implements OnInit {
 
   }
 
+  // 条件查询
+  public queryVideoGroupData(): void {
+    this.videoGroupService.searchVideoGroup({page: 1, nums: 10},this.queryVideoGroup).subscribe(
+      (value) => {
+        console.log(value.data.contents);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.videoGroups = value.data.contents;
+
+      }
+    );
+  }
+  // 重置
+  public  resetQueryVideoGroup(): void {
+    this.queryVideoGroup.orientationDO = null;
+    this.queryVideoGroup.serviceAreaId = null;
+    this.addAreaTree.label = null;
+    this.orientationName = null;
+    this.ServiceName = null;
+    this.addServicesAreas = null;
+    this.highsdData = null;
+    this.updateCashDate();
+  }
+
+
+
   public AreaTreeClick(): void {
     this.areaDialog = true;
     this.videoGroupService.searchAreaList({page: 1, nums: 100}).subscribe(
@@ -393,6 +425,7 @@ export class VideoGroupComponent implements OnInit {
   public serviceChange(e): void {
     this.addVideoGroup.serviceAreaId = e.value.id;
     this.modifyVideoGroup.serviceAreaId = e.value.id;
+    this.queryVideoGroup.serviceAreaId = e.value.id;
     this.videoGroupService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -411,6 +444,7 @@ export class VideoGroupComponent implements OnInit {
   public directionChange(e): void {
     this.addVideoGroup.saOrientationId = e.value.id;
     this.modifyVideoGroup.saOrientationId = e.value.id;
+    this.queryVideoGroup.orientationDO = e.value.id;
     /* this.videoGroupService.searchStoreItem(e.value.orientaionId).subscribe(
        (value) => {
          console.log(value.data);

@@ -11,16 +11,19 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"/>
-    <label for="addCompany" style="margin-left: 0.5vw;font-size: 1.5rem">所属公司：</label>
-    <p-dropdown id="addCompany"   [style]="{'width':'9vw','margin-bottom':'3px'}" scrollHeight="120px" optionLabel="name"  placeholder="请选择所属公司..."></p-dropdown>
-    <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">所属部门：</label>
-    <p-dropdown id="addDep"   [style]="{'width':'9vw','margin-bottom':'3px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属部门..."></p-dropdown>
+    <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+    <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
+    <p-dropdown id="addserviceArea" [options]="addServicesAreas" (onChange)="serviceChange($event)"  [style]="{'width':'7vw','margin-bottom':'3px'}" scrollHeight="100px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
+    <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
+    <p-dropdown id="addsaOrientation" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'7vw','margin-bottom':'3px'}" scrollHeight="100px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+    <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">卡口类型：</label>
+    <p-dropdown id="addDep" [options]="this.bayonetTypes"  [style]="{'width':'7vw','margin-bottom':'3px'}" scrollHeight="100px" optionLabel="label" placeholder="卡口类型..." [(ngModel)]="this.bayonetLabel" (onChange)="bayonetChange($event)"></p-dropdown>
     <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">卡扣编号：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"/>
-    <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">卡扣名称：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"/>
-    <button class="btn" type="button" style="margin: 0;padding: 0;width: 3vw;height: 3.5vh">查询</button>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryIntercept.bayonetCode"/>
+    <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">服务区名：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryIntercept.serviceAreaName"/>
+    <button class="btn querybtn" type="button" (click)="queryInterceptData()">查询</button>
+    <button class="btn querybtn" type="button" (click)="resetQueryIntercept()">重置</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
     <!--数据-->

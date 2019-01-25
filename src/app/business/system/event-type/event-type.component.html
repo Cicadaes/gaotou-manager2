@@ -10,6 +10,12 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
+    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">事件类型编码：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"  [(ngModel)]="this.queryEventType.categoryCode"/>
+    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">事件类型名称 ：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.queryEventType.eventCategoryName"/>
+    <button class="btn querybtn" type="button" (click)="queryEventTypeData()">查询</button>
+    <button class="btn querybtn" type="button" (click)="resetQueryEventType()">重置</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
     <!--数据-->

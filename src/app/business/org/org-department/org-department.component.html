@@ -10,15 +10,18 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifybtn()">修改</button>
-    <label for="addAreaName" class="addAreaNamelabel" style="">所属区划：</label>
-    <input pInputText id="addAreaName" class="addAreaNameInput"  (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
     <label for="addCompany" class="addCompanylabel">所属公司：</label>
     <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+    <label class="department">部门类型：</label>
+    <p-dropdown [options]="DepartmentType" [(ngModel)]="this.dType" optionLabel="label" (onChange)="departmentTypeChange($event)" placeholder="选择部门类型" [showClear]="true"></p-dropdown>
+    <label class="department">上级部门ID：</label>
+    <input pInputText id="addAreaName" class="addAreaNameInput" [(ngModel)]="this.queryDepartment.pid"/>
     <label class="department">部门编号：</label>
     <input pInputText id="addAreaName" class="addAreaNameInput" [(ngModel)]="this.queryDepartment.deptCode"/>
     <label  class="department">部门名称：</label>
     <input pInputText id="addAreaName" class="addAreaNameInput" [(ngModel)]="this.queryDepartment.deptName"/>
-    <button class="btn querybtn" type="button"  (click)="conditionQuery()">查询</button>
+    <button class="btn querybtn" type="button"  (click)="conditionDepartmentQuery()">查询</button>
+    <button class="btn querybtn" type="button"  (click)="resetDepartmentQuery()">重置</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '50vh'}">
     <!--数据-->

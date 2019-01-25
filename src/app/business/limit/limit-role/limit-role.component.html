@@ -10,17 +10,10 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
-    <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName" class="addAreaNameInput"  (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
-    <label for="addCompany" style="margin-left: 0.5vw;font-size: 1.5rem">所属公司：</label>
-    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
-    <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">所属部门：</label>
-    <input pInputText  id="addDep" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label" class="addAreaNameInput" placeholder="请选择所属部门...">
-    <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">角色编码：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"/>
-    <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">角色名称：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"/>
-    <button class="btn" type="button" style="margin: 0;padding: 0;width: 3vw;height: 3.5vh">查询</button>
+    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">角色名称：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.roleName"/>
+    <button class="btn querybtn" type="button"  (click)="queryRole()">查询</button>
+    <button class="btn querybtn" type="button" (click)="resetQueryRole()" >重置</button>
   </div>
   <p-scrollPanel>
     <!--数据-->

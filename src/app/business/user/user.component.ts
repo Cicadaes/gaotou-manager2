@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AddUser, modifyUser, User} from '../../common/model/user-model';
+import {AddUser, modifyUser, QueryUser, User} from '../../common/model/user-model';
 import {UserService} from '../../common/services/user.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -54,6 +54,10 @@ export class UserComponent implements OnInit {
   public DutyTrees:  DutyTree[];
   public dutyDialog: boolean;// 职位树弹窗
   public DutyTree:  DutyTree = new  DutyTree(); // 职位树选择
+
+  //调教查询
+  public queryUser:   QueryUser = new QueryUser();
+
   // 修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyUser: modifyUser = new modifyUser();
@@ -81,6 +85,10 @@ export class UserComponent implements OnInit {
       {field: 'idt', header: '添加时间'}
     ];
     this.updateUserDate();
+    this.queryUser.deptId = null;
+    this.queryUser.organizationId = null;
+    this.queryUser.realName = null;
+    this.queryUser.userName = null;
   }
 
   public updateUserDate(): void {
@@ -469,6 +477,31 @@ export class UserComponent implements OnInit {
   //   this.modifyUser.dutyId = e.value.id;
   // }*/
 
+  //条件查询
+  public  QueryUser(): void {
+    this.userService.searchUser({page: 1, nums: 10},this.queryUser).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
+        this.users = value.data.contents;
+        this.users.map((val, index) => {
+          val.gender = this.sex[val.gender - 1];
+        });
+      }
+    );
+  }
+  //重置数据
+  public  resetQueryUser(): void {
+    this.queryUser.deptId = null;
+    this.queryUser.organizationId = null;
+    this.queryUser.realName = null;
+    this.queryUser.userName = null;
+    this.CompanyTree.label = null;
+    this.DepartmentTree.label =null;
+    this.updateUserDate();
+  }
+
+
   //选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -601,6 +634,7 @@ export class UserComponent implements OnInit {
 
     this.modifyUser.organizationName =  this.CompanyTree.label;
     this.modifyUser.organizationId =  this.CompanyTree.id;
+    this.queryUser.organizationId =  this.CompanyTree.id;
     // this.queryDepartment.organizationId =  this.CompanyTree.id;
   }
   public treeSelectDepartmentClick (): void {
@@ -609,6 +643,7 @@ export class UserComponent implements OnInit {
     this.addUser.deptName = this.DepartmentTree.label;
     this.modifyUser.deptName = this.DepartmentTree.label;
     this.modifyUser.deptId = this.DepartmentTree.id;
+    this.queryUser.deptId = this.DepartmentTree.id;
 
   }
   public treeSelectDutyClick (): void {

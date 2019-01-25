@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AddDepartment, Department, ModifyDepartment, queryCompany, queryDepartment} from '../../../common/model/org-model';
+import {AddDepartment, Department, DepartmentType, ModifyDepartment, queryCompany, queryDepartment} from '../../../common/model/org-model';
 import {
   AddTreeArea,
   CompanyTree,
@@ -43,11 +43,12 @@ export class OrgDepartmentComponent implements OnInit {
 
 
   //条件查询
+  public DepartmentType: any;
   public addAreaTrees: AddTreeArea[]; // 区域树结构
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public areaDialog: boolean; // 区域树弹窗
   public queryDepartment: queryDepartment = new queryDepartment();
-  //分页相关
+  public dType: any;
   public nowPage: any;
   public option: any;
   //修改相关
@@ -85,11 +86,12 @@ export class OrgDepartmentComponent implements OnInit {
       {field: 'idt', header: '创建时间'},
 
     ];
+    this.DepartmentType = [{label:'服务区类',value:1},{label:'非服务区类',value:2}];
     this.queryDepartment.deptCategory = null;
     this.queryDepartment.deptCode = null;
     this.queryDepartment.organizationId = null;
     this.queryDepartment.deptName = null;
-    this.queryDepartment.pids = null;
+    this.queryDepartment.pid = null;
     this.updateOrgDate();
   }
 
@@ -401,16 +403,37 @@ export class OrgDepartmentComponent implements OnInit {
   }
 
   //条件查询
-  public conditionQuery(): void {
+  public conditionDepartmentQuery(): void {
     console.log(this.queryDepartment);
     this.orgService.searchDepart({page: 1, nums: 10},this.queryDepartment).subscribe(
       (val) => {
-        this.orgs = val.data.contents;
         console.log(val);
+
+        this.orgs = val.data.contents;
       }
     );
   }
+  // 重置
+  public resetDepartmentQuery(): void {
+    this.queryDepartment.deptCategory = null;
+    this.queryDepartment.deptCode = null;
+    this.queryDepartment.organizationId = null;
+    this.queryDepartment.deptName = null;
+    this.queryDepartment.pid = null;
+    this.CompanyTree.label = null;
+    this.dType = null;
+    this.updateOrgDate();
+    this.DepartmentType = [{label:'1、服务区类',value:1},{label:'2、非服务区类',value:2}];
 
+  }
+
+  // 部门类型
+  public departmentTypeChange(e): void {
+    console.log(e.value.value);
+    if (e.value.value >=1){
+      this.queryDepartment.deptCategory = e.value.value;
+    }
+  }
   //选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;

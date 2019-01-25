@@ -1,4 +1,5 @@
 import {AddCity, AddProvince, AddSaOrientation, AddServiceArea} from './shared-model';
+import {e} from '@angular/core/src/render3';
 
 export class Intercept {
   administrativeAreaId?: number; // 区划
@@ -39,4 +40,13 @@ export class ModifyIntercept {
   bayonetType?: number; // 卡口类型
   id?: string;
   idt?: string;
+}
+
+//条件查询
+export class QueryIntercept {
+  serviceAreaId?: number;
+  orientationDO?: number;
+  bayonetCode?: number;
+  bayonetType?: number;
+  serviceAreaName?: string;
 }

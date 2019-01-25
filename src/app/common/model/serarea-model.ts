@@ -146,6 +146,14 @@ export class AddCommonAttribute {
   attributeDesc: string;
 }
 
+//条件查询
+export class QuerySerarea {
+  name?: string;
+  organizationId ?: number;
+  deptId ?: number;
+  administrativeAreaId ?: number;
+}
+
 /*export class AddCarAttribute {
   attributeName: string; // 停车位类型，大车还是小车
   value: number;

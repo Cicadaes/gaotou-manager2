@@ -75,6 +75,9 @@ export class OrgService {
   public searchDutyList(num): Observable<any> {
     return this.http.post(`${this.globalService.urlt}/duty/queryByPaging/${num.page}/${num.nums}`, {});
   }
+  public searchDuty(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urlt}/duty/queryByPaging/${num.page}/${num.nums}`, body);
+  }
 
   /*************************数据联动查询*******************************/
   // 查询激活区域
@@ -92,7 +95,7 @@ export class OrgService {
   }
   // 查询上级职务；根据公司或者部门id
   public searchCompanyIdDepIdDutyList(params): Observable<any> {
-    if (params.depId) {
+    if (params.deptId) {
       return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}/${params.deptId}`);
     } else {
       return this.http.get(`${this.globalService.urlt}/duty/queryByOrg/${params.companyId}`);

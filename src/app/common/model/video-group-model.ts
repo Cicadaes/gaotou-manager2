@@ -25,3 +25,10 @@ export class ModifyVideoGroup {
   idt?: string; // 创建时间
   enabled?: boolean; // 是否可用
 }
+
+
+//条件查询
+export class QueryVideoGroup {
+  serviceAreaId?: number;
+  orientationDO?: number;
+}

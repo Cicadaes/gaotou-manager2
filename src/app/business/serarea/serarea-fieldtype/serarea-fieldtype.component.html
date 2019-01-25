@@ -10,11 +10,10 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
-    <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">分类id：</label>
-    <input pInputText id="addDep" style="height: 3vh;width: 7vw"/>
     <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">分类名称：</label>
-    <input pInputText id="addDep" style="height: 3vh;width: 7vw"/>
-    <button class="btn" type="button" style="margin: 0;padding: 0;width: 3vw;height: 3.5vh">查询</button>
+    <input pInputText id="addDep" style="height: 3vh;width: 7vw" [(ngModel)]="this.categoryName"/>
+    <button class="btn querybtn" type="button" (click)="queryFieldType()">查询</button>
+    <button class="btn querybtn" type="button" (click)="resetQueryFieldType()">重置</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
     <!--数据-->

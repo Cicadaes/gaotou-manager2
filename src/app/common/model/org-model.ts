@@ -75,6 +75,7 @@ export class queryCompany {
   name?: string;
   regNo?: string;
   pid?: number;
+  areaName?: string;
 }
 
 
@@ -131,8 +132,14 @@ export class queryDepartment {
   deptName?: string;
   deptCode?: string;
   organizationId?: number;
-  deptCategory?: any;
-  pids?: string; // 上级部门
+  deptCategory?: number;
+  pid?: string; // 上级部门
+}
+// 职位类型
+export class DepartmentType {
+  label?:string;
+  value?:number;
+
 }
 // 职位数据泛型
 export class Duty {
@@ -184,4 +191,10 @@ export class ModifyDuty {
   organizationId?: number; // 公司id
 }
 
+export class QueryDuty {
+  organizationId?: number;
+  deptId?: number;
+  pid?: string;
+  dutyName?: string;
+}
 

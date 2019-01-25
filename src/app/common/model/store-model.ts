@@ -68,3 +68,11 @@ export class ModifyStore {
   id: 1;
   idt: null;
 }
+
+export class QueryStroe {
+  serviceAreaId?: number; //服务区id
+  orientationDO?: number; //方向id
+  categoryCode?: string; //店铺分类
+  storeName?: string; //商店名
+  principal?: string; //负责人
+}

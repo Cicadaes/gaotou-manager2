@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {OrgService} from '../../../common/services/org.service';
 import {GlobalService} from '../../../common/services/global.service';
-import {AddDuty, Duty, ModifyDuty} from '../../../common/model/org-model';
+import {AddDuty, Duty, ModifyDuty, QueryDuty} from '../../../common/model/org-model';
 import {
   AddTreeArea,
   CompanyTree,
@@ -57,6 +57,9 @@ export class OrgDutyComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public areaDialog: boolean; // 区域树弹窗
 
+  //条件查询相关
+  public queryDuty: QueryDuty = new QueryDuty;
+
   // 修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDuty: ModifyDuty = new ModifyDuty();
@@ -86,6 +89,10 @@ export class OrgDutyComponent implements OnInit {
         this.addCompanySelect = this.initializeSelectCompany(val.data.contents);
       }
     );
+    this.queryDuty.deptId = null;
+    this.queryDuty.organizationId = null;
+    this.queryDuty.pid = null;
+    this.queryDuty.dutyName = null;
   }
 
   public updateDutyDate(): void {
@@ -375,6 +382,8 @@ export class OrgDutyComponent implements OnInit {
     }
   }
 
+
+
   // 修改确认
   public modifySure(): void {
     console.log(this.modifyDuty);
@@ -442,16 +451,38 @@ export class OrgDutyComponent implements OnInit {
       }
     });
   }
-  //选择区域
-  public AreaTreeClick(): void {
-    this.areaDialog = true;
-    this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
+  // 条件查询
+  public dutyQuery(): void {
+    this.orgService.searchDuty({page: 1, nums: 10},this.queryDuty).subscribe(
       (val) => {
-        this.addAreaTrees = this.initializeTree(val.data.contents);
-        console.log(this.addAreaTrees);
+        console.log(val);
+        this.duties = val.data.contents;
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize};
       }
     );
   }
+  //重置
+  public  resetdutyQuery(): void {
+    this.queryDuty.deptId = null;
+    this.queryDuty.organizationId = null;
+    this.queryDuty.pid = null;
+    this.queryDuty.dutyName = null;
+    this.CompanyTree.label = null;
+    this.DepartmentTree.label = null;
+    this.updateDutyDate();
+  }
+  // //选择区域
+  // public AreaTreeClick(): void {
+  //   this.areaDialog = true;
+  //   this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
+  //     (val) => {
+  //       this.addAreaTrees = this.initializeTree(val.data.contents);
+  //       console.log(this.addAreaTrees);
+  //     }
+  //   );
+  // }
+
+
   public treeOnNodeSelect(event): void {
     this.areaDialog = false;
     // this.addAreaTreeSelect.push(event.node);
@@ -461,27 +492,27 @@ export class OrgDutyComponent implements OnInit {
     this.areaDialog = false;
   }
 // 区划数据格式化
-  public initializeTree(data): any {
-    const oneChild = [];
-    for (let i = 0; i < data.length; i++) {
-      const childnode = new TreeNode();
-      childnode.label = data[i].areaName;
-      childnode.id = data[i].id;
-      childnode.areaCode = data[i].areaCode;
-      childnode.parentId = data[i].parentId;
-      childnode.enabled = data[i].enabled;
-      childnode.cityType = data[i].cityType;
-      childnode.level = data[i].level;
-      if (childnode === null) {
-        childnode.children = [];
-      } else {
-        childnode.children = this.initializeTree(data[i].administrativeAreaTree);
-      }
-      oneChild.push(childnode);
-    }
-    console.log(oneChild);
-    return oneChild;
-  }
+//   public initializeTree(data): any {
+//     const oneChild = [];
+//     for (let i = 0; i < data.length; i++) {
+//       const childnode = new TreeNode();
+//       childnode.label = data[i].areaName;
+//       childnode.id = data[i].id;
+//       childnode.areaCode = data[i].areaCode;
+//       childnode.parentId = data[i].parentId;
+//       childnode.enabled = data[i].enabled;
+//       childnode.cityType = data[i].cityType;
+//       childnode.level = data[i].level;
+//       if (childnode === null) {
+//         childnode.children = [];
+//       } else {
+//         childnode.children = this.initializeTree(data[i].administrativeAreaTree);
+//       }
+//       oneChild.push(childnode);
+//     }
+//     console.log(oneChild);
+//     return oneChild;
+//   }
   //选择公司
   public CompanyTreeClick(): void {
     this.companyDialog = true;
@@ -528,7 +559,7 @@ export class OrgDutyComponent implements OnInit {
     }
 
   }
-  //选择部门
+  //选择职位
   public  dutyTreeClick(): void {
     if (this.modifyFlag === 1){
       this.dutyDialog = true;
@@ -550,9 +581,9 @@ export class OrgDutyComponent implements OnInit {
         this.cleanTimer = setTimeout(() => {
           this.msgs = [];
         }, 3000);
-      }else {
+      }else{
         this.dutyDialog = true;
-        console.log(this.CompanyId);
+        console.log(this.DepartmentTree.id);
         this.orgService.searchCompanyIdDepIdDutyList({companyId:this.CompanyId,deptId:this.DepartmentTree.id}).subscribe(
           (val) => {
             console.log(val);
@@ -572,6 +603,7 @@ export class OrgDutyComponent implements OnInit {
 
     this.modifyDuty.organizationName =  this.CompanyTree.label;
     this.modifyDuty.organizationId =  this.CompanyTree.id;
+    this.queryDuty.organizationId = this.CompanyTree.id;
     // this.queryDepartment.organizationId =  this.CompanyTree.id;
   }
   public treeSelectDepartmentClick (): void {
@@ -580,7 +612,7 @@ export class OrgDutyComponent implements OnInit {
     this.addDuty.deptName = this.DepartmentTree.label;
     this.modifyDuty.deptName = this.DepartmentTree.label;
     this.modifyDuty.id = this.DepartmentTree.pid;
-
+    this.queryDuty.deptId = this.DepartmentTree.id;
   }
   public treeSelectDutyClick (): void {
     this.dutyDialog = false;

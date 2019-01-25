@@ -10,6 +10,14 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
+    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">字典编码：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"  [(ngModel)]="this.queryDictWord.dictionaryCode"/>
+    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">词条编码：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.queryDictWord.entryCode"/>
+    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">词条值：</label>
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.queryDictWord.entryValue"/>
+    <button class="btn querybtn" type="button" (click)="queryDictWordData()">查询</button>
+    <button class="btn querybtn" type="button" (click)="resetQueryDictWord()">重置</button>
   </div>
   <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
     <!--数据-->

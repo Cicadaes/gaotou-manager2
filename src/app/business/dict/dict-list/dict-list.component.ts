@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DictService} from '../../../common/services/dict.service';
-import {AddDictList, DictList, ModifyDictList} from '../../../common/model/dict.model';
+import {AddDictList, DictList, ModifyDictList, QueryDict} from '../../../common/model/dict.model';
 
 @Component({
   selector: 'app-dict-list',
@@ -23,6 +23,9 @@ export class DictListComponent implements OnInit {
   //分页相关
   public nowPage: any;
   public option: any;
+
+  //条件查询相关
+  public queryDict: QueryDict = new QueryDict();
   // 修改相关
   public modifyDialog: boolean;
   public modifyDictList: ModifyDictList = new ModifyDictList();
@@ -44,6 +47,8 @@ export class DictListComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.updateDictListData();
+    this.queryDict.dictionaryCode =null;
+    this.queryDict.dictionaryName =null;
   }
 
   public updateDictListData(): void {
@@ -338,6 +343,24 @@ export class DictListComponent implements OnInit {
       }
     });
 
+  }
+
+
+  //条件查询
+  public  queryDictListData(): void {
+    this.dictService.searchDict({page: 1, nums: 10},this.queryDict).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.dictLists = value.data.contents;
+      }
+    );
+  }
+  //重置
+  public  resetQueryDictList(): void {
+     this.queryDict.dictionaryName = null;
+     this.queryDict.dictionaryCode = null;
+     this.updateDictListData();
   }
   //分页查询
   public nowpageEventHandle(event: any) {

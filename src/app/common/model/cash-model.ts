@@ -78,6 +78,15 @@ export class ModifyCash {
   id?: number;
 }
 
+//条件查询
+export class QueryCash {
+  serviceAreaId?: number;
+  orientationDO?: number;
+  storeId?: number;
+  storeName?: string;
+}
+
+
 // 上下行方向泛型
 export class HighSpeedDirection {
   label?: string;

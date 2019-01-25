@@ -13,23 +13,27 @@ export class LimitService {
   /*****************************角色管理**************************/
   // 增加
   public addRoleItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/role/add`, params);
+    return this.http.post(`${this.globalService.urlt}/role/add`, params);
   }
   // 删除单个
   public deleteRoleItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/role/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/role/delete/${id}`);
   }
   // 删除多个
   public deleteRoleList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/role/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/role/delete`, params);
   }
   // 修改
   public modifyRoleItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/role/update`, params);
+    return this.http.post(`${this.globalService.urlt}/role/update`, params);
   }
   // 查询
   public searchRoleList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/role/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/role/queryByPaging/${num.page}/${num.nums}`, {});
+  }
+  // 条件查询
+  public searchRole(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urlt}/role/queryByPaging/${num.page}/${num.nums}`, body);
   }
 
   public searchArea(num): Observable<any> {

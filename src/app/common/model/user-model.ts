@@ -56,3 +56,9 @@ export class modifyUser {
   id?: number; // 用户id
   idt?: string; // 创建时间
 }
+export class QueryUser {
+  realName?: string;
+  userName?: string;
+  organizationId?: number;
+  deptId?: number;
+}

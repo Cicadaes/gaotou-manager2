@@ -20,6 +20,10 @@ export class SerareaFieldtypeComponent implements OnInit {
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addFieldType: AddFieldType = new AddFieldType();
+  
+  // 条件查询相关
+  public categoryName: any;
+  
   //分页相关
   public nowPage: any;
   public option: any;
@@ -340,6 +344,26 @@ export class SerareaFieldtypeComponent implements OnInit {
     });
 
   }
+
+  // 条件查询
+  public queryFieldType(): void {
+    this.serareaService.searchSaFieldType({page: 1, nums: 10},{categoryName:this.categoryName}).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.fieldTypes = value.data.contents;
+      }
+    );
+  }
+  // 重置
+  public  resetQueryFieldType(): void {
+    this.categoryName = null;
+    this.updateFieldTypeData();
+  }
+
+
+
+  //分页
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
     console.log('我是父组件');
@@ -352,5 +376,8 @@ export class SerareaFieldtypeComponent implements OnInit {
     );
     this.selectedfieldTypes = null;
   }
+
+  //
+
 
 }

@@ -13,48 +13,56 @@ export class DictService {
   /*****************************字典**************************/
   // 增加
   public addDictItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionary/add`, params);
+    return this.http.post(`${this.globalService.urlt}/dictionary/add`, params);
   }
   // 删除单个
   public deleteDictItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/dictionary/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/dictionary/delete/${id}`);
   }
   // 删除多个
   public deleteDictList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionary/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/dictionary/delete`, params);
   }
   // 修改
   public modifyDictItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionary/update`, params);
+    return this.http.post(`${this.globalService.urlt}/dictionary/update`, params);
   }
   // 查询
   public searchDictList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionary/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/dictionary/queryByPaging/${num.page}/${num.nums}`, {});
+  }
+  //条件查询
+  public searchDict(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urlt}/dictionary/queryByPaging/${num.page}/${num.nums}`, body);
   }
 
   /*****************************字典词条**************************/
   // 增加
   public addDictWordItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionaryEntry/add`, params);
+    return this.http.post(`${this.globalService.urlt}/dictionaryEntry/add`, params);
   }
   // 删除单个
   public deleteDictWordItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/dictionaryEntry/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/dictionaryEntry/delete/${id}`);
   }
   // 删除多个
   public deleteDictWordList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionaryEntry/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/dictionaryEntry/delete`, params);
   }
   // 修改
   public modifyDictWordItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionaryEntry/update`, params);
+    return this.http.post(`${this.globalService.urlt}/dictionaryEntry/update`, params);
   }
   // 查询
   public searchDictWordList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionaryEntry/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/dictionaryEntry/queryByPaging/${num.page}/${num.nums}`, {});
+  }
+  // 查询
+  public searchDictWord(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urlt}/dictionaryEntry/queryByPaging/${num.page}/${num.nums}`, body);
   }
   // 指定查询
   public searchDictWordItem(item): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/dictionaryEntry/queryByPaging/${item}`, {});
+    return this.http.post(`${this.globalService.urlt}/dictionaryEntry/queryByPaging/${item}`, {});
   }
 }

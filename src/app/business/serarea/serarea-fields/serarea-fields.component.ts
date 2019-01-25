@@ -27,6 +27,9 @@ export class SerareaFieldsComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyField: ModifyField = new ModifyField();
+  
+  // 条件查询相关
+  public attributeName1: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -53,6 +56,7 @@ export class SerareaFieldsComponent implements OnInit {
       }
     );
     this.uploadFieldData();
+    this.attributeName1 = null;
   }
 
   public uploadFieldData(): void {
@@ -367,6 +371,24 @@ export class SerareaFieldsComponent implements OnInit {
     });
 
   }
+
+  //条件查询
+  public  queryFields(): void {
+    this.serareaService.searchSaField({page: 1, nums: 10},{attributeDesc:this.attributeName1}).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.fields = value.data.contents;
+      }
+    );
+  }
+  //重置
+  public  resetQueryFields(): void {
+    this.attributeName1 = null;
+    this.uploadFieldData();
+  }
+
+
 
   // 字段分类改变
   public fieldTypeChange(e) {

@@ -77,6 +77,14 @@ export class CompanyTree {
   list?: any;
   pid?: string;
 }
+
+// 条件查询
+export class QueryVideo{
+  serviceAreaId?: number;
+  orientationDO?: number;
+  groupId?: number;
+}
+
 // 区域树泛型
 export class CompanyTreeNode {
   id?: number;

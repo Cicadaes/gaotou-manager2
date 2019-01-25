@@ -50,6 +50,9 @@ export class LimitRoleComponent implements OnInit {
   public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 部门树选择
   public CompanyId: number; // 区域查询的公司ID
 
+  //条件查询相关
+  public roleName: string;
+  
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -69,6 +72,7 @@ export class LimitRoleComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.uploadRoleData();
+    this.roleName = null;
   }
 
   public uploadRoleData(): void {
@@ -367,6 +371,22 @@ export class LimitRoleComponent implements OnInit {
 
   }
 
+  //条件查询
+  public  queryRole(): void {
+    console.log(this.roleName);
+    this.limitService.searchRole({page: 1, nums: 10},{roleName:this.roleName}).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
+        this.roles = value.data.contents;
+      }
+    );
+  }
+  // 重置数据
+  public  resetQueryRole(): void {
+    this.roleName = null;
+    this.uploadRoleData();
+  }
 
   //选择区域
   public AreaTreeClick(): void {

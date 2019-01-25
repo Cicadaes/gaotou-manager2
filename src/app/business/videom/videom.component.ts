@@ -3,7 +3,7 @@ import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideomService} from '../../common/services/videom.service';
 import {AddVideo, ModifyVideo, Video} from '../../common/model/videom-model';
-import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
+import {AddTreeArea, QueryVideo, SelectItem, TreeNode} from '../../common/model/shared-model';
 
 @Component({
   selector: 'app-videom',
@@ -27,6 +27,12 @@ export class VideomComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: SelectItem[]; // 店铺列表
   public videoGroupList: SelectItem[]; // 分组列表
+  
+  // 条件查询
+  public  queryVideo: QueryVideo = new QueryVideo();
+  public  ServiceName: any;
+  public  orientationName: any;
+  public  VideoGroupName: any;
   //分页相关
   public nowPage: any;
   public option: any;
@@ -53,16 +59,20 @@ export class VideomComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.updateVideoData();
+
   }
 
   public updateVideoData(): void {
     this.videomService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value.data.contents);
+        console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videos = value.data.contents;
       }
     );
+    this.queryVideo.groupId = null;
+    this.queryVideo.serviceAreaId = null;
+    this.queryVideo.orientationDO = null;
   }
 
   // 选中后赋值
@@ -411,10 +421,35 @@ export class VideomComponent implements OnInit {
     this.storeList = null;
   }
 
+  //条件查询
+  public  queryVideoData(): void {
+    this.videomService.searchVideo({page: 1, nums: 10},this.queryVideo).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.videos = value.data.contents;
+      }
+    );
+  }
+  // 重置
+  public  resetQueryVideo(): void {
+    this.queryVideo.groupId = null;
+    this.queryVideo.serviceAreaId = null;
+    this.queryVideo.orientationDO = null;
+    this.addAreaTree.label = null;
+    this.ServiceName = null;
+    this.orientationName = null;
+    this.VideoGroupName = null;
+    this.updateVideoData();
+  }
+
+
+
   // 选择服务区
   public serviceChange(e): void {
     this.addVideo.serviceAreaId = e.value.id;
     this.modifyVideo.serviceAreaId = e.value.id;
+    this.queryVideo.serviceAreaId =e.value.id;
     this.videomService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         this.highsdData = this.initializeServiceAreaDirec(value.data);
@@ -426,6 +461,7 @@ export class VideomComponent implements OnInit {
   public directionChange(e): void {
     this.addVideo.saOrientationId = e.value.id;
     this.modifyVideo.saOrientationId = e.value.id;
+    this.queryVideo.orientationDO= e.value.id;
     console.log(e.value.id);
     this.videomService.searchStoreItem(e.value.orientaionId).subscribe(
       (value) => {
@@ -449,6 +485,7 @@ export class VideomComponent implements OnInit {
   public videoGroupChange(e): void {
     this.addVideo.groupId = e.value.id;
     this.modifyVideo.groupId = e.value.id;
+    this.queryVideo.groupId = e.value.id;
   }
 
   // 数据格式化
@@ -515,7 +552,6 @@ export class VideomComponent implements OnInit {
     }
     return oneChild;
   }
-
   public initializeVideoGroup(data): any {
     const oneChild = [];
     for (let i = 0; i < data.length; i++) {

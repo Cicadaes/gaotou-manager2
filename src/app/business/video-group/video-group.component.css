@@ -1,0 +1,21 @@
+.btn-manner .addAreaNameInput{
+  height: 3vh;
+  width: 7vw;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: none;
+}
+.querybtn {
+  margin: 0;
+  padding: 0;
+  width: 3vw;
+  height: 3.5vh;
+}
+.querybtn:active{
+  background: #209E91;
+}

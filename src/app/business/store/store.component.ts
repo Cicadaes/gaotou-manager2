@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AddStore, ModifyStore, Store} from '../../common/model/store-model';
+import {AddStore, ModifyStore, QueryStroe, Store} from '../../common/model/store-model';
 import {StoreService} from '../../common/services/store.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -32,6 +32,11 @@ export class StoreComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeTypes: SelectItem[]; // 上下行选择数据
 
+  // 条件查询相关
+  public queryStroe: QueryStroe = new QueryStroe();
+  public ServiceDown: any; //选择服务区
+  public orientationDown: any; //选择上下行
+  public StoreType: any; // 选择店铺分类
   //修改相关
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyStore: ModifyStore = new ModifyStore(); //修改弹窗显示控制
@@ -73,6 +78,12 @@ export class StoreComponent implements OnInit {
         this.stores = value.data.contents;
       }
     );
+
+    this.queryStroe.categoryCode = null;
+    this.queryStroe.orientationDO = null;
+    this.queryStroe.serviceAreaId = null;
+    this.queryStroe.storeName = null;
+    this.queryStroe.principal = null;
   }
 
   // 选中后赋值
@@ -376,6 +387,35 @@ export class StoreComponent implements OnInit {
 
   }
 
+
+  //分页查询
+  public  queryStoreData(): void {
+    this.storeService.searchStore({page: 1, nums: 10},this.queryStroe).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.stores = value.data.contents;
+      }
+    );
+  }
+  // 重置
+  public  resetQueryStore(): void {
+    this.queryStroe.categoryCode = null;
+    this.queryStroe.orientationDO = null;
+    this.queryStroe.serviceAreaId = null;
+    this.queryStroe.storeName = null;
+    this.queryStroe.principal = null;
+    this.addAreaTree.label = null;
+    this.ServiceDown = null;
+    this.orientationDown = null;
+    this.StoreType = null;
+    this.updateCashDate();
+  }
+
+
+
+
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -417,8 +457,10 @@ export class StoreComponent implements OnInit {
     this.addStore.serviceAreaName = e.value.name;
     this.modifyStore.serviceAreaId = e.value.id;
     this.modifyStore.serviceAreaName = e.value.name;
+    this.queryStroe.serviceAreaId = e.value.id;
     this.storeService.searchHighDirection(e.value.id).subscribe(
       (value) => {
+        console.log(value);
         this.highsdData = this.initializeServiceAreaDirec(value.data);
       }
     );
@@ -428,6 +470,7 @@ export class StoreComponent implements OnInit {
   public directionChange(e): void {
     this.addStore.saOrientationId = e.value.id;
     this.modifyStore.saOrientationId = e.value.id;
+    this.queryStroe.orientationDO = e.value.id;
   }
 
   // 选择店铺类型
@@ -435,6 +478,7 @@ export class StoreComponent implements OnInit {
     console.log(e.value.code);
     this.addStore.categoryCode = e.value.code;
     this.modifyStore.categoryCode = e.value.code;
+    this.queryStroe.categoryCode = e.value.code;
   }
 
   // 选择时间

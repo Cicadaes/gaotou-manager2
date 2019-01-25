@@ -384,6 +384,14 @@ export class OrgCompanyComponent implements OnInit {
      }
    );
   }
+  // 重置
+  public  resetCompanyQuery(): void {
+    this.queryCompany.name = '';
+    this.queryCompany.regNo = '';
+    this.queryCompany.pid = null;
+    this.addAreaTree.label = '';
+    this.updateCompanyDate(1);
+  }
 
   // 选择区域
   public AreaTreeClick(): void {
@@ -404,9 +412,9 @@ export class OrgCompanyComponent implements OnInit {
 
   public treeSelectAreaClick(): void {
     this.areaDialog = false;
+    this.queryCompany.areaName = this.addAreaTree.label;
     this.addCompany.areaCode = this.addAreaTree.areaCode;
     this.addCompany.areaName = this.addAreaTree.label;
-    this.queryCompany.name = this.addAreaTree.label;
     this.modifyCompany.areaCode = this.addAreaTree.areaCode;
     this.modifyCompany.areaName = this.addAreaTree.label;
   }

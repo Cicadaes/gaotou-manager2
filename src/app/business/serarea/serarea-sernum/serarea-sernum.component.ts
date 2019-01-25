@@ -2,8 +2,15 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
-import {AddSerarea, ModifySerarea, Serarea} from '../../../common/model/serarea-model';
-import {AddTreeArea, SelectItem} from '../../../common/model/shared-model';
+import {AddSerarea, ModifySerarea, Serarea, QuerySerarea} from '../../../common/model/serarea-model';
+import {
+  AddTreeArea,
+  CompanyTree,
+  CompanyTreeNode,
+  DepartmentTree,
+  DepartmentTreeNode, DutyTreeNode,
+  SelectItem
+} from '../../../common/model/shared-model';
 import {TreeNode} from '../../../common/model/cash-model';
 import {e} from '@angular/core/src/render3';
 
@@ -41,9 +48,23 @@ export class SerareaSernumComponent implements OnInit {
   //分页相关
   public nowPage: any;
   public option: any;
+
+  // 树结构
+  public CompanyTrees: CompanyTree[];
+  public companyDialog: boolean;// 公司树弹窗
+  public CompanyTree: CompanyTree = new CompanyTree(); // 公司树选择
+
+  public DepartmentTrees:  DepartmentTree[];
+  public departmentDialog: boolean;// 部门树弹窗
+  public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 部门树选择
+  public CompanyId: number; // 区域查询的公司ID
+
   // 修改
   public revampDialog: boolean; // 修改弹窗
   public revampSerArea: ModifySerarea = new ModifySerarea();
+  public modifyFlag = 0;
+  //条件查询相关
+  public querySerarea: QuerySerarea = new QuerySerarea();
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -64,11 +85,11 @@ export class SerareaSernumComponent implements OnInit {
     ];
     this.updateApplyListData();
     // 初始化公司数据
-    this.serareaService.searchCompanyList({page: 1, nums: 1000}).subscribe(
-      (val) => {
-        this.addCompanySelect = this.initializeSelectCompany(val.data.contents);
-      }
-    );
+    // this.serareaService.searchCompanyList({page: 1, nums: 1000}).subscribe(
+    //   (val) => {
+    //     this.addCompanySelect = this.initializeSelectCompany(val.data.contents);
+    //   }
+    // );
     // 初始化人员数据
     this.serareaService.searchUserList({page: 1, nums: 1000}).subscribe(
       (val) => {
@@ -94,15 +115,20 @@ export class SerareaSernumComponent implements OnInit {
         });
       }
     );
+
+    this.querySerarea.administrativeAreaId = null;
+    this.querySerarea.organizationId = null;
+    this.querySerarea.name = null;
+    this.querySerarea.deptId = null;
     console.log(this.commonAttributeValues);
   }
 
   public updateApplyListData(): void {
     this.serareaService.searchSerAraList({page: 1, nums: 10}).subscribe(
       (value) => {
+        console.log(value);
         this.serAreas = value.data.contents;
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        console.log(value);
       }
     );
   }
@@ -315,6 +341,7 @@ export class SerareaSernumComponent implements OnInit {
 
   // 修改、保存修改
   public revampClick() {
+    this.modifyFlag = 1;
     if (this.selectedSerAreas === undefined || this.selectedSerAreas.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -346,6 +373,8 @@ export class SerareaSernumComponent implements OnInit {
             this.revampSerArea.chiefName = val.data.chiefName;
             this.revampSerArea.chiefPhone = val.data.chiefPhone;
             this.revampSerArea.chiefUserId = val.data.chiefUserId;
+            this.revampSerArea.organizationId  =val.data.organizationId;
+            this.revampSerArea.organizationName  =val.data.organizationName;
             this.revampSerArea.commonAttributeValues = val.data.commonAttributeValues;
             this.revampSerArea.upAttributeValues = val.data.upAttributeValues;
             this.revampSerArea.downAttributeValues = val.data.downAttributeValues;
@@ -453,7 +482,7 @@ export class SerareaSernumComponent implements OnInit {
 
   }
 
-  // 选择公司
+ /* // 选择公司
   public companyChange(e): void {
     this.addSerarea.organizationName = e.value.name;
     this.addSerarea.organizationId = e.value.id;
@@ -473,7 +502,124 @@ export class SerareaSernumComponent implements OnInit {
     this.addSerarea.deptId = e.value.id;
     this.revampSerArea.deptName = e.value.name;
     this.revampSerArea.deptId = e.value.id;
+  }*/
+
+  //条件查询
+  public  querySerareaData(): void {
+    this.serareaService.searchSerAra({page: 1, nums: 10},this.querySerarea).subscribe(
+      (value) => {
+        this.serAreas = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        console.log(value);
+      }
+    );
   }
+  //重置数据
+  public  resetQuerySerarea(): void {
+    this.querySerarea.administrativeAreaId = null;
+    this.querySerarea.organizationId = null;
+    this.querySerarea.name = null;
+    this.querySerarea.deptId = null;
+    this.addAreaTree.label = null;
+    this.CompanyTree.label = null;
+    this.DepartmentTree.label = null;
+    this.CompanyId = undefined;
+    this.updateApplyListData();
+  }
+
+  //选择公司
+  public CompanyTreeClick(): void {
+    this.companyDialog = true;
+    this.serareaService.searchCompanyTree().subscribe(
+      (val) => {
+        this.CompanyTrees = this.initializeCompanyTree(val.data);
+      }
+    );
+  }
+
+  //选择部门
+  public  departmentTreeClick(): void {
+    if (this.modifyFlag === 1){
+      this.departmentDialog = true;
+      console.log(this.revampSerArea.organizationId);
+      this.serareaService.searchDepartmentTree(this.revampSerArea.organizationId).subscribe(
+        (val) => {
+          console.log(val);
+          this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+          // console.log( this.CompanyTrees);
+        }
+      );
+    } else {
+      if (this.CompanyId === undefined) {
+        if (this.cleanTimer) {
+          clearTimeout(this.cleanTimer);
+        }
+        this.msgs = [];
+        this.msgs.push({severity: 'error', summary: '操作错误', detail: '请先选择公司'});
+        this.cleanTimer = setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }else {
+        this.departmentDialog = true;
+        console.log(this.CompanyId);
+        this.serareaService.searchDepartmentTree(this.CompanyId).subscribe(
+          (val) => {
+            console.log(val);
+            this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+            // console.log( this.CompanyTrees);
+          }
+        );
+      }
+    }
+
+  }
+
+  public  departmentTreequery(): void {
+      if (this.CompanyId === undefined) {
+        if (this.cleanTimer) {
+          clearTimeout(this.cleanTimer);
+        }
+        this.msgs = [];
+        this.msgs.push({severity: 'error', summary: '操作错误', detail: '请先选择公司'});
+        this.cleanTimer = setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }else {
+        this.departmentDialog = true;
+        console.log(this.CompanyId);
+        this.serareaService.searchDepartmentTree(this.CompanyId).subscribe(
+          (val) => {
+            console.log(val);
+            this.DepartmentTrees = this.initializeDepartmentTree(val.data);
+            // console.log( this.CompanyTrees);
+          }
+        );
+      }
+
+  }
+  public treeSelectCompanyClick(): void {
+    this.companyDialog = false;
+    this.CompanyId = this.CompanyTree.id;
+    this.addSerarea.organizationName = this.CompanyTree.label;
+    this.addSerarea.organizationId = this.CompanyTree.id;
+
+    this.revampSerArea.organizationName =  this.CompanyTree.label;
+    this.revampSerArea.organizationId =  this.CompanyTree.id;
+    this.querySerarea.organizationId =  this.CompanyTree.id;
+    // this.queryDepartment.organizationId =  this.CompanyTree.id;
+  }
+  public treeSelectDepartmentClick (): void {
+    this.departmentDialog = false;
+    this.addSerarea.deptId = this.DepartmentTree.id;
+    this.addSerarea.deptName = this.DepartmentTree.label;
+    this.revampSerArea.deptName = this.DepartmentTree.label;
+    this.revampSerArea.deptId = this.DepartmentTree.id;
+    this.querySerarea.deptId = this.DepartmentTree.id;
+  }
+
+
+
+
 
   // 选择区域
   public AreaTreeClick(): void {
@@ -498,6 +644,7 @@ export class SerareaSernumComponent implements OnInit {
       this.addSerarea.administrativeAreaName = this.addAreaTree.label;
       this.revampSerArea.administrativeAreaId = this.addAreaTree.id;
       this.revampSerArea.administrativeAreaName = this.addAreaTree.label;
+      this.querySerarea.administrativeAreaId = this.addAreaTree.id;
       this.areaDialog = false;
     } else {
       this.msgs = [];
@@ -543,18 +690,18 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   /************************数据格式化**************************/
-  // 公司数据格式化
-  public initializeSelectCompany(data): any {
-    const oneChild = [];
-    for (let i = 0; i < data.length; i++) {
-      const childnode = new SelectItem();
-      childnode.name = data[i].name;
-      childnode.id = data[i].id;
-      oneChild.push(childnode);
-    }
-    return oneChild;
-  }
-
+  // // 公司数据格式化
+  // public initializeSelectCompany(data): any {
+  //   const oneChild = [];
+  //   for (let i = 0; i < data.length; i++) {
+  //     const childnode = new SelectItem();
+  //     childnode.name = data[i].name;
+  //     childnode.id = data[i].id;
+  //     oneChild.push(childnode);
+  //   }
+  //   return oneChild;
+  // }
+  //
   // 组织数据格式化
   public initializeSelectOrg(data): any {
     const oneChild = [];
@@ -566,7 +713,46 @@ export class SerareaSernumComponent implements OnInit {
     }
     return oneChild;
   }
+  // 公司数据格式化
+  public initializeCompanyTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new CompanyTreeNode();
+      childnode1.areaCode = data[i].areaCode;
+      childnode1.areaName = data[i].areaName;
+      childnode1.label = data[i].name;
+      childnode1.id = data[i].id;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeCompanyTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
 
+  // 部门数据格式化
+  public initializeDepartmentTree(data): any {
+    const oneChild1 = [];
+    // console.log(data.length);
+    for (let i = 0; i < data.length; i++) {
+      const childnode1 = new DepartmentTreeNode();
+      childnode1.label = data[i].deptName;
+      childnode1.telNumber = data[i].telNumber;
+      childnode1.id = data[i].id;
+      childnode1.pid = data[i].pid;
+      childnode1.pids = data[i].pids;
+      if (data[i].list === null) {
+        childnode1.children = [];
+      } else {
+        childnode1.children = this.initializeDepartmentTree(data[i].list);
+      }
+      oneChild1.push(childnode1);
+    }
+    return oneChild1;
+  }
   // 格式区划树
   public initializeTree(data): any {
     const oneChild = [];

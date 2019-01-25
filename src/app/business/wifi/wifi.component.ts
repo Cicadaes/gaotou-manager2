@@ -28,6 +28,8 @@ export class WifiComponent implements OnInit {
   //分页相关
   public nowPage: any;
   public option: any;
+  //条件查询
+  public ServiceName: any;
   // 修改相关
   public modifyDialog: boolean;
   public modifyWifi: ModifyWifi = new ModifyWifi();
@@ -358,6 +360,25 @@ export class WifiComponent implements OnInit {
     });
 
   }
+
+
+  // 条件查询
+  public queryWifiData (): void {
+    this.wifiService.searchWifi({page: 1, nums: 10},{serviceAreaName:this.ServiceName}).subscribe(
+      (value) => {
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        console.log(this.option);
+        this.wifis = value.data.contents;
+      }
+    );
+  }
+  // 重置
+  public  resetQueryWifi(): void {
+    this.ServiceName = null;
+    this.updateWifiDate();
+  }
+
+
 
   // 选择区域
   public AreaTreeClick(): void {

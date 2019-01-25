@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AddIntercept, Intercept, ModifyIntercept} from '../../common/model/intercept-model';
+import {AddIntercept, Intercept, ModifyIntercept, QueryIntercept} from '../../common/model/intercept-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {InterceptService} from '../../common/services/intercept.service';
@@ -29,6 +29,12 @@ export class InterceptComponent implements OnInit {
   //分页相关
   public nowPage: any;
   public option: any;
+  //条件查询相关
+  public bayonetTypes: any; //选择卡口分类
+  public bayonetLabel: any;
+  public ServiceDown: any; //选择服务区
+  public orientationDown: any; //选择上下行
+  public queryIntercept: QueryIntercept = new QueryIntercept();
   // 修改相关
   public modifyDialog: boolean;//增加弹窗显示控制
   public modifyIntercept: ModifyIntercept = new ModifyIntercept();//增加弹窗显示控制
@@ -52,7 +58,13 @@ export class InterceptComponent implements OnInit {
       {field: 'bayonetName', header: '卡口名称'},
       {field: 'idt', header: '添加时间'},
     ];
+    this.bayonetTypes = [{label:'进口',value:1},{label:'出口',value:2}];
     this.updateInterceptDate();
+    this.queryIntercept.serviceAreaName = null;
+    this.queryIntercept.serviceAreaId = null;
+    this.queryIntercept.bayonetCode = null;
+    this.queryIntercept.bayonetType = null;
+    this.queryIntercept.orientationDO = null;
   }
 
   public updateInterceptDate(): void {
@@ -364,6 +376,30 @@ export class InterceptComponent implements OnInit {
 
   }
 
+  // 条件查询
+  public queryInterceptData (): void {
+    this.interceptService.searchIntercept({page: 1, nums: 10},this.queryIntercept).subscribe(
+      (value) => {
+        console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.intercepts = value.data.contents;
+      }
+    );
+  }
+  //重置
+  public  resetQueryIntercept(): void {
+    this.queryIntercept.serviceAreaName = null;
+    this.queryIntercept.serviceAreaId = null;
+    this.queryIntercept.bayonetCode = null;
+    this.queryIntercept.bayonetType = null;
+    this.queryIntercept.orientationDO = null;
+    this.addAreaTree.label = null;
+    this.ServiceDown = null;
+    this.orientationDown = null;
+    this.bayonetLabel = null;
+    this.updateInterceptDate();
+  }
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -422,6 +458,7 @@ export class InterceptComponent implements OnInit {
 
     this.modifyIntercept.serviceArea.serviceAreaId = e.value.id;
     this.modifyIntercept.serviceArea.serviceAreaName = e.value.name;
+    this.queryIntercept.serviceAreaId = e.value.id;
     this.modifyhighsdData = '请选择上下行';
     this.interceptService.searchHighDirection(e.value.id).subscribe(
       (value) => {
@@ -444,6 +481,14 @@ export class InterceptComponent implements OnInit {
     this.modifyIntercept.saOrientation.flagName = e.value.flagName;
     this.modifyIntercept.saOrientation.orientaionId = e.value.orientaionId;
     this.modifyIntercept.saOrientation.source = e.value.source;
+
+    this.queryIntercept.orientationDO = e.value.orientaionId;
+  }
+
+  // 选择卡口类型
+  public bayonetChange (e): void {
+   console.log(e.value.value);
+   this.queryIntercept.bayonetType = e.value.value;
   }
 
   // 数据格式化

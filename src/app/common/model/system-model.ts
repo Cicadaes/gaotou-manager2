@@ -32,3 +32,8 @@ export class ModifyEventType {
   idt: string; // 创建时间
   // udt: string; // 更新时间
 }
+
+export class QueryEventType {
+  eventCategoryName?: string;
+  categoryCode ?: number;
+}

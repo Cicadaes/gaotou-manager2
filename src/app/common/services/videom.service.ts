@@ -14,47 +14,51 @@ export class VideomService {
   ) { }
   // 增加
   public addItem(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/camera/add`, params);
+    return this.http.post(`${this.globalService.urlt}/camera/add`, params);
   }
   // 删除单个
   public deleteItem(id): Observable<any> {
-    return this.http.get(`${this.globalService.urls}/camera/delete/${id}`);
+    return this.http.get(`${this.globalService.urlt}/camera/delete/${id}`);
   }
   // 删除多个
   public deleteList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/camera/delete`, params);
+    return this.http.post(`${this.globalService.urlt}/camera/delete`, params);
   }
   // 修改
   public modifyList(params): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/camera/update`, params);
+    return this.http.post(`${this.globalService.urlt}/camera/update`, params);
   }
   // 查询
   public searchList(num): Observable<any> {
-    return this.http.post(`${this.globalService.urls}/camera/queryByPaging/${num.page}/${num.nums}`, {});
+    return this.http.post(`${this.globalService.urlt}/camera/queryByPaging/${num.page}/${num.nums}`, {});
+  }
+  // 分页查询
+  public searchVideo(num,body): Observable<any> {
+    return this.http.post(`${this.globalService.urlt}/camera/queryByPaging/${num.page}/${num.nums}`, body);
   }
   // 查询激活区域
   public searchAreaList(num): Observable<any> {
     return this.http.post(
-      `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
+      `${this.globalService.urlt}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
   }
   // 查询所属服务区
   public searchServiceAreaList(id): Observable<any> {
     return this.http.get(
-      `${this.globalService.urls}/common/config/getServiceAreaByAdministrativeAreaId/${id}`, {});
+      `${this.globalService.urlt}/common/config/getServiceAreaByAdministrativeAreaId/${id}`, {});
   }
   // 查询服务区方向
   public searchHighDirection(id): Observable<any> {
     return this.http.get(
-      `${this.globalService.urls}/serviceArea/orientation/queryByServiceAreaId/${id}`);
+      `${this.globalService.urlt}/serviceArea/orientation/queryByServiceAreaId/${id}`);
   }
   // 根据服务区方向查询店铺
   public searchStoreItem(id): Observable<any> {
     return this.http.get(
-      `${this.globalService.urls}/storeInfo/queryByOrientationId/${id}`);
+      `${this.globalService.urlt}/storeInfo/queryByOrientationId/${id}`);
   }
   // 根据服务区方向查询视频分组
   public searchVideoGroupList(id): Observable<any> {
     return this.http.get(
-      `${this.globalService.urls}/cameraGroup/queryByOrientationId/${id}`);
+      `${this.globalService.urlt}/cameraGroup/queryByOrientationId/${id}`);
   }
 }
