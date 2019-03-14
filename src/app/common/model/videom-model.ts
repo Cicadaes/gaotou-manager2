@@ -16,7 +16,9 @@ export class Video {
   videoUrl: string; // 视频源地址
   saOrientationId: number; // 服务区方向2
   cameraType: string; // 摄像头类型
-
+  serviceAreaName: string; // 摄像头类型
+  orientationDo?:OrientationDo;
+  // SelectItem?;SelectItem();
 }
 export class AddVideo {
   saOrientationId: number; // 服务区方向2
@@ -48,4 +50,10 @@ export class ModifyVideo {
   idt: string; // 创建时间
   enabled: any; // 摄像头是否可用
   cameraType: string; // 摄像头类型
+  serviceAreaName: string;
+}
+
+export class OrientationDo {
+  destination?: string;
+  source?: string;
 }

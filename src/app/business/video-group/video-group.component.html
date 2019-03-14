@@ -13,9 +13,9 @@
     <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
     <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
     <label for="addServiceAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
-    <p-dropdown id="addServiceAreaName" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'4.5vh'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."  [(ngModel)]="this.ServiceName"></p-dropdown>
+    <p-dropdown id="addServiceAreaName" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."  [(ngModel)]="this.ServiceName"></p-dropdown>
     <label for="highDirec" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
-    <p-dropdown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'4.5vh'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择高速方向..." [(ngModel)]="this.orientationName"></p-dropdown>
+    <p-dropdown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择高速方向..." [(ngModel)]="this.orientationName"></p-dropdown>
     <button class="btn querybtn" type="button" (click)="queryVideoGroupData()">查询</button>
     <button class="btn querybtn" type="button" (click)="resetQueryVideoGroup()">重置</button>
   </div>
@@ -31,8 +31,11 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr [pSelectableRow]="rowData">
-          <td *ngFor="let col of columns">
-            {{rowData[col.field]}}
+
+          <td  *ngFor="let col of columns" >
+            <span *ngIf="col.field==='orientationDO'" >{{rowData[col.field].flagName}}</span>
+            <span *ngIf="col.field!='orientationDO'">{{rowData[col.field]}}</span>
+
           </td>
         </tr>
       </ng-template>

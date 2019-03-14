@@ -39,6 +39,7 @@ export class VideomComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean; //修改弹窗显示
   public modifyVideo: ModifyVideo = new ModifyVideo();
+  public orientation: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -53,10 +54,11 @@ export class VideomComponent implements OnInit {
   ngOnInit() {
     this.cols = [
       {field: 'id', header: '摄像头id'},
-      {field: 'cameraNumber', header: '摄像头编号'},
       {field: 'cameraName', header: '摄像头名称'},
-      {field: 'showLocation', header: '监视窗位置'},
-      {field: 'idt', header: '添加时间'},
+      // {field: 'showLocation', header: '监视窗位置'},
+      {field: 'serviceAreaName', header: '服务区名字'},
+      {field: 'orientationDO', header: '上下行'},
+      {field: 'outUrl', header: '视频连接'},
     ];
     this.updateVideoData();
 
@@ -287,10 +289,22 @@ export class VideomComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedvideos.length === 1) {
+      this.videomService.searchServiceAreaList(this.selectedvideos[0].serviceAreaId).subscribe(
+        value => {
+          this.addServicesAreas = this.initializeServiceArea(value.data);
+          // console.log(value.data);
+        }
+      );
+      this.videomService.searchHighDirection(this.selectedvideos[0].id).subscribe(
+        (value) => {
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      );
       this.modifyDialog = true;
       this.modifyVideo.cameraName = this.selectedvideos[0].cameraName;
       this.modifyVideo.saOrientationId = this.selectedvideos[0].saOrientationId;
       this.modifyVideo.serviceAreaId = this.selectedvideos[0].serviceAreaId;
+      this.modifyVideo.serviceAreaName = this.selectedvideos[0].serviceAreaName;
       this.modifyVideo.storeId = this.selectedvideos[0].storeId;
       this.modifyVideo.groupId = this.selectedvideos[0].groupId;
       this.modifyVideo.cameraName = this.selectedvideos[0].cameraName;
@@ -303,7 +317,6 @@ export class VideomComponent implements OnInit {
       this.modifyVideo.id = this.selectedvideos[0].id;
       this.modifyVideo.idt = this.selectedvideos[0].idt;
       this.modifyVideo.cameraType = this.selectedvideos[0].cameraType;
-      console.log(this.modifyVideo.showLocation);
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -442,7 +455,6 @@ export class VideomComponent implements OnInit {
     this.VideoGroupName = null;
     this.updateVideoData();
   }
-
 
 
   // 选择服务区
