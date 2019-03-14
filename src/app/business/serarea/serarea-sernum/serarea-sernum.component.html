@@ -134,7 +134,7 @@
           <label>{{item.attributeName}}：</label>
         </div>
         <div class="ui-g-6">
-          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+          <input pInputText placeholder="请输入{{item.attributeDesc}}" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
           <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
@@ -165,7 +165,7 @@
           <label>{{item.attributeName}}：</label>
         </div>
         <div class="ui-g-6">
-          <input pInputText placeholder="上行方向起始点..." [(ngModel)]="item.value"/>
+          <input pInputText placeholder="请输入{{item.attributeDesc}}" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
           <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
@@ -242,17 +242,30 @@
       </div>
       <div class="ui-g-6" *ngFor="let item of this.revampSerArea.commonAttributeValues;let i = index">
         <div class="ui-g-4">
-          <label for="longitude1">{{item.attributeDesc}}：</label>
+          <label for="commonAttribute-{{i}}">{{item?.attributeDesc}}：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="longitude1" [placeholder]="'请输入'+item.attributeName+'...'" [(ngModel)]="item.value" ([value])="item.value"/>
+          <input pInputText id="commonAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
+        </div>
+      </div>
+      <div class="ui-g-6 text-center">
+        <div class="ui-g-4">
+          <!--<p-dropdown [options]="commonAttributeList" [(ngModel)]="commonAttributeSelect" editable="true" placeholder="添加公共属性" (onChange)="attributeSelectChange($event,'common')"></p-dropdown>-->
         </div>
       </div>
       <!--————————————上行属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">上行属性</h4>
       </div>
-      <div class="ui-g-6">
+      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.upAttributeValues?.attributeValues;let i = index">
+        <div class="ui-g-4">
+          <label for="upAttribute-{{i}}">{{item?.attributeDesc}}：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="upAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
+        </div>
+      </div>
+      <!--<div class="ui-g-6">
         <div class="ui-g-4">
           <label>上行起始点：</label>
         </div>
@@ -278,12 +291,20 @@
         <div class="ui-g-3">
           <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
         </div>
-      </div>
+      </div>-->
       <!--————————————下行属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">下行属性</h4>
       </div>
-      <div class="ui-g-6">
+      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.downAttributeValues?.attributeValues;let i = index">
+        <div class="ui-g-4">
+          <label for="downAttribute-{{i}}">{{item?.attributeDesc}}：</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="downAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
+        </div>
+      </div>
+    <!--  <div class="ui-g-6">
         <div class="ui-g-4">
           <label>下行起始点：</label>
         </div>
@@ -309,7 +330,7 @@
         <div class="ui-g-3">
           <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
         </div>
-      </div>
+      </div>-->
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
@@ -361,7 +382,6 @@
       </div>
     </p-footer>
   </p-dialog>
-
   <p-dialog header="请选择公司" [(visible)]="companyDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
     <div class="ui-g ui-fluid">
       <div class="ui-g-12">

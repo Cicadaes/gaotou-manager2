@@ -60,7 +60,7 @@ export class SerareaService {
     return this.http.post(`${this.globalService.urls}/serviceArea/attribute/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 条件查询
-  public searchSaField(num,body): Observable<any> {
+  public searchSaField(num, body): Observable<any> {
     return this.http.post(`${this.globalService.urls}/serviceArea/attribute/queryByPaging/${num.page}/${num.nums}`, body);
   }
 
@@ -75,6 +75,7 @@ export class SerareaService {
   }
   // 删除多个
   public deleteSerAraList(params): Observable<any> {
+    console.log(params);
     return this.http.post(`${this.globalService.urls}/serviceArea/delete`, params);
   }
   // 修改

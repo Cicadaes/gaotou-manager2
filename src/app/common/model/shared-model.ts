@@ -40,6 +40,7 @@ export class AddTreeArea {
 }
 export class SelectItem {
   id?: number;
+  label?: number;
   name?: string;
   code: any;
   styleClass?: string;

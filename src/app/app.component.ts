@@ -17,7 +17,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.globalService.eventSubject.subscribe(
       (value) => {
-        console.log(value);
         this.display = value.display;
       }
     );
