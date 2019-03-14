@@ -40,7 +40,8 @@ import {PagingModule} from '../../common/components/paging/paging.module';
     DropdownModule,
     RadioButtonModule,
     CalendarModule,
-    PagingModule
+    PagingModule,
+    DropdownModule
   ],
   declarations: [SerareaComponent, SerareaSernumComponent, SerareaFieldsComponent, SerareaFieldtypeComponent],
   providers: [SerareaService, MessageService, ConfirmationService, DatePipe]

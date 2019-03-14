@@ -285,8 +285,7 @@ export class SerareaFieldtypeComponent implements OnInit {
     }
   }
 
-  //确认修改
-
+  // 确认修改
   public modifySure(): void {
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
@@ -294,6 +293,7 @@ export class SerareaFieldtypeComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.globalService.eventSubject.next({display: true});
+        console.log(this.modifyFieldType);
         this.serareaService.modifySaFieldTypeItem(this.modifyFieldType).subscribe(
           (value) => {
             if (value.status === '200') {
@@ -302,7 +302,7 @@ export class SerareaFieldtypeComponent implements OnInit {
                 clearTimeout(this.cleanTimer);
               }
               this.msgs = [];
-              this.selectedfieldTypes=undefined;
+              this.selectedfieldTypes = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
               this.updateFieldTypeData();
               this.cleanTimer = setTimeout(() => {

@@ -28,7 +28,7 @@ ngOnInit() {
     userName: ['', [Validators.required]],
     password: ['' , [Validators.required]]
   });
-    this.formUsername = this.myFromModule.get('userName');
+  this.formUsername = this.myFromModule.get('userName');
   this.formPassword = this.myFromModule.get('password');
 }
 

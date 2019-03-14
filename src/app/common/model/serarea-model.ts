@@ -96,36 +96,36 @@ export class Coordinate {
 
 /*******************添加服务区泛型**************************/
 export class AddSerarea {
-  organizationId: number; // 1 公司ID
-  organizationName: string; // 1 公司名
-  deptId: number; // 1 部门ID
-  deptName: string; // 1 部门名
-  administrativeAreaId: number; // 1 区划id
-  administrativeAreaName: string; // 1 区划名
-  chiefUserId: number; // 1 区长用户id
-  chiefName: string; // 1 区长名
-  chiefPhone: string; // 1 区长电话
-  serviceAreaName: string; // 2 服务区名
-  commonAttributeValues: any[]; // 公共属性：经纬度及面积
-  upAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
-  downAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
+  organizationId?: number; // 1 公司ID
+  organizationName?: string; // 1 公司名
+  deptId?: number; // 1 部门ID
+  deptName?: string; // 1 部门名
+  administrativeAreaId?: number; // 1 区划id
+  administrativeAreaName?: string; // 1 区划名
+  chiefUserId?: number; // 1 区长用户id
+  chiefName?: string; // 1 区长名
+  chiefPhone?: string; // 1 区长电话
+  serviceAreaName?: string; // 2 服务区名
+  commonAttributeValues?: any[]; // 公共属性：经纬度及面积
+  upAttributeValues?: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
+  downAttributeValues?: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
 }
 
 export class ModifySerarea {
-  organizationId: number; // 1 公司ID
-  organizationName: string; // 1 公司名
-  deptId: number; // 1 部门ID
-  deptName: string; // 1 部门名
-  administrativeAreaId: number; // 1 区划id
-  administrativeAreaName: string; // 1 区划名
-  chiefUserId: number; // 1 区长用户id
-  chiefName: string; // 1 区长名
-  chiefPhone: string; // 1 区长电话
-  serviceAreaName: string; // 2 服务区名
-  commonAttributeValues: any[]; // 公共属性：经纬度及面积
-  upAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
-  downAttributeValues: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
-  createUserName: string;
+  organizationId?: number; // 1 公司ID
+  organizationName?: string; // 1 公司名
+  deptId?: number; // 1 部门ID
+  deptName?: string; // 1 部门名
+  administrativeAreaId?: number; // 1 区划id
+  administrativeAreaName?: string; // 1 区划名
+  chiefUserId?: number; // 1 区长用户id
+  chiefName?: string; // 1 区长名
+  chiefPhone?: string; // 1 区长电话
+  serviceAreaName?: string; // 2 服务区名
+  commonAttributeValues?: any[]; // 公共属性：经纬度及面积
+  upAttributeValues?: AddUpDownAttribute = new AddUpDownAttribute(); // 上行;
+  downAttributeValues?: AddUpDownAttribute = new AddUpDownAttribute(); // 下行
+  createUserName?: string;
   id?: number;
   idt?: string;
 }
@@ -133,20 +133,20 @@ export class ModifySerarea {
 // 上下行属性
 export class AddUpDownAttribute {
   source?: string; // 起始点
-  destination: string; // 终点
-  flag: string; // 上下行标识
-  flagName: string; // 上下行
-  attributeValues: Array<AddCommonAttribute>;
+  destination?: string; // 终点
+  flag?: string; // 上下行标识
+  flagName?: string; // 上下行
+  attributeValues?: Array<AddCommonAttribute>;
 }
 
 // 循环属性
 export class AddCommonAttribute {
-  attributeName: string;
-  value: number;
-  attributeDesc: string;
+  attributeName?: string;
+  value?: number;
+  attributeDesc?: string;
 }
 
-//条件查询
+// 条件查询
 export class QuerySerarea {
   name?: string;
   organizationId ?: number;
