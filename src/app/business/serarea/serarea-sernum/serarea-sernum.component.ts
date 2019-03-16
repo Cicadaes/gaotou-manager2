@@ -62,7 +62,7 @@ export class SerareaSernumComponent implements OnInit {
 
   // 修改
   public revampDialog: boolean; // 修改弹窗
-  public revampSerArea: ModifySerarea = {};
+  public revampSerArea: ModifySerarea = new ModifySerarea();
   public modifyFlag = 0;
   // 条件查询相关
   public querySerarea: QuerySerarea = new QuerySerarea();
@@ -99,7 +99,6 @@ export class SerareaSernumComponent implements OnInit {
     );
     this.serareaService.searchtSerareaAttribute().subscribe(
       (value) => {
-        console.log(value);
         value.data.commonAttribute.map((val, index) => {
           this.commonAttributeValues.push(
             {attributeName: val.attributeDesc, value: '', attributeDesc: val.attributeName, attributeId: val.id}
@@ -149,7 +148,7 @@ export class SerareaSernumComponent implements OnInit {
   public selectItemClone (c: any): any {
     const car = [];
     c.map((item) => {
-      car.push({label: item['attributeDesc'], value: item['attributeDesc']});
+      car.push({label: item['attributeDesc'], value: item['attributeDesc'], id: item['id']});
     });
    /* for (const prop in c) {
       if (c) {
@@ -159,7 +158,8 @@ export class SerareaSernumComponent implements OnInit {
     return car;
   }
   public attributeSelectChange (event, type): void {
-      // console.log(event);
+      console.log(event);
+      console.log(this.commonAttributeSelect);
   }
 
   // 增加
@@ -352,7 +352,7 @@ export class SerareaSernumComponent implements OnInit {
     }
   }
 
-  // 修改、保存修改
+  // 修改弹窗
   public revampClick() {
     this.modifyFlag = 1;
     if (this.selectedSerAreas === undefined || this.selectedSerAreas.length === 0) {
@@ -378,7 +378,7 @@ export class SerareaSernumComponent implements OnInit {
       this.serareaService.searchSerAraListItem({id: this.selectedSerAreas[0].id}).subscribe(
         (val) => {
           if (val.status === '200') {
-            // console.log(val.data);
+            console.log(val.data);
             this.revampSerArea.administrativeAreaId = val.data.administrativeAreaId;
             this.revampSerArea.id = val.data.id;
             this.revampSerArea.idt = val.data.idt;
@@ -393,6 +393,10 @@ export class SerareaSernumComponent implements OnInit {
             this.revampSerArea.upAttributeValues = val.data.upAttributeValues;
             this.revampSerArea.downAttributeValues = val.data.downAttributeValues;
             this.revampSerArea.createUserName = this.selectedSerAreas[0].createUserName;
+            this.upSource = this.revampSerArea.upAttributeValues.source;
+            this.upDestination = this.revampSerArea.upAttributeValues.destination;
+            this.downSource = this.revampSerArea.downAttributeValues.source;
+            this.downDestination = this.revampSerArea.downAttributeValues.destination;
            /* if (this.revampSerArea.upAttributeValues.attributeValues.length === 0) {
               this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
             }
@@ -430,7 +434,7 @@ export class SerareaSernumComponent implements OnInit {
     }
 
   }
-
+  // 保存修改
   public revampSave(): void {
     // 上行
     this.revampSerArea.upAttributeValues.source = this.upSource;
@@ -673,17 +677,17 @@ export class SerareaSernumComponent implements OnInit {
 
   }
 
+  // 公共属性删除
+  public commonAttributeDelete(i, obj): void {
+    obj.splice(i, 1);
+  }
   // 上行下属性删除
-  public upAttributeDelete(i): void {
-    this.upAttribute = this.upAttribute.filter((item, index) => {
-      return i !== index;
-    });
+  public upAttributeDelete(i, obj): void {
+    obj.splice(i, 1);
   }
 
-  public downAttributeDelete(i): void {
-    this.downAttribute = this.upAttribute.filter((item, index) => {
-      return i !== index;
-    });
+  public downAttributeDelete(i, obj): void {
+    obj.splice(i, 1);
   }
 
   /************************数据格式化**************************/
