@@ -53,7 +53,9 @@ export class VideoGroupComponent implements OnInit {
     this.cols = [
       {field: 'groupCode', header: '分组编号'},
       {field: 'groupName', header: '分组名称'},
-      {field: 'idt', header: '添加时间'},
+      {field: 'serviceAreaName', header: '服务区名称'},
+      {field: 'orientationDO', header: '上下行'},
+      {field: 'udt', header: '添加时间'},
     ];
     this.updateCashDate();
     this.queryVideoGroup.orientationDO = null;

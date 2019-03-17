@@ -52,7 +52,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide($event)">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide()">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
@@ -184,7 +184,7 @@
           <label for="addbuildAera">建组面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addbuildAera" [(ngModel)]="addStore.buildAera"/>
+          <input pInputText id="addbuildAera" [(ngModel)]="addStore.buildAera" type="number"/>
         </div>
       </div>
       <!--实用面积-->
@@ -193,7 +193,7 @@
           <label for="addusableArea">实用面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addusableArea" [(ngModel)]="addStore.usableArea"/>
+          <input pInputText id="addusableArea" [(ngModel)]="addStore.usableArea" type="number" />
         </div>
       </div>
       <!--行业编码-->
@@ -264,7 +264,7 @@
     </p-footer>
   </p-dialog>
 
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide()">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
@@ -281,7 +281,7 @@
           <label for="modifyserviceAreaId">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyStore.serviceAreaName"></p-dropdown>
+          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifySeriviceName"></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -290,7 +290,7 @@
           <label for="modifysaOrientationId">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyOrientation"></p-dropdown>
         </div>
       </div>
       <!--店铺分类-->
@@ -396,7 +396,7 @@
           <label for="modifybuildAera">建组面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifybuildAera" [(ngModel)]="modifyStore.buildAera" ([value])="this.modifyStore.buildAera"/>
+          <input pInputText id="modifybuildAera" [(ngModel)]="modifyStore.buildAera" ([value])="this.modifyStore.buildAera" type="number"/>
         </div>
       </div>
       <!--实用面积-->
@@ -405,7 +405,7 @@
           <label for="modifyusableArea">实用面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifyusableArea" [(ngModel)]="modifyStore.usableArea" ([value])="this.modifyStore.industryName"/>
+          <input pInputText id="modifyusableArea" [(ngModel)]="modifyStore.usableArea" ([value])="this.modifyStore.industryName" type="number"/>
         </div>
       </div>
       <!--行业编码-->

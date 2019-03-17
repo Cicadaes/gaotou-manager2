@@ -1,3 +1,6 @@
+::-webkit-scrollbar{
+  display:none;
+}
 .video-manage{
   padding: 0 15px
 }
@@ -22,4 +25,9 @@
 .btn-manner .addAreaNameInput{
   height: 3vh;
   width: 7vw;
+}
+
+td {
+  overflow-x: scroll;
+  /*overflow: visible;*/
 }
