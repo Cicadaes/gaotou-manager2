@@ -328,7 +328,7 @@ export class StoreComponent implements OnInit {
     }
   }
 
-  // 修改确认
+  // 保存修改
   public modifySure(): void {
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
@@ -336,6 +336,7 @@ export class StoreComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.globalService.eventSubject.next({display: true});
+        console.log(this.modifyStore);
         this.storeService.modifyList(this.modifyStore).subscribe(
           (value) => {
             if (value.status === '200') {
@@ -410,6 +411,13 @@ export class StoreComponent implements OnInit {
     this.orientationDown = null;
     this.StoreType = null;
     this.updateCashDate();
+  }
+  // addOnHide
+  public addOnHide (): void {
+      this.addStore = new AddStore();
+      this.addAreaTree = new AddTreeArea();
+      this.addServicesAreas  = [];
+      this.highsdData = [];
   }
 
 

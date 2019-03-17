@@ -10,18 +10,18 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
-    <label for="addAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">所属区化：</label>
-    <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <label for="addAreaName2" style="margin-left: 0.5vw;font-size: 1.5rem">所属区化：</label>
+    <input pInputText id="addAreaName2" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
     <label for="addserviceAreaId" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
     <p-dropdown id="addserviceAreaId" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px" [options]="addServicesAreas" (onChange)="serviceChange($event)" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="this.ServiceDown"></p-dropdown>
     <label for="addsaOrientationId" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
     <p-dropdown id="addsaOrientationId" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px" [options]="highsdData" (onChange)="directionChange($event)"   optionLabel="name" placeholder="请选择高速方向..." [(ngModel)]="this.orientationDown"></p-dropdown>
-    <label for="addAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">店铺分类：</label>
+    <label for="addstoreId" style="margin-left: 0.5vw;font-size: 1.5rem">店铺分类：</label>
     <p-dropdown id="addstoreId" [options]="storeTypes" (onChange)="storeTypeChange($event)" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择店铺类型..." [(ngModel)]="this.StoreType"></p-dropdown>
-    <label for="addAreaName" style="margin-left: 0.5vw;font-size: 1.5rem">商店名：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryStroe.storeName"/>
-    <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">负责人：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryStroe.principal"/>
+    <label for="addAreaName3" style="margin-left: 0.5vw;font-size: 1.5rem">商店名：</label>
+    <input pInputText id="addAreaName3" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryStroe.storeName"/>
+    <label for="addAreaName4" style="margin-left:  0.5vw;font-size: 1.5rem">负责人：</label>
+    <input pInputText id="addAreaName4" style="height: 3vh;width: 6vw" [(ngModel)]="this.queryStroe.principal"/>
     <button class="btn querybtn" type="button" (click)="queryStoreData()">查询</button>
     <button class="btn querybtn" type="button" (click)="resetQueryStore()">重置</button>
   </div>
@@ -52,42 +52,42 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide($event)">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addAreaName">所属区划：</label>
+          <label for="addAreaName1">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
         </div>
       </div>
       <!--服务区-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addserviceAreaId">所属服务区：</label>
+          <label for="addserviceAreaId1">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="addserviceAreaId1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
         </div>
       </div>
       <!--上下行-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addsaOrientationId">上下行：</label>
+          <label for="addsaOrientationId1">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addsaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown id="addsaOrientationId1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
         </div>
       </div>
       <!--店铺分类-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addstoreId">店铺分类：</label>
+          <label for="addstoreId1">店铺分类：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addstoreId" [options]="storeTypes" (onChange)="storeTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺类型..."></p-dropdown>
+          <p-dropdown id="addstoreId1" [options]="storeTypes" (onChange)="storeTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺类型..."></p-dropdown>
         </div>
       </div>
       <!--合同开始日期-->
