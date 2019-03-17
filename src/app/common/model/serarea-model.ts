@@ -137,6 +137,7 @@ export class AddUpDownAttribute {
   flag?: string; // 上下行标识
   flagName?: string; // 上下行
   attributeValues?: Array<AddCommonAttribute>;
+  id?: any;
 }
 
 // 循环属性

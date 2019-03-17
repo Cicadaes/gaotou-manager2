@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="revampClick()">修改</button>
     <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <input pInputText id="addAreaName5" style="height: 3vh;width: 7vw" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
     <label for="addCompany" style="margin-left: 0.5vw;font-size: 1.5rem">所属公司：</label>
     <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
     <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">所属部门：</label>
@@ -64,10 +64,10 @@
       <!--区划-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addAreaName">所属区划：</label>
+          <label for="addAreaName3">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+          <input pInputText id="addAreaName3" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
         </div>
       </div>
       <!--创建人-->
@@ -113,22 +113,6 @@
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">上行属性</h4>
       </div>
-      <div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>上行起始点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="上行起始点..." [(ngModel)]="upSource"/>
-        </div>
-      </div>
-      <div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>上行结束点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="上行结束点..." [(ngModel)]="upDestination"/>
-        </div>
-      </div>
       <div class="ui-g-6" *ngFor="let item of upAttribute;let i = index">
         <div class="ui-g-3">
           <label>{{item.attributeName}}：</label>
@@ -137,28 +121,12 @@
           <input pInputText placeholder="请输入{{item.attributeDesc}}" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="upAttributeDelete(i,upAttribute)" class="ui-button-danger"></button>
         </div>
       </div>
       <!--————————————下行属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">下行属性</h4>
-      </div>
-      <div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>下行起始点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="下行起始点..." [(ngModel)]="downSource"/>
-        </div>
-      </div>
-      <div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>下行结束点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="下行结束点..." [(ngModel)]="downDestination"/>
-        </div>
       </div>
       <div class="ui-g-6" *ngFor="let item of downAttribute;let i = index">
         <div class="ui-g-3">
@@ -168,7 +136,7 @@
           <input pInputText placeholder="请输入{{item.attributeDesc}}" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="downAttributeDelete(i,downAttribute)" class="ui-button-raised ui-button-danger"></button>
         </div>
       </div>
     </div>
@@ -240,97 +208,88 @@
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">公共属性</h4>
       </div>
-      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.commonAttributeValues;let i = index">
-        <div class="ui-g-4">
+      <div class="ui-g-6" *ngFor="let item of revampSerArea.commonAttributeValues;let i = index">
+        <div class="ui-g-3">
           <label for="commonAttribute-{{i}}">{{item?.attributeDesc}}：</label>
         </div>
-        <div class="ui-g-8">
+        <div class="ui-g-6">
           <input pInputText id="commonAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
         </div>
-      </div>
-      <div class="ui-g-6 text-center">
-        <div class="ui-g-4">
-          <!--<p-dropdown [options]="commonAttributeList" [(ngModel)]="commonAttributeSelect" editable="true" placeholder="添加公共属性" (onChange)="attributeSelectChange($event,'common')"></p-dropdown>-->
+        <div class="ui-g-3">
+          <button pButton type="button" label="删除" (click)="commonAttributeDelete(i, revampSerArea.commonAttributeValues)" class="ui-button-danger"></button>
         </div>
       </div>
+      <!--<div class="ui-g-6 text-center">
+        <div class="ui-g-4">
+          <p-dropdown [options]="commonAttributeList" [(ngModel)]="commonAttributeSelect" [filter]="false" editable="true" placeholder="添加公共属性" (onChange)="attributeSelectChange($event,'common')"></p-dropdown>
+          <select class="col-sm-3 form-control" style="width:200px;" [(ngModel)]="commonAttributeSelect" name="courseId" (input)="attributeSelectChange($event,'common')">
+            <option [ngValue]=""></option>
+            <option class="col-md-1" *ngFor="let course of commonAttributeList" [value]="course.id">{{course.label}}</option>
+          </select>
+        </div>
+      </div>-->
       <!--————————————上行属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">上行属性</h4>
       </div>
-      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.upAttributeValues?.attributeValues;let i = index">
-        <div class="ui-g-4">
+      <div class="ui-g-6">
+       <div class="ui-g-4">
+         <label>方向起点：</label>
+       </div>
+       <div class="ui-g-8">
+         <input pInputText placeholder="请输入服务区方向起点..." [(ngModel)]="upSource"/>
+       </div>
+     </div>
+      <div class="ui-g-6">
+       <div class="ui-g-4">
+         <label>方向终点：</label>
+       </div>
+       <div class="ui-g-8">
+         <input pInputText placeholder="请输入服务区方向终点..." [(ngModel)]="upDestination"/>
+       </div>
+     </div>
+      <div class="ui-g-6" *ngFor="let item of revampSerArea.upAttributeValues?.attributeValues;let i = index">
+        <div class="ui-g-3">
           <label for="upAttribute-{{i}}">{{item?.attributeDesc}}：</label>
         </div>
-        <div class="ui-g-8">
-          <input pInputText id="upAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
-        </div>
-      </div>
-      <!--<div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>上行起始点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.upAttributeValues.source"/>
-        </div>
-      </div>
-      <div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>上行结束点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.upAttributeValues.destination"/>
-        </div>
-      </div>
-      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.upAttributeValues.attributeValues;let i = index">
-        <div class="ui-g-3">
-          <label>{{item.attributeDesc}}：</label>
-        </div>
         <div class="ui-g-6">
-          <input pInputText placeholder="数量..." [(ngModel)]="item.value" ([value])="item.value"/>
+          <input pInputText id="upAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value" />
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="upAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="upAttributeDelete(i,revampSerArea.upAttributeValues?.attributeValues)" class="ui-button-danger"></button>
         </div>
-      </div>-->
+      </div>
       <!--————————————下行属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">下行属性</h4>
       </div>
-      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.downAttributeValues?.attributeValues;let i = index">
+      <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="downAttribute-{{i}}">{{item?.attributeDesc}}：</label>
+          <label>方向起点：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="downAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
-        </div>
-      </div>
-    <!--  <div class="ui-g-6">
-        <div class="ui-g-4">
-          <label>下行起始点：</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.downAttributeValues.source" ([value])="this.revampSerArea.downAttributeValues.source"/>
+          <input pInputText placeholder="请输入下从方向起点" [(ngModel)]="downSource"/>
         </div>
       </div>
       <div class="ui-g-6">
         <div class="ui-g-4">
           <label>下行结束点：</label>
         </div>
-        <div class="ui-g-8">
-          <input pInputText placeholder="数量..." [(ngModel)]="this.revampSerArea.downAttributeValues.destination" ([value])="this.revampSerArea.downAttributeValues.destination"/>
+        <div class="ui-g-6">
+          <input pInputText placeholder="请输入下从方向终点" [(ngModel)]="downDestination"/>
         </div>
       </div>
-      <div class="ui-g-6" *ngFor="let item of this.revampSerArea.downAttributeValues.attributeValues;let i = index">
+      <div class="ui-g-6" *ngFor="let item of revampSerArea.downAttributeValues?.attributeValues;let i = index">
         <div class="ui-g-3">
-          <label>{{item.attributeDesc}}：</label>
+          <label for="downAttribute-{{i}}">{{item?.attributeDesc}}：</label>
         </div>
         <div class="ui-g-6">
-          <input pInputText placeholder="数量..." [(ngModel)]="item.value"  ([value])="item.value"/>
+          <input pInputText id="downAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="downAttributeDelete(i)" class="ui-button-raised ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="downAttributeDelete(i,revampSerArea.downAttributeValues?.attributeValues)" class="ui-button-danger"></button>
         </div>
-      </div>-->
+      </div>
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-helper-clearfix">
