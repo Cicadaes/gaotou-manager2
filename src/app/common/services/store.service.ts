@@ -30,6 +30,7 @@ export class StoreService {
   }
   // 查询
   public searchList(num): Observable<any> {
+    // console.log(num);
     return this.http.post(`${this.globalService.urls}/storeInfo/queryByPaging/${num.page}/${num.nums}`, {});
   }
   // 条件查询

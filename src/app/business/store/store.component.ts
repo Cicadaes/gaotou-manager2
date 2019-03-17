@@ -40,9 +40,12 @@ export class StoreComponent implements OnInit {
   //修改相关
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyStore: ModifyStore = new ModifyStore(); //修改弹窗显示控制
+  public modifyOrientation: any;
+  public modifySeriviceName: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
+  public totalpage: any;
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -73,8 +76,9 @@ export class StoreComponent implements OnInit {
   public updateCashDate(): void {
     this.storeService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
+        console.log(value.data.totalRecord);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
         this.stores = value.data.contents;
       }
     );
@@ -111,6 +115,7 @@ export class StoreComponent implements OnInit {
       header: '增加提醒',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
+        console.log(this.addStore);
         this.globalService.eventSubject.next({display: true});
         this.storeService.addItem(this.addStore).subscribe(
           (value) => {
@@ -122,9 +127,11 @@ export class StoreComponent implements OnInit {
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
               this.updateCashDate();
+              // this.updateAddData();
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
+              this.clearMoudle();
               this.addDialog = false;
             } else {
               setTimeout(() => {
@@ -194,7 +201,10 @@ export class StoreComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateCashDate();
+                    // this.nowpageEventHandle();
+                    //查询数据
+                    this.updateCashDate()
+                    // this.updateNowData();
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -240,6 +250,7 @@ export class StoreComponent implements OnInit {
                     this.msgs = [];
                     this.selectedstores = undefined;
                     this.updateCashDate();
+                    // this.updateNowData();
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -293,29 +304,36 @@ export class StoreComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedstores.length === 1) {
+      this.modifyOrientation = this.selectedstores[0].orientationDO.source+'--'+this.selectedstores[0].orientationDO.destination;
+      this.modifySeriviceName = this.selectedstores[0].serviceAreaName;
+      // console.log;
       this.modifyDialog = true;
       this.modifyStore.id = this.selectedstores[0].id;
-      this.modifyStore.idt = this.selectedstores[0].idt;
-      this.modifyStore.principalMobile = this.selectedstores[0].principalMobile;
-      this.modifyStore.principal = this.selectedstores[0].principal;
-      this.modifyStore.industryName = this.selectedstores[0].industryName;
-      this.modifyStore.industryCode = this.selectedstores[0].industryCode;
-      this.modifyStore.usableArea = this.selectedstores[0].usableArea;
-      this.modifyStore.buildAera = this.selectedstores[0].buildAera;
-      this.modifyStore.waterAccount = this.selectedstores[0].waterAccount;
-      this.modifyStore.electricityAccount = this.selectedstores[0].electricityAccount;
+      this.modifyStore.serviceAreaId = this.selectedstores[0].serviceAreaId;
+      this.modifyStore.saOrientationId = this.selectedstores[0].orientationDO.id;
       this.modifyStore.storeName = this.selectedstores[0].storeName;
       this.modifyStore.storeCode = this.selectedstores[0].storeCode;
-      this.modifyStore.contractStartDate = this.selectedstores[0].contractStartDate;
-      this.modifyStore.contractExpirationDate = this.selectedstores[0].contractExpirationDate;
-      this.modifyStore.cashierType = this.selectedstores[0].cashierType;
-      this.modifyStore.statusChangeDate = this.selectedstores[0].statusChangeDate;
-      this.modifyStore.operateStatus = this.selectedstores[0].operateStatus;
       this.modifyStore.categoryCode = this.selectedstores[0].categoryCode;
-      this.modifyStore.serviceAreaName = this.selectedstores[0].serviceAreaName;
-      this.modifyStore.serviceAreaId = this.selectedstores[0].serviceAreaId;
-      this.modifyStore.saOrientationId = this.selectedstores[0].saOrientationId;
+      this.modifyStore.industryName = this.selectedstores[0].industryName;
+      this.modifyStore.principal = this.selectedstores[0].principal;
+      this.modifyStore.principalMobile = this.selectedstores[0].principalMobile;
+
+      // this.modifyStore.openData
+      this.modifyStore.operateStatus = this.selectedstores[0].operateStatus;
+      this.modifyStore.statusChangeDate = this.selectedstores[0].statusChangeDate;
+      this.modifyStore.usableArea = this.selectedstores[0].usableArea;
+      this.modifyStore.waterAccount = this.selectedstores[0].waterAccount;
+      this.modifyStore.electricityAccount = this.selectedstores[0].electricityAccount;
+      this.modifyStore.buildAera = this.selectedstores[0].buildAera;
+      this.modifyStore.industryCode = this.selectedstores[0].industryCode;
+      this.modifyStore.cashierType = this.selectedstores[0].cashierType;
       this.modifyStore.enabled = this.selectedstores[0].enabled;
+
+
+
+      // this.modifyStore.contractStartDate = this.selectedstores[0].contractStartDate;
+      // this.modifyStore.contractExpirationDate = this.selectedstores[0].contractExpirationDate;
+      // this.modifyStore.serviceAreaName = this.selectedstores[0].serviceAreaName;
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -336,8 +354,10 @@ export class StoreComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.globalService.eventSubject.next({display: true});
+        console.log(this.modifyStore);
         this.storeService.modifyList(this.modifyStore).subscribe(
           (value) => {
+            console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -350,6 +370,7 @@ export class StoreComponent implements OnInit {
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
+              this.clearMoudle();
               this.modifyDialog = false;
             } else {
               setTimeout(() => {
@@ -400,6 +421,12 @@ export class StoreComponent implements OnInit {
   }
   // 重置
   public  resetQueryStore(): void {
+    this.clearMoudle();
+    this.updateCashDate();
+  }
+
+  //清除数据
+  public  clearMoudle(): void {
     this.queryStroe.categoryCode = null;
     this.queryStroe.orientationDO = null;
     this.queryStroe.serviceAreaId = null;
@@ -409,12 +436,54 @@ export class StoreComponent implements OnInit {
     this.ServiceDown = null;
     this.orientationDown = null;
     this.StoreType = null;
-    this.updateCashDate();
   }
 
-
-
-
+  // //删除数据
+  // public  updateNowData(): void {
+  //
+  //   this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
+  //     (value) => {
+  //       // console.log(value);
+  //       if (value.data.contents.length<1 || value.data.contents===null){
+  //         if (this.nowPage-1>=1){
+  //           this.storeService.searchList({page: this.nowPage-1, nums: 10}).subscribe(
+  //             (value) => {
+  //               this.stores = value.data.contents;
+  //               this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+  //             }
+  //           );
+  //         }else {
+  //           this.stores = value.data.contents;
+  //           this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+  //         }
+  //       } else {
+  //         this.stores = value.data.contents;
+  //         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+  //       }
+  //     }
+  //   );
+  //   this.selectedstores = null;
+  // }
+// public  updateAddData(): void {
+//   this.storeService.searchList({page: this.totalpage, nums: 10}).subscribe(
+//     (value) => {
+//       if (value.data.contents.length+1>10){
+//           this.storeService.searchList({page: this.totalpage+1, nums: 10}).subscribe(
+//             (value) => {
+//               this.stores = value.data.contents;
+//               this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+//             }
+//           );
+//           this.stores = value.data.contents;
+//         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+//       } else {
+//         this.stores = value.data.contents;
+//         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+//       }
+//     }
+//   );
+//   this.selectedstores = null;
+// }
 
   // 选择区域
   public AreaTreeClick(): void {

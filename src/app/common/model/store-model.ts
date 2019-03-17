@@ -22,26 +22,27 @@ export class Store {
   storeName: string; // 店铺名称
   usableArea: null; // 实用面积
   waterAccount: null; // 水费账号
+  orientationDO?: orientationDo
 }
 export class AddStore {
   saOrientationId?: number; // 服务区方向
   serviceAreaId?: number; // 服务区id
   serviceAreaName?: string; // 服务区名称
   categoryCode?: string; // 店铺分类
-  operateStatus?: any; // 经营状态
-  statusChangeDate?: string; // 经营状态改变日期
+  operateStatus?: string; // 经营状态
+  statusChangeDate?: any; // 经营状态改变日期
   cashierType?: any; // 收银分类
-  contractExpirationDate?: string; // 合同到期日期
-  contractStartDate?: string; // 合同开始日期
+  contractExpirationDate?: any; // 合同到期日期
+  contractStartDate?: any; // 合同开始日期
   storeCode?: string; // 店铺编码
   storeName?: string; // 店铺名称
-  electricityAccount?: null; // 电费账号
-  waterAccount?: null; // 水费账号
-  buildAera?: null; // 建组面积
-  usableArea?: null; // 实用面积
-  industryCode?: null; // 行业编码
-  industryName?: null; // 行业名称
-  principal?: null; // 负责人姓名
+  electricityAccount?: string; // 电费账号
+  waterAccount?: string; // 水费账号
+  buildAera?: any; // 建组面积
+  usableArea?: any; // 实用面积
+  industryCode?: string; // 行业编码
+  industryName?: string; // 行业名称
+  principal?: string; // 负责人姓名
   principalMobile?: string; // 负责人电话
 }
 export class ModifyStore {
@@ -50,23 +51,24 @@ export class ModifyStore {
   serviceAreaName?: string; // 服务区名称
   categoryCode?: string; // 店铺分类
   operateStatus?: any; // 经营状态
-  statusChangeDate?: string; // 经营状态改变日期
+  statusChangeDate?: any; // 经营状态改变日期
   cashierType?: any; // 收银分类
-  contractExpirationDate?: string; // 合同到期日期
-  contractStartDate?: string; // 合同开始日期
+  contractExpirationDate?: any; // 合同到期日期
+  contractStartDate?: any; // 合同开始日期
   storeCode?: string; // 店铺编码
   storeName?: string; // 店铺名称
-  electricityAccount?: null; // 电费账号
-  waterAccount?: null; // 水费账号
-  buildAera?: number; // 建组面积
-  usableArea?: number; // 实用面积
-  industryCode?: null; // 行业编码
-  industryName?: null; // 行业名称
-  principal?: null; // 负责人姓名
+  electricityAccount?: string; // 电费账号
+  waterAccount?: string; // 水费账号
+  buildAera?: string; // 建组面积
+  usableArea?: string; // 实用面积
+  industryCode?: string; // 行业编码
+  industryName?: string; // 行业名称
+  principal?: string; // 负责人姓名
   principalMobile?: string; // 负责人电话
   enabled: true; // 数据状态
-  id: 1;
-  idt: null;
+  // openDate?: any;
+  id?: number;
+  // idt?: any;
 }
 
 export class QueryStroe {
@@ -75,4 +77,12 @@ export class QueryStroe {
   categoryCode?: string; //店铺分类
   storeName?: string; //商店名
   principal?: string; //负责人
+}
+
+export class orientationDo {
+  id?: number;
+  flag?: number;
+  destination?: string;
+  source?: string;
+
 }
