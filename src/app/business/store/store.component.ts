@@ -476,6 +476,7 @@ export class StoreComponent implements OnInit {
 
   // 选择上下行
   public directionChange(e): void {
+    console.log(e);
     this.addStore.saOrientationId = e.value.id;
     this.modifyStore.saOrientationId = e.value.id;
     this.queryStroe.orientationDO = e.value.id;
