@@ -52,7 +52,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide($event)">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide()">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
@@ -184,7 +184,7 @@
           <label for="addbuildAera">建组面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addbuildAera" [(ngModel)]="addStore.buildAera"/>
+          <input pInputText id="addbuildAera" [(ngModel)]="addStore.buildAera" type="number"/>
         </div>
       </div>
       <!--实用面积-->
@@ -193,7 +193,7 @@
           <label for="addusableArea">实用面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addusableArea" [(ngModel)]="addStore.usableArea"/>
+          <input pInputText id="addusableArea" [(ngModel)]="addStore.usableArea" type="number" />
         </div>
       </div>
       <!--行业编码-->
@@ -264,7 +264,7 @@
     </p-footer>
   </p-dialog>
 
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="addOnHide()">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
@@ -396,7 +396,7 @@
           <label for="modifybuildAera">建组面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifybuildAera" [(ngModel)]="modifyStore.buildAera" ([value])="this.modifyStore.buildAera"/>
+          <input pInputText id="modifybuildAera" [(ngModel)]="modifyStore.buildAera" ([value])="this.modifyStore.buildAera" type="number"/>
         </div>
       </div>
       <!--实用面积-->
@@ -405,7 +405,7 @@
           <label for="modifyusableArea">实用面积：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifyusableArea" [(ngModel)]="modifyStore.usableArea" ([value])="this.modifyStore.industryName"/>
+          <input pInputText id="modifyusableArea" [(ngModel)]="modifyStore.usableArea" ([value])="this.modifyStore.industryName" type="number"/>
         </div>
       </div>
       <!--行业编码-->

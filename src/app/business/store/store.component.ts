@@ -45,7 +45,7 @@ export class StoreComponent implements OnInit {
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
-  public totalpage: any;
+  // public totalpage: any;
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -78,7 +78,7 @@ export class StoreComponent implements OnInit {
       (value) => {
         console.log(value.data.totalRecord);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
+        // this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
         this.stores = value.data.contents;
       }
     );
@@ -328,12 +328,7 @@ export class StoreComponent implements OnInit {
       this.modifyStore.industryCode = this.selectedstores[0].industryCode;
       this.modifyStore.cashierType = this.selectedstores[0].cashierType;
       this.modifyStore.enabled = this.selectedstores[0].enabled;
-
-
-
-      // this.modifyStore.contractStartDate = this.selectedstores[0].contractStartDate;
-      // this.modifyStore.contractExpirationDate = this.selectedstores[0].contractExpirationDate;
-      // this.modifyStore.serviceAreaName = this.selectedstores[0].serviceAreaName;
+      
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -498,6 +493,7 @@ export class StoreComponent implements OnInit {
     this.modifyStore.serviceAreaName = '请选择服务区';
     this.storeService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
+        // console.log(val);
         this.addAreaTrees = this.initializeTree(val.data.contents);
       }
     );
@@ -534,6 +530,7 @@ export class StoreComponent implements OnInit {
     this.modifyStore.serviceAreaId = e.value.id;
     this.modifyStore.serviceAreaName = e.value.name;
     this.queryStroe.serviceAreaId = e.value.id;
+    // console.log(e.value.id);
     this.storeService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
