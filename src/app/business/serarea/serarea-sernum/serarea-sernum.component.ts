@@ -27,7 +27,11 @@ export class SerareaSernumComponent implements OnInit {
   public serArea: any; // 接收选中的值
   public selectedSerAreas: Serarea[]; // 多个选择
   public commonAttributeList: SelectItem[];
-  public commonAttributeSelect: SelectItem;
+  public commonAttributeAdd: any[] = [];
+  public upAttributeList: SelectItem[];
+  public upAttributeAdd: any[] = [];
+  public downAttributeList: SelectItem[];
+  public downAttributeAdd: any[] = [];
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addSerarea: AddSerarea = new AddSerarea(); // 添加参数字段
@@ -148,7 +152,15 @@ export class SerareaSernumComponent implements OnInit {
   public selectItemClone (c: any): any {
     const car = [];
     c.map((item) => {
-      car.push({label: item['attributeDesc'], value: item['attributeDesc'], id: item['id']});
+      car.push({
+        label: item['attributeDesc'],
+        value: item['attributeDesc'],
+        id: item['id'],
+        attributeDesc: item['attributeDesc'],
+        attributeId: item['attributeId'],
+        attributeName: item['attributeName'],
+        show: item['show'],
+      });
     });
    /* for (const prop in c) {
       if (c) {
@@ -157,9 +169,34 @@ export class SerareaSernumComponent implements OnInit {
     }*/
     return car;
   }
-  public attributeSelectChange (event, type): void {
-      console.log(event);
-      console.log(this.commonAttributeSelect);
+  public attributeSelectChange (event, type: 'common' | 'up' | 'down'): void {
+    if (type === 'common') {
+      const a = this.commonAttributeAdd.filter((item, index, obj) => {
+        return item.attributeDesc === event.value;
+      })[0];
+      if (a) {
+        this.revampSerArea.commonAttributeValues.push(a);
+      }
+      return;
+    }
+    if (type === 'up') {
+      const a = this.upAttributeAdd.filter((item, index, obj) => {
+        return item.attributeDesc === event.value;
+      })[0];
+      if (a) {
+        this.revampSerArea.upAttributeValues.attributeValues.push(a);
+      }
+      return;
+    }
+    if (type === 'down') {
+      const a = this.downAttributeAdd.filter((item, index, obj) => {
+        return item.attributeDesc === event.value;
+      })[0];
+      if (a) {
+        this.revampSerArea.downAttributeValues.attributeValues.push(a);
+      }
+      return;
+    }
   }
 
   // 增加
@@ -378,7 +415,6 @@ export class SerareaSernumComponent implements OnInit {
       this.serareaService.searchSerAraListItem({id: this.selectedSerAreas[0].id}).subscribe(
         (val) => {
           if (val.status === '200') {
-            console.log(val.data);
             this.revampSerArea.administrativeAreaId = val.data.administrativeAreaId;
             this.revampSerArea.id = val.data.id;
             this.revampSerArea.idt = val.data.idt;
@@ -397,28 +433,57 @@ export class SerareaSernumComponent implements OnInit {
             this.upDestination = this.revampSerArea.upAttributeValues.destination;
             this.downSource = this.revampSerArea.downAttributeValues.source;
             this.downDestination = this.revampSerArea.downAttributeValues.destination;
-           /* if (this.revampSerArea.upAttributeValues.attributeValues.length === 0) {
-              this.revampSerArea.upAttributeValues.attributeValues = this.upAttribute;
-            }
-            if (this.revampSerArea.downAttributeValues.attributeValues.length === 0) {
-              this.revampSerArea.downAttributeValues.attributeValues = this.downAttribute;
-            }*/
-            this.globalService.eventSubject.next({display: false});
-          } else {
-            // this.globalService.eventSubject.next({display: false});
-            this.msgs = [];
-            this.msgs.push({severity: 'error', summary: '请求异常', detail: '网络请求异常'});
-            this.cleanTimer = setTimeout(() => {
-              this.msgs = [];
-            }, 3000);
-          }
-          this.revampDialog = true;
-        }
-      );
-      this.serareaService.searchSaField({page: 1, nums: 10000}, {}).subscribe(
-        (val) => {
-          if (val.status === '200') {
-            this.commonAttributeList = this.selectItemClone(val.data.contents);
+            this.serareaService.searchSaCommonFieldList(this.selectedSerAreas[0].id).subscribe(
+              (value) => {
+                if (value.status === '200') {
+                  this.commonAttributeAdd = value.data;
+                  this.commonAttributeList = this.selectItemClone(value.data);
+                  this.globalService.eventSubject.next({display: false});
+                } else {
+                  // this.globalService.eventSubject.next({display: false});
+                  this.msgs = [];
+                  this.msgs.push({severity: 'error', summary: '请求异常', detail: '网络请求异常'});
+                  this.cleanTimer = setTimeout(() => {
+                    this.msgs = [];
+                  }, 3000);
+                }
+                this.revampDialog = true;
+              }
+            );
+            this.serareaService.searchSaDircFieldList(this.selectedSerAreas[0].id, this.revampSerArea.upAttributeValues.id).subscribe(
+              (value) => {
+                if (value.status === '200') {
+                  this.upAttributeAdd = value.data;
+                  this.upAttributeList = this.selectItemClone(value.data);
+                  this.globalService.eventSubject.next({display: false});
+                } else {
+                  // this.globalService.eventSubject.next({display: false});
+                  this.msgs = [];
+                  this.msgs.push({severity: 'error', summary: '请求异常', detail: '网络请求异常'});
+                  this.cleanTimer = setTimeout(() => {
+                    this.msgs = [];
+                  }, 3000);
+                }
+                this.revampDialog = true;
+              }
+            );
+            this.serareaService.searchSaDircFieldList(this.selectedSerAreas[0].id, this.revampSerArea.downAttributeValues.id).subscribe(
+              (value) => {
+                if (value.status === '200') {
+                  this.downAttributeAdd = value.data;
+                  this.downAttributeList = this.selectItemClone(value.data);
+                  this.globalService.eventSubject.next({display: false});
+                } else {
+                  // this.globalService.eventSubject.next({display: false});
+                  this.msgs = [];
+                  this.msgs.push({severity: 'error', summary: '请求异常', detail: '网络请求异常'});
+                  this.cleanTimer = setTimeout(() => {
+                    this.msgs = [];
+                  }, 3000);
+                }
+                this.revampDialog = true;
+              }
+            );
             this.globalService.eventSubject.next({display: false});
           } else {
             // this.globalService.eventSubject.next({display: false});
@@ -678,16 +743,37 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   // 公共属性删除
-  public commonAttributeDelete(i, obj): void {
+  public commonAttributeDelete(id, i, obj): void {
     obj.splice(i, 1);
+    this.serareaService.delSerAraAttr(id).subscribe(
+      (val) => {
+        if (val.status === '200') {
+          window.alert(val.message);
+        }
+      }
+    );
   }
-  // 上行下属性删除
-  public upAttributeDelete(i, obj): void {
+  // 上行属性删除
+  public upAttributeDelete(id, i, obj): void {
     obj.splice(i, 1);
+    this.serareaService.delSerAraAttr(id).subscribe(
+      (val) => {
+        if (val.status === '200') {
+          window.alert(val.message);
+        }
+      }
+    );
   }
-
-  public downAttributeDelete(i, obj): void {
+// 下行属性删除
+  public downAttributeDelete(id, i, obj): void {
     obj.splice(i, 1);
+    this.serareaService.delSerAraAttr(id).subscribe(
+      (val) => {
+        if (val.status === '200') {
+          window.alert(val.message);
+        }
+      }
+    );
   }
 
   /************************数据格式化**************************/

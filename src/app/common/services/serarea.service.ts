@@ -90,8 +90,20 @@ export class SerareaService {
   public searchSerAraList(num): Observable<any> {
     return this.http.post(`${this.globalService.urls}/serviceArea/queryByPaging/${num.page}/${num.nums}`, {});
   }
-  //条件查询
-  public searchSerAra(num,body): Observable<any> {
+  // 删除指定属性
+  public delSerAraAttr(id): Observable<any> {
+    return this.http.get(`${this.globalService.urls}/serviceArea/deleteAttributeValue/${id}`);
+  }
+  // 查询所有公共字段
+  public searchSaCommonFieldList(id): Observable<any> {
+    return this.http.get(`${this.globalService.urls}/serviceArea/queryCommonAttribute/${id}`);
+  }
+  // 查询所有有方向的字段
+  public searchSaDircFieldList(areaId, oriId): Observable<any> {
+    return this.http.get(`${this.globalService.urls}/serviceArea/queryOrientationAttribute/${areaId}/orientationId/${oriId}`);
+  }
+  // 条件查询
+  public searchSerAra(num, body): Observable<any> {
     return this.http.post(`${this.globalService.urls}/serviceArea/queryByPaging/${num.page}/${num.nums}`, body);
   }
 

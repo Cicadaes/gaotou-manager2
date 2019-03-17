@@ -39,8 +39,13 @@ export class AddTreeArea {
   droppable?: boolean;
 }
 export class SelectItem {
-  id?: any;
   label?: number;
+  value?: any;
+  id?: any;
+  attributeDesc?: string;
+  attributeId?: any;
+  attributeName?: string;
+  show?: any;
   name?: string;
   code: any;
   styleClass?: string;

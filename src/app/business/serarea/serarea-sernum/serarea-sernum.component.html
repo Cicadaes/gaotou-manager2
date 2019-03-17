@@ -216,35 +216,31 @@
           <input pInputText id="commonAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="commonAttributeDelete(i, revampSerArea.commonAttributeValues)" class="ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="commonAttributeDelete(item.id, i, revampSerArea.commonAttributeValues)" class="ui-button-danger"></button>
         </div>
       </div>
-      <!--<div class="ui-g-6 text-center">
+      <div class="ui-g-6 text-center">
         <div class="ui-g-4">
-          <p-dropdown [options]="commonAttributeList" [(ngModel)]="commonAttributeSelect" [filter]="false" editable="true" placeholder="添加公共属性" (onChange)="attributeSelectChange($event,'common')"></p-dropdown>
-          <select class="col-sm-3 form-control" style="width:200px;" [(ngModel)]="commonAttributeSelect" name="courseId" (input)="attributeSelectChange($event,'common')">
-            <option [ngValue]=""></option>
-            <option class="col-md-1" *ngFor="let course of commonAttributeList" [value]="course.id">{{course.label}}</option>
-          </select>
+          <p-dropdown [options]="commonAttributeList" [filter]="false" editable="true" placeholder="添加公共属性" (onChange)="attributeSelectChange($event, 'common')"></p-dropdown>
         </div>
-      </div>-->
+      </div>
       <!--————————————上行属性————————————-->
       <div class="ui-g-12" style="border-bottom: 2px dotted black">
         <h4 class="text-center">上行属性</h4>
       </div>
       <div class="ui-g-6">
-       <div class="ui-g-4">
+       <div class="ui-g-3">
          <label>方向起点：</label>
        </div>
-       <div class="ui-g-8">
+       <div class="ui-g-6">
          <input pInputText placeholder="请输入服务区方向起点..." [(ngModel)]="upSource"/>
        </div>
      </div>
       <div class="ui-g-6">
-       <div class="ui-g-4">
+       <div class="ui-g-3">
          <label>方向终点：</label>
        </div>
-       <div class="ui-g-8">
+       <div class="ui-g-6">
          <input pInputText placeholder="请输入服务区方向终点..." [(ngModel)]="upDestination"/>
        </div>
      </div>
@@ -256,7 +252,12 @@
           <input pInputText id="upAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value" />
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="upAttributeDelete(i,revampSerArea.upAttributeValues?.attributeValues)" class="ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="upAttributeDelete(item['id'], i,revampSerArea.upAttributeValues?.attributeValues)" class="ui-button-danger"></button>
+        </div>
+      </div>
+      <div class="ui-g-6 text-center">
+        <div class="ui-g-4">
+          <p-dropdown [options]="upAttributeList" [filter]="false" editable="true" placeholder="添加上行属性" (onChange)="attributeSelectChange($event, 'up')"></p-dropdown>
         </div>
       </div>
       <!--————————————下行属性————————————-->
@@ -264,15 +265,15 @@
         <h4 class="text-center">下行属性</h4>
       </div>
       <div class="ui-g-6">
-        <div class="ui-g-4">
+        <div class="ui-g-3">
           <label>方向起点：</label>
         </div>
-        <div class="ui-g-8">
+        <div class="ui-g-6">
           <input pInputText placeholder="请输入下从方向起点" [(ngModel)]="downSource"/>
         </div>
       </div>
       <div class="ui-g-6">
-        <div class="ui-g-4">
+        <div class="ui-g-3">
           <label>下行结束点：</label>
         </div>
         <div class="ui-g-6">
@@ -287,7 +288,12 @@
           <input pInputText id="downAttribute-{{i}}" [placeholder]="'请输入'+item?.attributeDesc+'...'" [(ngModel)]="item.value"/>
         </div>
         <div class="ui-g-3">
-          <button pButton type="button" label="删除" (click)="downAttributeDelete(i,revampSerArea.downAttributeValues?.attributeValues)" class="ui-button-danger"></button>
+          <button pButton type="button" label="删除" (click)="downAttributeDelete(item['id'],i,revampSerArea.downAttributeValues?.attributeValues)" class="ui-button-danger"></button>
+        </div>
+      </div>
+      <div class="ui-g-6 text-center">
+        <div class="ui-g-4">
+          <p-dropdown [options]="downAttributeList" [filter]="false" editable="true" placeholder="添加下行属性" (onChange)="attributeSelectChange($event, 'down')"></p-dropdown>
         </div>
       </div>
     </div>
