@@ -53,8 +53,8 @@ export class EventTypeComponent implements OnInit {
   public updateEventTypeDate(): void {
     this.systemService.searchEventTypeList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        // console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.eventTypes = value.data.contents;
       }
     );
@@ -62,7 +62,7 @@ export class EventTypeComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
-    console.log(event.data);
+    // console.log(event.data);
     this.eventType = this.cloneCar(event.data);
   }
 

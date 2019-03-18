@@ -60,7 +60,7 @@ export class WifiComponent implements OnInit {
     this.wifiService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.contents);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.wifis = value.data.contents;
       }
     );

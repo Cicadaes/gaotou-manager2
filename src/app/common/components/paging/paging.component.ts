@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PagingOption} from './paging.model';
+import {number} from 'ng4-validators/src/app/number/validator';
 
 @Component({
   selector: 'app-paging',
@@ -18,7 +19,7 @@ export class PagingComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.option){
-      this.nowPage = 1;
+      // this.nowPage = this.option.nowpage;
       if (this.option.total === null || this.option.total === 0) {
         this.showPaging = false;
         return;

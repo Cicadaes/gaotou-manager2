@@ -65,7 +65,7 @@ export class OrgCompanyComponent implements OnInit {
     this.orgService.searchCompanyList({page: page, nums: 10}).subscribe(
       (value) => {
         this.companies = value.data.contents;
-        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
+        this.option = {total:value.data.totalRecord,row:value.data.pageSize, nowpage:1};
         console.log(value);
       }
     );

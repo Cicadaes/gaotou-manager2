@@ -100,7 +100,7 @@ export class OrgDutyComponent implements OnInit {
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
-        this.option = {total: val.data.totalRecord, row: val.data.pageSize};
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize,nowpage: 1};
       }
     );
   }

@@ -79,7 +79,7 @@ export class LimitRoleComponent implements OnInit {
     this.limitService.searchRoleList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row:value.data.pageSize, nowpage: 1};
         this.roles = value.data.contents;
       }
     );
