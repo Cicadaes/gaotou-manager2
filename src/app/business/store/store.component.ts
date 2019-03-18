@@ -13,8 +13,7 @@ import {DatePipe} from '@angular/common';
   encapsulation: ViewEncapsulation.None
 })
 export class StoreComponent implements OnInit {
-  @ViewChild('addserviceAreaId1')
-  // table显示相关
+
   public stores: Store[]; // 整个table数据
   public cols: any[]; // 表头
   public store: any; // 接收选中的值
@@ -31,6 +30,7 @@ export class StoreComponent implements OnInit {
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeTypes: SelectItem[]; // 上下行选择数据
+  public arealabel= '请选择区划';
 
   // 条件查询相关
   public queryStroe: QueryStroe = new QueryStroe();
@@ -65,12 +65,7 @@ export class StoreComponent implements OnInit {
       {field: 'saOrientationId', header: '服务区方向'},
     ];
     this.updateCashDate();
-    this.storeService.searchStoreType().subscribe(
-      (val) => {
-        console.log(val);
-        this.storeTypes = this.initializeStoreTypes(val.data);
-      }
-    );
+
     // console.log();
   }
 
@@ -304,9 +299,6 @@ export class StoreComponent implements OnInit {
       }, 3000);
     } else if (this.selectedstores.length === 1) {
 
-      this.modifyOrientation = this.selectedstores[0].orientationDO.source+'--'+this.selectedstores[0].orientationDO.destination;
-      this.modifySeriviceName = this.selectedstores[0].serviceAreaName;
-      // console.log;
       this.modifyDialog = true;
       this.modifyStore.id = this.selectedstores[0].id;
       this.modifyStore.serviceAreaId = this.selectedstores[0].serviceAreaId;
@@ -433,11 +425,11 @@ export class StoreComponent implements OnInit {
   // addOnHide
   public addOnHide (): void {
       this.addStore= new AddStore();
-      this.addAreaTree.label = "请选择区划";
+      this.arealabel = "请选择区划";
       this.addServicesAreas = null;
       this.highsdData= null;
-      this.StoreType = [];
-    // this.addserviceAreaId1.nativeElement = '123'
+      this.storeTypes = null;
+      this.StoreType = null;
   }
 
 //   //删除数据
@@ -500,6 +492,7 @@ export class StoreComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.arealabel = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
       this.areaDialog = false;
@@ -527,7 +520,7 @@ export class StoreComponent implements OnInit {
     // console.log(e.value.id);
     this.storeService.searchHighDirection(e.value.id).subscribe(
       (value) => {
-        console.log(value);
+        // console.log(value);
         this.highsdData = this.initializeServiceAreaDirec(value.data);
       }
     );
@@ -535,15 +528,21 @@ export class StoreComponent implements OnInit {
 
   // 选择上下行
   public directionChange(e): void {
-    console.log(e);
+    // console.log(e);
     this.addStore.saOrientationId = e.value.id;
     this.modifyStore.saOrientationId = e.value.id;
     this.queryStroe.orientationDO = e.value.id;
+    this.storeService.searchStoreType().subscribe(
+      (val) => {
+        // console.log(val);
+        this.storeTypes = this.initializeStoreTypes(val.data);
+      }
+    );
   }
 
   // 选择店铺类型
   public storeTypeChange(e): void {
-    console.log(e.value.code);
+    // console.log(e.value.code);
     this.addStore.categoryCode = e.value.code;
     this.modifyStore.categoryCode = e.value.code;
     this.queryStroe.categoryCode = e.value.code;
@@ -631,11 +630,11 @@ export class StoreComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
+    // console.log('我是父组件');
+    // console.log(this.nowPage);
     this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
+        // console.log(value);
         this.stores = value.data.contents;
       }
     );
