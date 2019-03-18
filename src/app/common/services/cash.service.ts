@@ -12,6 +12,7 @@ export class CashService {
   ) { }
   // 增加
   public addItem(params): Observable<any> {
+    console.log(params);
     return this.http.post(`${this.globalService.urls}/cashRegister/add`, params);
   }
   // 删除单个

@@ -1,10 +1,9 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideomService} from '../../common/services/videom.service';
 import {AddVideo, ModifyVideo, Video} from '../../common/model/videom-model';
 import {AddTreeArea, QueryVideo, SelectItem, TreeNode} from '../../common/model/shared-model';
-import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-videom',
