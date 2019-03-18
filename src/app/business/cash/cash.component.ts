@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {CashService} from '../../common/services/cash.service';
 import {GlobalService} from '../../common/services/global.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -22,6 +22,7 @@ export class CashComponent implements OnInit {
   public addCash: AddCash = new AddCash();
   public areaDialog: boolean; // 区域树弹窗
   public addAreaTrees: AddTreeArea[]; // 区域树结构
+  public addAreaSelect = '请选择区域...'; // 区域树选择
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public servicesAreaDialog: boolean; // 服务区树弹窗
   public addServicesAreaTrees: AddTreeArea[]; // 服务区列表
@@ -99,6 +100,7 @@ export class CashComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
+    console.log(this.addCash);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -152,7 +154,6 @@ export class CashComponent implements OnInit {
       reject: () => {
       }
     });
-    console.log(this.addCash);
   }
 
   // 删除
@@ -325,18 +326,19 @@ export class CashComponent implements OnInit {
       }, 3000);
     }
   }
+
   //修改确认
   public modifySure(): void {
     console.log(this.addServicesAreaTrees);
-    if (this.addServicesAreaTrees === undefined){
-        if (this.cleanTimer) {
-          clearTimeout(this.cleanTimer);
-        }
+    if (this.addServicesAreaTrees === undefined) {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择区划'});
+      this.cleanTimer = setTimeout(() => {
         this.msgs = [];
-        this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择区划'});
-        this.cleanTimer = setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
+      }, 3000);
     } else {
       this.confirmationService.confirm({
         message: `确定要修改吗？`,
@@ -398,15 +400,16 @@ export class CashComponent implements OnInit {
   }
 
   public clearDown(): void {
-    this.addAreaTree.label = null;
+    this.addAreaSelect = '请选择区域...';
     this.addServicesAreaTrees = null;
     this.highsdData = null;
     this.storeList = null;
+    this.addCash = new AddCash();
   }
 
   // 条件查询
-  public  queryCashData(): void {
-    this.cashService.searchCash({page: 1, nums: 10},this.queryCash).subscribe(
+  public queryCashData(): void {
+    this.cashService.searchCash({page: 1, nums: 10}, this.queryCash).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -414,8 +417,9 @@ export class CashComponent implements OnInit {
       }
     );
   }
+
   //重置
-  public  resetQueryCash(): void {
+  public resetQueryCash(): void {
     this.updateCashDate();
     this.queryCash.orientationDO = null;
     this.queryCash.serviceAreaId = null;
@@ -528,6 +532,7 @@ export class CashComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.addAreaSelect = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
       this.addCash.city.administrativeAreaId = this.addAreaTree.id;
@@ -578,21 +583,23 @@ export class CashComponent implements OnInit {
 
   // 选择上下行
   public directionChange(e): void {
+    console.log(e);
     this.addCash.saOrientation.destination = e.value.destination;
     this.addCash.saOrientation.flag = e.value.flag;
     this.addCash.saOrientation.flagName = e.value.flagName;
-    this.addCash.saOrientation.orientaionId = e.value.orientaionId;
+    this.addCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
     this.addCash.saOrientation.source = e.value.source;
+    this.addCash.saOrientation.id = e.value.id;
 
     this.modifyCash.saOrientation.destination = e.value.destination;
     this.modifyCash.saOrientation.flag = e.value.flag;
     this.modifyCash.saOrientation.flagName = e.value.flagName;
-    this.modifyCash.saOrientation.orientaionId = e.value.orientaionId;
+    this.modifyCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
     this.modifyCash.saOrientation.source = e.value.source;
 
     this.queryCash.orientationDO = e.value.orientaionId;
     this.modifyCash.store.storeName = '请选择店铺';
-    this.cashService.searchStoreItem(e.value.orientaionId).subscribe(
+    this.cashService.searchStoreItem(e.value.id).subscribe(
       (value) => {
         console.log(value.data);
         this.storeList = this.initializeStore(value.data);
@@ -653,11 +660,11 @@ export class CashComponent implements OnInit {
       for (let i = 0; i < data.length; i++) {
         const childnode = new SelectItem();
         childnode.name = data[i].flagName + '：' + data[i].source + '—>' + data[i].destination;
-        childnode.code = data[i].flag;
-        childnode.destination = data[i].id;
+        childnode.destination = data[i].destination;
         childnode.flag = data[i].flag;
         childnode.flagName = data[i].flagName;
-        childnode.orientaionId = data[i].id;
+        childnode.id = data[i].id;
+        childnode.serviceAreaId = data[i].serviceAreaId;
         childnode.source = data[i].source;
         oneChild.push(childnode);
       }

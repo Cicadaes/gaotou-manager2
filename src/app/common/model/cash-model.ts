@@ -38,8 +38,9 @@ export class AddCashSaOrientation {
   destination?: string;
   flag?: string;
   flagName?: string;
-  orientaionId?: number;
+  serviceAreaId?: number;
   source?: string;
+  id?: any;
 }
 
 export class AddCashStore {
