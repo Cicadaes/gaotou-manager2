@@ -67,7 +67,7 @@ export class DictWordComponent implements OnInit {
     this.dictService.searchDictWordList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option1 = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option1 = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.dictWords = value.data.contents;
       }
     );

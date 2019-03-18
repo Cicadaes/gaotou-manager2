@@ -75,7 +75,7 @@ export class CashComponent implements OnInit {
   public updateCashDate(): void {
     this.cashService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.cashs = value.data.contents;
       }
     );

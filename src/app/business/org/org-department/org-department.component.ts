@@ -99,7 +99,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.orgService.searchDepartList({page: 1, nums: 10}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
-        this.option = {total:val.data.totalRecord,row:val.data.pageSize}
+        this.option = {total:val.data.totalRecord,row:val.data.pageSize, nowpage: 1}
 
       }
     );

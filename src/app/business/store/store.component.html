@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName2" style="margin-left: 0.5vw;font-size: 1.5rem">所属区化：</label>
-    <input pInputText id="addAreaName2" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <input pInputText id="addAreaName2" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel"/>
     <label for="addserviceAreaId" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
     <p-dropdown id="addserviceAreaId" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px" [options]="addServicesAreas" (onChange)="serviceChange($event)" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="this.ServiceDown"></p-dropdown>
     <label for="addsaOrientationId" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
@@ -31,9 +31,6 @@
     <p-table [columns]="cols" [value]="stores" selectionMode="multiple" [(selection)]="selectedstores" (onRowSelect)="onRowSelect($event)">
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <!-- <th style="width: 3em">
-             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-           </th>-->
           <th *ngFor="let col of columns">
             {{col.header}}
           </th>
@@ -41,9 +38,6 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr [pSelectableRow]="rowData">
-          <!-- <td>
-             <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-           </td>-->
           <td *ngFor="let col of columns">
             {{rowData[col.field]}}
           </td>
@@ -60,7 +54,7 @@
           <label for="addAreaName1">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel"/>
         </div>
       </div>
       <!--服务区-->
@@ -69,7 +63,7 @@
           <label for="addserviceAreaId1">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addserviceAreaId1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown   id="addserviceAreaId1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -272,7 +266,7 @@
           <label for="modifyAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" ([value])="addAreaTree.label"/>
+          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel" />
         </div>
       </div>
       <!--服务区-->
@@ -281,7 +275,7 @@
           <label for="modifyserviceAreaId">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifySeriviceName"></p-dropdown>
+          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -290,7 +284,7 @@
           <label for="modifysaOrientationId">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyOrientation"></p-dropdown>
+          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择上下行..."></p-dropdown>
         </div>
       </div>
       <!--店铺分类-->
@@ -452,5 +446,5 @@
       </div>
     </p-footer>
   </p-dialog>
-  <app-paging [option]="option" (pageClick)="nowpageEventHandle($event)"></app-paging>
+  <app-paging [option]="option" (pageClick)="nowpageEventHandle($event) "></app-paging>
 </div>

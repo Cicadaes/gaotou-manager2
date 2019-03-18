@@ -71,7 +71,7 @@ export class InterceptComponent implements OnInit {
     this.interceptService.searchList({page: 1, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.intercepts = value.data.contents;
       }
     );

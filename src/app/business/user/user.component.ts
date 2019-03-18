@@ -95,7 +95,7 @@ export class UserComponent implements OnInit {
     this.userService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];

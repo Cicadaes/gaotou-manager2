@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AddStore, ModifyStore, QueryStroe, Store} from '../../common/model/store-model';
 import {StoreService} from '../../common/services/store.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -11,10 +11,9 @@ import {DatePipe} from '@angular/common';
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.css'],
   encapsulation: ViewEncapsulation.None
-
 })
 export class StoreComponent implements OnInit {
-  // table显示相关
+
   public stores: Store[]; // 整个table数据
   public cols: any[]; // 表头
   public store: any; // 接收选中的值
@@ -31,6 +30,7 @@ export class StoreComponent implements OnInit {
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeTypes: SelectItem[]; // 上下行选择数据
+  public arealabel= '请选择区划';
 
   // 条件查询相关
   public queryStroe: QueryStroe = new QueryStroe();
@@ -45,7 +45,7 @@ export class StoreComponent implements OnInit {
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
-  // public totalpage: any;
+  public totalpage: any;
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -65,12 +65,8 @@ export class StoreComponent implements OnInit {
       {field: 'saOrientationId', header: '服务区方向'},
     ];
     this.updateCashDate();
-    this.storeService.searchStoreType().subscribe(
-      (val) => {
-        console.log(val);
-        this.storeTypes = this.initializeStoreTypes(val.data);
-      }
-    );
+
+    // console.log();
   }
 
   public updateCashDate(): void {
@@ -78,7 +74,7 @@ export class StoreComponent implements OnInit {
       (value) => {
         console.log(value.data.totalRecord);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        // this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
+        this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
         this.stores = value.data.contents;
       }
     );
@@ -109,13 +105,11 @@ export class StoreComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    console.log(this.addStore);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        console.log(this.addStore);
         this.globalService.eventSubject.next({display: true});
         this.storeService.addItem(this.addStore).subscribe(
           (value) => {
@@ -131,7 +125,7 @@ export class StoreComponent implements OnInit {
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
-              this.clearMoudle();
+              // this.clearMoudle();
               this.addDialog = false;
             } else {
               setTimeout(() => {
@@ -304,9 +298,7 @@ export class StoreComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedstores.length === 1) {
-      this.modifyOrientation = this.selectedstores[0].orientationDO.source+'--'+this.selectedstores[0].orientationDO.destination;
-      this.modifySeriviceName = this.selectedstores[0].serviceAreaName;
-      // console.log;
+
       this.modifyDialog = true;
       this.modifyStore.id = this.selectedstores[0].id;
       this.modifyStore.serviceAreaId = this.selectedstores[0].serviceAreaId;
@@ -328,7 +320,7 @@ export class StoreComponent implements OnInit {
       this.modifyStore.industryCode = this.selectedstores[0].industryCode;
       this.modifyStore.cashierType = this.selectedstores[0].cashierType;
       this.modifyStore.enabled = this.selectedstores[0].enabled;
-      
+
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -349,10 +341,10 @@ export class StoreComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.globalService.eventSubject.next({display: true});
-        console.log(this.modifyStore);
+        // console.log(this.modifyStore);
         this.storeService.modifyList(this.modifyStore).subscribe(
           (value) => {
-            console.log(value);
+            // console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -365,7 +357,16 @@ export class StoreComponent implements OnInit {
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
-              this.clearMoudle();
+              // this.clearMoudle();
+
+              // // 更新数据区域
+              // this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
+              //   (value) => {
+              //     console.log(value);
+              //     this.option = {total: value.data.totalRecord, row: value.data.pageSize ,nowpage: this.nowPage};
+              //     this.stores = value.data.contents;
+              //   }
+              // );
               this.modifyDialog = false;
             } else {
               setTimeout(() => {
@@ -408,7 +409,7 @@ export class StoreComponent implements OnInit {
   public  queryStoreData(): void {
     this.storeService.searchStore({page: 1, nums: 10},this.queryStroe).subscribe(
       (value) => {
-        console.log(value);
+        // console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.stores = value.data.contents;
       }
@@ -416,56 +417,46 @@ export class StoreComponent implements OnInit {
   }
   // 重置
   public  resetQueryStore(): void {
-    this.clearMoudle();
+    // this.clearMoudle();
     this.updateCashDate();
+    this.addOnHide();
   }
 
-  //清除数据
-  public  clearMoudle(): void {
-    this.queryStroe.categoryCode = null;
-    this.queryStroe.orientationDO = null;
-    this.queryStroe.serviceAreaId = null;
-    this.queryStroe.storeName = null;
-    this.queryStroe.principal = null;
-    this.addAreaTree.label = null;
-    this.ServiceDown = null;
-    this.orientationDown = null;
-    this.StoreType = null;
-  }
   // addOnHide
   public addOnHide (): void {
-      this.addStore = new AddStore();
-      this.addAreaTree = new AddTreeArea();
-      this.addServicesAreas  = [];
-      this.highsdData = [];
+      this.addStore= new AddStore();
+      this.arealabel = "请选择区划";
+      this.addServicesAreas = null;
+      this.highsdData= null;
+      this.storeTypes = null;
+      this.StoreType = null;
   }
 
-  // //删除数据
-  // public  updateNowData(): void {
-  //
-  //   this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
-  //     (value) => {
-  //       // console.log(value);
-  //       if (value.data.contents.length<1 || value.data.contents===null){
-  //         if (this.nowPage-1>=1){
-  //           this.storeService.searchList({page: this.nowPage-1, nums: 10}).subscribe(
-  //             (value) => {
-  //               this.stores = value.data.contents;
-  //               this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-  //             }
-  //           );
-  //         }else {
-  //           this.stores = value.data.contents;
-  //           this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-  //         }
-  //       } else {
-  //         this.stores = value.data.contents;
-  //         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-  //       }
-  //     }
-  //   );
-  //   this.selectedstores = null;
-  // }
+//   //删除数据
+//   public  updateNowData(): void {
+//     console.log(this.nowPage);
+//     this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
+//       (value) => {
+//         if (value.data.contents.length<1 || value.data.contents===null){
+//           if (this.nowPage-1>=1){
+//             this.storeService.searchList({page: this.nowPage-1, nums: 10}).subscribe(
+//               (value) => {
+//                 this.stores = value.data.contents;
+//                 this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: this.nowPage-1};
+//               }
+//             );
+//           }else {
+//             this.stores = value.data.contents;
+//             this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: this.nowPage};
+//           }
+//         } else {
+//           this.stores = value.data.contents;
+//           this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: this.nowPage};
+//         }
+//       }
+//     );
+//     this.selectedstores = null;
+//   }
 // public  updateAddData(): void {
 //   this.storeService.searchList({page: this.totalpage, nums: 10}).subscribe(
 //     (value) => {
@@ -473,14 +464,12 @@ export class StoreComponent implements OnInit {
 //           this.storeService.searchList({page: this.totalpage+1, nums: 10}).subscribe(
 //             (value) => {
 //               this.stores = value.data.contents;
-//               this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+//               this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: this.totalpage+1};
 //             }
 //           );
-//           this.stores = value.data.contents;
-//         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
 //       } else {
 //         this.stores = value.data.contents;
-//         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+//         this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: this.totalpage};
 //       }
 //     }
 //   );
@@ -500,12 +489,10 @@ export class StoreComponent implements OnInit {
   }
 
   public treeOnNodeSelect(event) {
-    // this.areaDialog = false;
-    // this.addAreaTreeSelect.push(event.node);
-    // console.log(this.addAreaTree);
   }
 
   public treeSelectAreaClick(): void {
+    this.arealabel = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
       this.areaDialog = false;
@@ -533,7 +520,7 @@ export class StoreComponent implements OnInit {
     // console.log(e.value.id);
     this.storeService.searchHighDirection(e.value.id).subscribe(
       (value) => {
-        console.log(value);
+        // console.log(value);
         this.highsdData = this.initializeServiceAreaDirec(value.data);
       }
     );
@@ -541,15 +528,21 @@ export class StoreComponent implements OnInit {
 
   // 选择上下行
   public directionChange(e): void {
-    console.log(e);
+    // console.log(e);
     this.addStore.saOrientationId = e.value.id;
     this.modifyStore.saOrientationId = e.value.id;
     this.queryStroe.orientationDO = e.value.id;
+    this.storeService.searchStoreType().subscribe(
+      (val) => {
+        // console.log(val);
+        this.storeTypes = this.initializeStoreTypes(val.data);
+      }
+    );
   }
 
   // 选择店铺类型
   public storeTypeChange(e): void {
-    console.log(e.value.code);
+    // console.log(e.value.code);
     this.addStore.categoryCode = e.value.code;
     this.modifyStore.categoryCode = e.value.code;
     this.queryStroe.categoryCode = e.value.code;
@@ -637,11 +630,11 @@ export class StoreComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
+    // console.log('我是父组件');
+    // console.log(this.nowPage);
     this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
+        // console.log(value);
         this.stores = value.data.contents;
       }
     );

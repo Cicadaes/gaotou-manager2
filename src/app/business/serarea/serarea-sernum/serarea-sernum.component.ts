@@ -129,7 +129,7 @@ export class SerareaSernumComponent implements OnInit {
     this.serareaService.searchSerAraList({page: 1, nums: 10}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize , nowpage: 1};
       }
     );
   }

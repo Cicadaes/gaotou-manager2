@@ -70,7 +70,7 @@ export class VideomComponent implements OnInit {
     this.videomService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.videos = value.data.contents;
       }
     );
