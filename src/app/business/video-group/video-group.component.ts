@@ -1,10 +1,9 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideoGroupService} from '../../common/services/video-group.service';
 import {AddVideoGroup, ModifyVideoGroup, QueryVideoGroup, VideoGroup} from '../../common/model/video-group-model';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
-import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-video-group',
@@ -29,7 +28,7 @@ export class VideoGroupComponent implements OnInit {
   // 分页相关
   public nowPage: any;
   public option: any;
-  //条件查询相关
+  // 条件查询相关
   public queryVideoGroup: QueryVideoGroup = new QueryVideoGroup();
   public  ServiceName: any;
   public  orientationName: any;
@@ -67,7 +66,6 @@ export class VideoGroupComponent implements OnInit {
   public updateCashDate(): void {
     this.videoGroupService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value.data.contents);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videoGroups = value.data.contents;
 
@@ -402,7 +400,6 @@ export class VideoGroupComponent implements OnInit {
     this.queryVideoGroup.serviceAreaId = e.value.id;
     this.videoGroupService.searchHighDirection(e.value.id).subscribe(
       (value) => {
-        console.log(value);
         this.highsdData = this.initializeServiceAreaDirec(value.data);
       }
     );
@@ -496,7 +493,6 @@ export class VideoGroupComponent implements OnInit {
     console.log(this.nowPage);
     this.videoGroupService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
         this.videoGroups = value.data.contents;
       }
     );
