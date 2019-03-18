@@ -40,6 +40,8 @@ export class OrgDepartmentComponent implements OnInit {
   public departmentDialog: boolean;// 公司树弹窗
   public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 区域树选择
   public CompanyId: number; // 区域查询的公司ID
+  public Companylabel = '请选择公司...';
+  public Departmentlabel = '请选择部门...';
 
 
   //条件查询
@@ -99,7 +101,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.orgService.searchDepartList({page: 1, nums: 10}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
-        this.option = {total:val.data.totalRecord,row:val.data.pageSize, nowpage: 1}
+        this.option = {total:val.data.totalRecord, row:val.data.pageSize}
 
       }
     );
@@ -420,7 +422,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.queryDepartment.organizationId = null;
     this.queryDepartment.deptName = null;
     this.queryDepartment.pid = null;
-    this.CompanyTree.label = null;
+    this.clearData();
     this.dType = null;
     this.updateOrgDate();
     this.DepartmentType = [{label:'1、服务区类',value:1},{label:'2、非服务区类',value:2}];
@@ -487,6 +489,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.areaDialog = false;
   }
   public treeSelectCompanyClick(): void {
+    this.Companylabel = this.CompanyTree.label;
     this.companyDialog = false;
     this.CompanyId = this.CompanyTree.id;
     this.addOrg.organizationName = this.CompanyTree.label;
@@ -497,6 +500,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.queryDepartment.organizationId =  this.CompanyTree.id;
   }
   public treeSelectDepartmentClick (): void {
+    this.Departmentlabel = this.DepartmentTree.label;
     this.departmentDialog = false;
     this.addOrg.pid = this.DepartmentTree.pid;
     this.addOrg.pids = `/${this.DepartmentTree.pid}/${this.DepartmentTree.pids}`;
@@ -628,5 +632,11 @@ export class OrgDepartmentComponent implements OnInit {
       }
     );
     this.selectedorgs = null;
+  }
+
+  public  clearData(): void {
+      this.addAreaTree = new AddTreeArea();
+      this.Companylabel = '请选择公司...';
+      this.Departmentlabel= '请选择部门...';
   }
 }

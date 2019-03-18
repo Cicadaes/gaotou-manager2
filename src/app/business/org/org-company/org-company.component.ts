@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AddTreeArea, TreeNode} from '../../../common/model/shared-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DatePipe} from '@angular/common';
 import {OrgService} from '../../../common/services/org.service';
 import {AddCompany, Company, modifydCompany, queryCompany} from '../../../common/model/org-model';
+import {Calendar, Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-org-company',
@@ -13,7 +14,7 @@ import {AddCompany, Company, modifydCompany, queryCompany} from '../../../common
   encapsulation: ViewEncapsulation.None
 })
 export class OrgCompanyComponent implements OnInit {
-
+  @ViewChild('addfoundDate') addfoundDate: Calendar;
   // table显示相关
   public companies: Company[]; // 整个table数据
   public cols: any[]; // 表头
@@ -32,6 +33,7 @@ export class OrgCompanyComponent implements OnInit {
 
   // 条件查询相关
   public queryCompany: queryCompany = new queryCompany();
+  public arealabel = '请选择区划...';
   //分页相关
   public nowPage: any;
   public option: any;
@@ -65,7 +67,7 @@ export class OrgCompanyComponent implements OnInit {
     this.orgService.searchCompanyList({page: page, nums: 10}).subscribe(
       (value) => {
         this.companies = value.data.contents;
-        this.option = {total:value.data.totalRecord,row:value.data.pageSize, nowpage:1};
+        this.option = {total:value.data.totalRecord, row:value.data.pageSize};
         console.log(value);
       }
     );
@@ -137,6 +139,7 @@ export class OrgCompanyComponent implements OnInit {
   public timeOnSelect(e): void {
     this.addCompany.foundDate = this.datePipe.transform(e, 'yyyy-MM-dd');
     this.modifyCompany.foundDate = this.datePipe.transform(e, 'yyyy-MM-dd');
+    console.log(e);
     // console.log(this.addCompany.foundDate)
   }
 
@@ -389,7 +392,7 @@ export class OrgCompanyComponent implements OnInit {
     this.queryCompany.name = '';
     this.queryCompany.regNo = '';
     this.queryCompany.pid = null;
-    this.addAreaTree.label = '';
+    this.arealabel = "请选择区划...";
     this.updateCompanyDate(1);
   }
 
@@ -411,6 +414,7 @@ export class OrgCompanyComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.arealabel = this.addAreaTree.label;
     this.areaDialog = false;
     this.queryCompany.areaName = this.addAreaTree.label;
     this.addCompany.areaCode = this.addAreaTree.areaCode;
@@ -453,5 +457,12 @@ export class OrgCompanyComponent implements OnInit {
       }
     );
     this.selectedcompanies = null;
+  }
+  
+  
+  public cleardata (): void {
+      this.arealabel = "请选择区划...";
+      this.addCompany = new AddCompany();
+      this.addfoundDate.inputFieldValue = null;
   }
 }

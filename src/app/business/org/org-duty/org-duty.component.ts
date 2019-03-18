@@ -47,6 +47,9 @@ export class OrgDutyComponent implements OnInit {
   public DutyTrees:  DutyTree[];
   public dutyDialog: boolean;// 公司树弹窗
   public DutyTree:  DutyTree = new  DutyTree(); // 区域树选择
+  public Companylabel = '请选择公司...';
+  public Departmentlabel = '请选择部门...';
+  public Dutylabel = '请选择职位...';
   // public DepartmentId: number; // 区域查询的公司ID
   // 分页相关
   public option: any;
@@ -100,17 +103,22 @@ export class OrgDutyComponent implements OnInit {
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
-        this.option = {total: val.data.totalRecord, row: val.data.pageSize,nowpage: 1};
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize};
       }
     );
   }
 
   public cleanData(): void {
-    this.addDuty = {};
-    this.addCompanySelect = [];
-    this.addDepSelect = [];
-    this.addDepTopDutySelect = [];
-    console.log(this.addCompanySelect);
+    this.addDuty = new AddDuty();
+    this.CompanyTree.label = null;
+    this.DepartmentTree.label = null;
+    this.DutyTree.label = null;
+    // this.addCompanySelect = [];
+    // this.addDepSelect = [];
+    // this.addDepTopDutySelect = [];
+    this.Companylabel = '请选择公司...';
+    this.Departmentlabel = '请选择部门...';
+    this.Dutylabel = '请选择职位...'
   }
 
   // 选中后赋值
@@ -414,7 +422,7 @@ export class OrgDutyComponent implements OnInit {
                 this.msgs = [];
               }, 3000);
               this.modifyDialog = false;
-              this.cleanData();
+              // this.cleanData();
             } else {
               console.log(value);
               setTimeout(() => {
@@ -467,8 +475,9 @@ export class OrgDutyComponent implements OnInit {
     this.queryDuty.organizationId = null;
     this.queryDuty.pid = null;
     this.queryDuty.dutyName = null;
-    this.CompanyTree.label = null;
-    this.DepartmentTree.label = null;
+    this.Companylabel = '请选择公司...';
+    this.Departmentlabel = '请选择部门...';
+    this.Dutylabel = '请选择职位...';
     this.updateDutyDate();
   }
   // //选择区域
@@ -596,6 +605,7 @@ export class OrgDutyComponent implements OnInit {
   }
 
   public treeSelectCompanyClick(): void {
+    this.Companylabel = this.CompanyTree.label;
     this.companyDialog = false;
     this.CompanyId = this.CompanyTree.id;
     this.addDuty.organizationName = this.CompanyTree.label;
@@ -607,6 +617,8 @@ export class OrgDutyComponent implements OnInit {
     // this.queryDepartment.organizationId =  this.CompanyTree.id;
   }
   public treeSelectDepartmentClick (): void {
+    this.Departmentlabel = this.DepartmentTree.label;
+
     this.departmentDialog = false;
     this.addDuty.pid = this.DepartmentTree.pid;
     this.addDuty.deptName = this.DepartmentTree.label;
@@ -615,6 +627,7 @@ export class OrgDutyComponent implements OnInit {
     this.queryDuty.deptId = this.DepartmentTree.id;
   }
   public treeSelectDutyClick (): void {
+    this.Dutylabel = this.DutyTree.label;
     this.dutyDialog = false;
     this.addDuty.pid = this.DutyTree.pid;
     this.modifyDuty.pid = this.DutyTree.pid;

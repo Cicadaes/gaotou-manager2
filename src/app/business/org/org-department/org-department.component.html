@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifybtn()">修改</button>
     <label for="addCompany" class="addCompanylabel">所属公司：</label>
-    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择所属公司...">
     <label class="department">部门类型：</label>
     <p-dropdown [options]="DepartmentType" [(ngModel)]="this.dType" optionLabel="label" (onChange)="departmentTypeChange($event)" placeholder="选择部门类型" [showClear]="true"></p-dropdown>
     <label class="department">上级部门ID：</label>
@@ -44,14 +44,14 @@
   </p-scrollPanel>
 
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <div class="ui-g-6">
         <div class="ui-g-4">
           <label for="addCompany">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addCompany" (click)="CompanyTreeClick()" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+          <input pInputText  id="addCompany" (click)="CompanyTreeClick()" [(ngModel)]="this.Companylabel"  placeholder="请选择所属公司...">
         </div>
       </div>
       <div class="ui-g-6">
@@ -59,7 +59,7 @@
           <label for="addCompany">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addCompany" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label"  placeholder="请选择所属部门...">
+          <input pInputText  id="addCompany" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel"  placeholder="请选择所属部门...">
         </div>
       </div>
       <div class="ui-g-6">
@@ -193,7 +193,7 @@
           <label for="addCompany1">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addCompany1" (click)="CompanyTreeClick()" [(ngModel)]="CompanyTree.label"  [placeholder]="this.modifyDepartment.organizationName">
+          <input pInputText  id="addCompany1" (click)="CompanyTreeClick()" [(ngModel)]="this.Companylabel"  [placeholder]="this.modifyDepartment.organizationName">
         </div>
       </div>
       <div class="ui-g-6">
@@ -201,7 +201,7 @@
           <label for="addOrgs1">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addOrgs1" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label"  [placeholder]="this.modifyDepartment.pDeptName">
+          <input pInputText  id="addOrgs1" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel"  [placeholder]="this.modifyDepartment.pDeptName">
         </div>
       </div>
       <div class="ui-g-6">

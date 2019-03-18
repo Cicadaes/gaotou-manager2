@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem" >所属区划：</label>
-    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+    <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel" />
     <label  style="margin-left: 0.5vw;font-size: 1.5rem">公司名称：</label>
     <input pInputText id="addAreaName" style="height: 3vh;width: 7vw"  [(ngModel)]="this.queryCompany.name"/>
     <label  style="margin-left: 0.5vw;font-size: 1.5rem">工商注册号：</label>
@@ -41,14 +41,14 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="cleardata()">
     <div class="ui-g ui-fluid">
       <div class="ui-g-6">
         <div class="ui-g-4">
           <label for="addAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel" />
         </div>
       </div>
       <div class="ui-g-6">
@@ -65,7 +65,7 @@
         </div>
         <div class="ui-g-8">
           <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
-          <p-calendar id="addfoundDate" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" ></p-calendar>
+          <p-calendar #addfoundDate id="addfoundDate" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" ></p-calendar>
         </div>
       </div>
       <div class="ui-g-6">
@@ -203,7 +203,7 @@
           <label for="addAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.modifyCompany.areaName"/>
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel"/>
         </div>
       </div>
       <div class="ui-g-6">
