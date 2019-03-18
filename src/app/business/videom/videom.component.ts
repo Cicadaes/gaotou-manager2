@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideomService} from '../../common/services/videom.service';
 import {AddVideo, ModifyVideo, Video} from '../../common/model/videom-model';
 import {AddTreeArea, QueryVideo, SelectItem, TreeNode} from '../../common/model/shared-model';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-videom',
@@ -23,6 +24,7 @@ export class VideomComponent implements OnInit {
   public areaDialog: boolean; // 区域树弹窗
   public addAreaTrees: AddTreeArea[]; // 区域树结构
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
+  public addAreaSelect =  '请选择区域...'; // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   public storeList: SelectItem[]; // 店铺列表
@@ -52,6 +54,7 @@ export class VideomComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.addAreaTree.label = '请选择区域...';
     this.cols = [
       {field: 'id', header: '摄像头id'},
       {field: 'cameraName', header: '摄像头名称'},
@@ -410,6 +413,7 @@ export class VideomComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.addAreaSelect = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
       this.areaDialog = false;
@@ -428,15 +432,16 @@ export class VideomComponent implements OnInit {
   }
 
   public clearDown(): void {
-    this.addAreaTree.label = null;
+    this.addAreaSelect = '请选择区域...';
     this.addServicesAreas = null;
     this.highsdData = null;
     this.storeList = null;
+    this.addVideo = new AddVideo();
   }
 
-  //条件查询
+  // 条件查询
   public  queryVideoData(): void {
-    this.videomService.searchVideo({page: 1, nums: 10},this.queryVideo).subscribe(
+    this.videomService.searchVideo({page: 1, nums: 10}, this.queryVideo).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -461,7 +466,7 @@ export class VideomComponent implements OnInit {
   public serviceChange(e): void {
     this.addVideo.serviceAreaId = e.value.id;
     this.modifyVideo.serviceAreaId = e.value.id;
-    this.queryVideo.serviceAreaId =e.value.id;
+    this.queryVideo.serviceAreaId = e.value.id;
     this.videomService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         this.highsdData = this.initializeServiceAreaDirec(value.data);

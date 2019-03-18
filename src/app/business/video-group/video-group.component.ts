@@ -28,7 +28,7 @@ export class VideoGroupComponent implements OnInit {
   // 分页相关
   public nowPage: any;
   public option: any;
-  //条件查询相关
+  // 条件查询相关
   public queryVideoGroup: QueryVideoGroup = new QueryVideoGroup();
   public  ServiceName: any;
   public  orientationName: any;
@@ -50,6 +50,7 @@ export class VideoGroupComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.addAreaTree.label = '请选择区域...';
     this.cols = [
       {field: 'groupCode', header: '分组编号'},
       {field: 'groupName', header: '分组名称'},
@@ -65,8 +66,7 @@ export class VideoGroupComponent implements OnInit {
   public updateCashDate(): void {
     this.videoGroupService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value.data.contents);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videoGroups = value.data.contents;
 
       }
@@ -75,7 +75,6 @@ export class VideoGroupComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
-    console.log(event.data);
     this.videoGroup = this.cloneCar(event.data);
   }
 
@@ -92,11 +91,6 @@ export class VideoGroupComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    /* if (this.addVideoGroup.enabled === '1') {
-       this.addVideoGroup.enabled = true;
-     } else {
-       this.addVideoGroup.enabled = false;
-     }*/
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -105,7 +99,6 @@ export class VideoGroupComponent implements OnInit {
         this.globalService.eventSubject.next({display: true});
         this.videoGroupService.addItem(this.addVideoGroup).subscribe(
           (value) => {
-            console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -133,7 +126,6 @@ export class VideoGroupComponent implements OnInit {
             }
           },
           (err) => {
-            console.log(err);
             setTimeout(() => {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -288,12 +280,6 @@ export class VideoGroupComponent implements OnInit {
       }, 3000);
     } else if (this.selectedVideoGroups.length === 1) {
       this.modifyDialog = true;
-      this.videoGroupService.QuryHighDirection(this.selectedVideoGroups[0].saOrientationId).subscribe(
-        (value) => {
-          console.log(value);
-          this.modifyhighsdData = value.data.source + '-' + value.data.destination;
-        }
-      );
       this.modifyVideoGroup.groupCode = this.selectedVideoGroups[0].groupCode;
       this.modifyVideoGroup.groupName = this.selectedVideoGroups[0].groupName;
       this.modifyVideoGroup.id = this.selectedVideoGroups[0].id;
@@ -321,7 +307,6 @@ export class VideoGroupComponent implements OnInit {
         this.globalService.eventSubject.next({display: true});
         this.videoGroupService.modifyList(this.modifyVideoGroup).subscribe(
           (value) => {
-            console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -350,7 +335,6 @@ export class VideoGroupComponent implements OnInit {
             }
           },
           (err) => {
-            console.log(err);
             setTimeout(() => {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -373,28 +357,14 @@ export class VideoGroupComponent implements OnInit {
 
   // 条件查询
   public queryVideoGroupData(): void {
-    this.videoGroupService.searchVideoGroup({page: 1, nums: 10},this.queryVideoGroup).subscribe(
+    this.videoGroupService.searchVideoGroup({page: 1, nums: 10}, this.queryVideoGroup).subscribe(
       (value) => {
-        console.log(value.data.contents);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.videoGroups = value.data.contents;
 
       }
     );
   }
-  // 重置
-  public  resetQueryVideoGroup(): void {
-    this.queryVideoGroup.orientationDO = null;
-    this.queryVideoGroup.serviceAreaId = null;
-    this.addAreaTree.label = null;
-    this.orientationName = null;
-    this.ServiceName = null;
-    this.addServicesAreas = null;
-    this.highsdData = null;
-    this.updateCashDate();
-  }
-
-
 
   public AreaTreeClick(): void {
     this.areaDialog = true;
@@ -430,16 +400,27 @@ export class VideoGroupComponent implements OnInit {
     this.queryVideoGroup.serviceAreaId = e.value.id;
     this.videoGroupService.searchHighDirection(e.value.id).subscribe(
       (value) => {
-        console.log(value);
         this.highsdData = this.initializeServiceAreaDirec(value.data);
       }
     );
   }
 
   public clearDown(): void {
-    this.addAreaTree.label = null;
+    this.addAreaTree.label = '请选择区域...';
     this.addServicesAreas = null;
     this.highsdData = null;
+    this.addVideoGroup = new AddVideoGroup();
+  }
+  // 重置
+  public  resetQueryVideoGroup(): void {
+    this.queryVideoGroup.orientationDO = null;
+    this.queryVideoGroup.serviceAreaId = null;
+    this.addAreaTree.label = '请选择区域...';
+    this.orientationName = null;
+    this.ServiceName = null;
+    this.addServicesAreas = null;
+    this.highsdData = null;
+    this.updateCashDate();
   }
 
   // 选择上下行
@@ -512,7 +493,6 @@ export class VideoGroupComponent implements OnInit {
     console.log(this.nowPage);
     this.videoGroupService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
         this.videoGroups = value.data.contents;
       }
     );
