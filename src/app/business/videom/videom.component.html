@@ -10,14 +10,14 @@
     <button class="btn btn-primary" (click)="addDialog = true">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
-    <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+    <label for="addAreaName10" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
+    <input pInputText id="addAreaName10" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
     <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
     <p-dropdown id="addserviceArea" [options]="addServicesAreas" (onChange)="serviceChange($event)"  [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择服务区..."  [(ngModel)]="this.ServiceName"></p-dropdown>
     <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
     <p-dropdown id="addsaOrientation" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择高速方向..." [(ngModel)]="this.orientationName"></p-dropdown>
-    <label for="addgroupId" style="margin-left: 0.5vw;font-size: 1.5rem">摄像头组：</label>
-    <p-dropdown id="addgroupId" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择分组..." [(ngModel)]="this.VideoGroupName"></p-dropdown>
+    <label for="addgroupId10" style="margin-left: 0.5vw;font-size: 1.5rem">摄像头组：</label>
+    <p-dropdown id="addgroupId10" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择分组..." [(ngModel)]="this.VideoGroupName"></p-dropdown>
     <!--<p-dropdown id="addDep" [options]="this.bayonetTypes"  [style]="{'width':'7vw','margin-bottom':'3px'}" scrollHeight="100px" optionLabel="label" placeholder="卡口类型..." [(ngModel)]="this.bayonetLabel" (onChange)="bayonetChange($event)"></p-dropdown>-->
     <button class="btn querybtn" type="button" (click)="queryVideoData()">查询</button>
     <button class="btn querybtn" type="button" (click)="resetQueryVideo()">重置</button>
@@ -54,7 +54,7 @@
           <label for="addAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaSelect"/>
         </div>
       </div>
       <!--服务区-->
@@ -63,7 +63,7 @@
           <label for="addserviceAreaId">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown #addSerdropDown id="addserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -72,16 +72,16 @@
           <label for="addsaOrientationId">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addsaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown #addDircDropDown id="addsaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
         </div>
       </div>
       <!--店铺-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addstoreId">所属店铺：</label>
+          <label for="addstoreId1">所属店铺：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addstoreId" [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺..."></p-dropdown>
+          <p-dropdown id="addstoreId1" [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺..."></p-dropdown>
         </div>
       </div>
       <!--是否在店铺内-->
@@ -90,17 +90,17 @@
           <label for="addvideoUrl">是否在店铺内：</label>
         </div>
         <div class="ui-g-8">
-          <p-radioButton id="addenabled1" name="group1" value="1" [(ngModel)]="addVideo.inStore" label="是" inputId="opt2"></p-radioButton>
-          <p-radioButton id="addenabled2" name="group1" value="0" [(ngModel)]="addVideo.inStore" label="否" inputId="opt3"></p-radioButton>
+          <p-radioButton name="group1" value="1" [(ngModel)]="addVideo.inStore" label="是" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group1" value="0" [(ngModel)]="addVideo.inStore" label="否" inputId="opt3"></p-radioButton>
         </div>
       </div>
       <!--视频分组-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addgroupId">所属分组：</label>
+          <label for="addgroupId2">所属分组：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addgroupId" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择分组..."></p-dropdown>
+          <p-dropdown id="addgroupId2" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择分组..."></p-dropdown>
         </div>
       </div>
       <!--摄像头名称-->
@@ -118,10 +118,10 @@
           <label for="addvideoUrl">显示窗口位置：</label>
         </div>
         <div class="ui-g-8">
-          <p-radioButton id="addenabled5" name="group2" value="1" [(ngModel)]="addVideo.showLocation" label="1" inputId="opt2"></p-radioButton>
-          <p-radioButton id="addenabled4" name="group2" value="2" [(ngModel)]="addVideo.showLocation" label="2" inputId="opt3"></p-radioButton>
-          <p-radioButton id="addenabled5" name="group2" value="3" [(ngModel)]="addVideo.showLocation" label="3" inputId="opt3"></p-radioButton>
-          <p-radioButton id="addenabled6" name="group2" value="4" [(ngModel)]="addVideo.showLocation" label="4" inputId="opt3"></p-radioButton>
+          <p-radioButton name="group2" value="1" [(ngModel)]="addVideo.showLocation" label="1" inputId="opt2"></p-radioButton>
+          <p-radioButton name="group2" value="2" [(ngModel)]="addVideo.showLocation" label="2" inputId="opt3"></p-radioButton>
+          <p-radioButton name="group2" value="3" [(ngModel)]="addVideo.showLocation" label="3" inputId="opt3"></p-radioButton>
+          <p-radioButton name="group2" value="4" [(ngModel)]="addVideo.showLocation" label="4" inputId="opt3"></p-radioButton>
         </div>
       </div>
       <!--将是摄像头类型得位置-->
