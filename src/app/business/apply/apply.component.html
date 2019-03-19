@@ -32,7 +32,7 @@
   </p-scrollPanel>
 
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="900">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="900" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--应用名称-->
       <div class="ui-g-6">
@@ -81,7 +81,7 @@
       </div>
     </p-footer>
   </p-dialog>
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="900">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="900" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--应用名称-->
       <div class="ui-g-6">

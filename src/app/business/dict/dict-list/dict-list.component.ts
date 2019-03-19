@@ -362,6 +362,10 @@ export class DictListComponent implements OnInit {
      this.queryDict.dictionaryCode = null;
      this.updateDictListData();
   }
+
+  public  clearData(): void {
+      this.addDictList = new AddDictList();
+  }
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;

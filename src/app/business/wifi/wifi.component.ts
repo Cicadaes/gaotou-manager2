@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {AddWifi, ModifyWifi, Wifi} from '../../common/model/wifi-model';
 import {WifiService} from '../../common/services/wifi.service';
 import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
 import {TreeNode} from '../../common/model/cash-model';
+import {Dropdown} from 'primeng/primeng';
+import {v} from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-wifi',
@@ -12,6 +14,8 @@ import {TreeNode} from '../../common/model/cash-model';
   styleUrls: ['./wifi.component.css']
 })
 export class WifiComponent implements OnInit {
+  @ViewChild('addsaOrientation') addsaOrientation: Dropdown;
+  @ViewChild('addsaOrientation') addserviceArea: Dropdown;
   // table显示相关
   public wifis: Wifi[]; // 整个table数据
   public cols: any[]; // 表头
@@ -25,6 +29,7 @@ export class WifiComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
+  public addArealabel: any;
   //分页相关
   public nowPage: any;
   public option: any;
@@ -98,6 +103,7 @@ export class WifiComponent implements OnInit {
         this.globalService.eventSubject.next({display: true});
         this.wifiService.addItem(this.addWifi).subscribe(
           (value) => {
+            console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -278,18 +284,38 @@ export class WifiComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedwifis.length === 1) {
+      this.wifiService.searchServiceAreaList(this.selectedwifis[0].administrativeAreaId).subscribe(
+        value => {
+          this.addServicesAreas = this.initializeServiceArea(value.data);
+        }
+      );
+      //查询当前服务区的上下行
+      this.wifiService.searchHighDirection(this.selectedwifis[0].serviceAreaId).subscribe(
+        (value) => {
+          console.log(value);
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      );
+      //查询当前服务区的上下行拼接显示
+      this.wifiService.QuryHighDirection(this.selectedwifis[0].saOrientationId).subscribe(
+        (value) => {
+          console.log(value);
+          this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+        }
+      );
+
       this.modifyDialog = true;
-      // this.wifiService.QuryHighDirection(this.selectedwifis[0].orientationFlag).subscribe(
-      //   (value) => {
-      //     console.log(value);
-      //     this.modifyhighsdData = value.data.source + '-' + value.data.destination;
-      //   }
-      // );
       this.modifyWifi.deviceCode = this.selectedwifis[0].deviceCode;
       this.modifyWifi.id = this.selectedwifis[0].id;
       this.modifyWifi.idt = this.selectedwifis[0].idt;
       this.modifyWifi.devicePosition = this.selectedwifis[0].devicePosition;
       this.modifyWifi.devicePositionCode = this.selectedwifis[0].devicePositionCode;
+      this.modifyWifi.city.administrativeAreaId = this.selectedwifis[0].administrativeAreaId;
+      this.modifyWifi.city.administrativeAreaName = this.selectedwifis[0].administrativeAreaName;
+      this.modifyWifi.serviceArea.serviceAreaName = this.selectedwifis[0].serviceAreaName;
+      this.modifyWifi.serviceArea.serviceAreaId = this.selectedwifis[0].serviceAreaId;
+      this.modifyWifi.saOrientation.orientaionId = this.selectedwifis[0].saOrientationId;
+      // this.modifyWifi.saOrientation.orientaionId = this.selectedwifis[0].saOrientationId;
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -304,6 +330,7 @@ export class WifiComponent implements OnInit {
 
   //确认修改
   public modifySure(): void {
+    console.log(this.modifyWifi);
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
       header: '修改提醒',
@@ -363,8 +390,8 @@ export class WifiComponent implements OnInit {
 
 
   // 条件查询
-  public queryWifiData (): void {
-    this.wifiService.searchWifi({page: 1, nums: 10},{serviceAreaName:this.ServiceName}).subscribe(
+  public queryWifiData(): void {
+    this.wifiService.searchWifi({page: 1, nums: 10}, {serviceAreaName: this.ServiceName}).subscribe(
       (value) => {
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         console.log(this.option);
@@ -372,19 +399,30 @@ export class WifiComponent implements OnInit {
       }
     );
   }
+
   // 重置
-  public  resetQueryWifi(): void {
+  public resetQueryWifi(): void {
     this.ServiceName = null;
     this.updateWifiDate();
   }
 
-
+  public  clearData(): void {
+      this.addAreaTree = new AddTreeArea();
+      this.highsdData = null;
+      this.addServicesAreas = null;
+      this.addsaOrientation.value = null;
+      this.addsaOrientation.value = null;
+      this.addArealabel = null;
+      this.addWifi = new AddWifi();
+      // this.modifyWifi = null;
+  }
 
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
     this.wifiService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
+        console.log(val);
         this.addAreaTrees = this.initializeTree(val.data.contents);
       }
     );
@@ -398,21 +436,23 @@ export class WifiComponent implements OnInit {
 
 
   public treeSelectAreaClick(): void {
+    this.addArealabel = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
-      this.addWifi.province.administrativeAreaId = this.addAreaTree.id;
-      this.addWifi.province.administrativeAreaName = this.addAreaTree.label;
-      this.addWifi.province.level = this.addAreaTree.level;
-      this.addWifi.city.administrativeAreaId = this.addAreaTree.parent.id;
-      this.addWifi.city.administrativeAreaName = this.addAreaTree.parent.label;
-      this.addWifi.city.level = this.addAreaTree.parent.level;
+      this.addWifi.city.administrativeAreaId = this.addAreaTree.id;
+      this.addWifi.city.administrativeAreaName = this.addAreaTree.label;
+      this.addWifi.city.level = this.addAreaTree.level;
+      this.addWifi.province.administrativeAreaId = this.addAreaTree.parent.id;
+      this.addWifi.province.administrativeAreaName = this.addAreaTree.parent.label;
+      this.addWifi.province.level = this.addAreaTree.parent.level;
 
-      this.modifyWifi.province.administrativeAreaId = this.addAreaTree.id;
-      this.modifyWifi.province.administrativeAreaName = this.addAreaTree.label;
-      this.modifyWifi.province.level = this.addAreaTree.level;
-      this.modifyWifi.city.administrativeAreaId = this.addAreaTree.parent.id;
-      this.modifyWifi.city.administrativeAreaName = this.addAreaTree.parent.label;
-      this.modifyWifi.city.level = this.addAreaTree.parent.level;
+      this.modifyWifi.city.administrativeAreaId = this.addAreaTree.id;
+      this.modifyWifi.city.administrativeAreaName = this.addAreaTree.label;
+      this.modifyWifi.city.level = this.addAreaTree.level;
+      this.modifyWifi.province.administrativeAreaId = this.addAreaTree.parent.id;
+      this.modifyWifi.province.administrativeAreaName = this.addAreaTree.parent.label;
+      this.modifyWifi.province.level = this.addAreaTree.parent.level;
+
       this.areaDialog = false;
       this.modifyWifi.serviceArea.serviceAreaName = '请选择服务区';
       this.wifiService.searchServiceAreaList(this.addAreaTree.id).subscribe(
@@ -433,6 +473,7 @@ export class WifiComponent implements OnInit {
   public serviceChange(e): void {
     this.addWifi.serviceArea.serviceAreaId = e.value.id;
     this.addWifi.serviceArea.serviceAreaName = e.value.name;
+
     this.modifyWifi.serviceArea.serviceAreaId = e.value.id;
     this.modifyWifi.serviceArea.serviceAreaName = e.value.name;
     this.modifyhighsdData = '请选择高速方向';

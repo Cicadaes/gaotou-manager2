@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AddIntercept, Intercept, ModifyIntercept, QueryIntercept} from '../../common/model/intercept-model';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {InterceptService} from '../../common/services/intercept.service';
 import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
 import {TreeNode} from '../../common/model/cash-model';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-intercept',
@@ -13,11 +14,16 @@ import {TreeNode} from '../../common/model/cash-model';
   encapsulation: ViewEncapsulation.None
 })
 export class InterceptComponent implements OnInit {
+  @ViewChild('addserviceArea1') addserviceArea: Dropdown;
+  @ViewChild('addserviceArea1') addserviceArea1: Dropdown;
+  @ViewChild('addserviceArea1') addsaOrientation: Dropdown;
+  @ViewChild('addserviceArea1') addsaOrientation1: Dropdown;
   // table显示相关
   public intercepts: Intercept[]; // 整个table数据
   public cols: any[]; // 表头
   public intercept: any; // 接收选中的值
   public selectedintercepts: Intercept[]; // 多个选择
+  public addArealabel: any;
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
   public addIntercept: AddIntercept = new AddIntercept();
@@ -71,7 +77,7 @@ export class InterceptComponent implements OnInit {
     this.interceptService.searchList({page: 1, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.intercepts = value.data.contents;
       }
     );
@@ -81,8 +87,8 @@ export class InterceptComponent implements OnInit {
   public onRowSelect(event): void {
     console.log(event.data);
     this.modifyhighsdData = null;
-    this.modifyIntercept.province.administrativeAreaName = null;
-    this.modifyIntercept.serviceArea.serviceAreaName = null;
+    this.modifyIntercept.administrativeAreaName = null;
+    this.modifyIntercept.serviceAreaName = null;
     this.addServicesAreas = null;
     this.intercept = this.cloneCar(event.data);
   }
@@ -109,6 +115,7 @@ export class InterceptComponent implements OnInit {
         this.globalService.eventSubject.next({display: true});
         this.interceptService.addItem(this.addIntercept).subscribe(
           (value) => {
+            // console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -290,9 +297,21 @@ export class InterceptComponent implements OnInit {
       }, 3000);
     } else if (this.selectedintercepts.length === 1) {
       this.modifyDialog = true;
-      this.interceptService.QuryHighDirection(this.selectedintercepts[0].saOrientationId).subscribe(
+      this.interceptService.searchServiceAreaList(this.selectedintercepts[0].administrativeAreaId).subscribe(
+        value => {
+          // console.log(value.data);
+          this.addServicesAreas = this.initializeServiceArea(value.data);
+        }
+      );
+      this.interceptService.searchHighDirection(this.selectedintercepts[0].serviceAreaId).subscribe(
         (value) => {
-          console.log(value);
+          // console.log(value);
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      );
+      this.interceptService.QuryHighDirection(this.selectedintercepts[0].serviceAreaId).subscribe(
+        (value) => {
+          // console.log(value);
           this.modifyhighsdData = value.data.source + '-' + value.data.destination;
         }
       );
@@ -301,10 +320,10 @@ export class InterceptComponent implements OnInit {
       this.modifyIntercept.bayonetType = this.selectedintercepts[0].bayonetType;
       this.modifyIntercept.id = this.selectedintercepts[0].id;
       this.modifyIntercept.idt = this.selectedintercepts[0].idt;
-      this.modifyIntercept.serviceArea.serviceAreaId = this.selectedintercepts[0].serviceAreaId;
-      this.modifyIntercept.serviceArea.serviceAreaName = this.selectedintercepts[0].serviceAreaName;
-      this.modifyIntercept.province.administrativeAreaId = this.selectedintercepts[0].administrativeAreaId;
-      this.modifyIntercept.province.administrativeAreaName = this.selectedintercepts[0].administrativeAreaName;
+      this.modifyIntercept.serviceAreaId = this.selectedintercepts[0].serviceAreaId;
+      this.modifyIntercept.serviceAreaName = this.selectedintercepts[0].serviceAreaName;
+      this.modifyIntercept.administrativeAreaId = this.selectedintercepts[0].administrativeAreaId;
+      this.modifyIntercept.administrativeAreaName = this.selectedintercepts[0].administrativeAreaName;
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -393,17 +412,17 @@ export class InterceptComponent implements OnInit {
     this.queryIntercept.bayonetCode = null;
     this.queryIntercept.bayonetType = null;
     this.queryIntercept.orientationDO = null;
-    this.addAreaTree.label = null;
     this.ServiceDown = null;
     this.orientationDown = null;
     this.bayonetLabel = null;
+    this.clearData();
     this.updateInterceptDate();
   }
 
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
-    this.modifyIntercept.serviceArea.serviceAreaName = '请选择服务区';
+    this.modifyIntercept.serviceAreaName = '请选择服务区';
     this.interceptService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
@@ -418,21 +437,22 @@ export class InterceptComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.addArealabel = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
-      this.addIntercept.city.administrativeAreaId = this.addAreaTree.id;
-      this.addIntercept.city.administrativeAreaName = this.addAreaTree.label;
-      this.addIntercept.city.level = this.addAreaTree.level;
-      this.addIntercept.province.administrativeAreaId = this.addAreaTree.parent.id;
-      this.addIntercept.province.administrativeAreaName = this.addAreaTree.parent.label;
-      this.addIntercept.province.level = this.addAreaTree.parent.level;
+      this.addIntercept.administrativeAreaId = this.addAreaTree.id;
+      this.addIntercept.administrativeAreaName = this.addAreaTree.label;
+      // this.addIntercept.level = this.addAreaTree.level;
+      // this.addIntercept.administrativeAreaId = this.addAreaTree.parent.id;
+      // this.addIntercept.administrativeAreaName = this.addAreaTree.parent.label;
+      // this.addIntercept.province.level = this.addAreaTree.parent.level;
 
-      this.modifyIntercept.city.administrativeAreaId = this.addAreaTree.id;
-      this.modifyIntercept.city.administrativeAreaName = this.addAreaTree.label;
-      this.modifyIntercept.city.level = this.addAreaTree.level;
-      this.modifyIntercept.province.administrativeAreaId = this.addAreaTree.parent.id;
-      this.modifyIntercept.province.administrativeAreaName = this.addAreaTree.parent.label;
-      this.modifyIntercept.province.level = this.addAreaTree.parent.level;
+      this.modifyIntercept.administrativeAreaId = this.addAreaTree.id;
+      this.modifyIntercept.administrativeAreaName = this.addAreaTree.label;
+      // this.modifyIntercept.city.level = this.addAreaTree.level;
+      // this.modifyIntercept.province.administrativeAreaId = this.addAreaTree.parent.id;
+      // this.modifyIntercept.province.administrativeAreaName = this.addAreaTree.parent.label;
+      // this.modifyIntercept.province.level = this.addAreaTree.parent.level;
       this.areaDialog = false;
       this.interceptService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -453,11 +473,11 @@ export class InterceptComponent implements OnInit {
 
   // 选择服务区
   public serviceChange(e): void {
-    this.addIntercept.serviceArea.serviceAreaId = e.value.id;
-    this.addIntercept.serviceArea.serviceAreaName = e.value.name;
+    this.addIntercept.serviceAreaId = e.value.id;
+    this.addIntercept.serviceAreaName = e.value.name;
 
-    this.modifyIntercept.serviceArea.serviceAreaId = e.value.id;
-    this.modifyIntercept.serviceArea.serviceAreaName = e.value.name;
+    this.modifyIntercept.serviceAreaId = e.value.id;
+    this.modifyIntercept.serviceAreaName = e.value.name;
     this.queryIntercept.serviceAreaId = e.value.id;
     this.modifyhighsdData = '请选择上下行';
     this.interceptService.searchHighDirection(e.value.id).subscribe(
@@ -470,17 +490,17 @@ export class InterceptComponent implements OnInit {
 
   // 选择上下行
   public directionChange(e): void {
-    this.addIntercept.saOrientation.destination = e.value.destination;
-    this.addIntercept.saOrientation.flag = e.value.flag;
-    this.addIntercept.saOrientation.flagName = e.value.flagName;
-    this.addIntercept.saOrientation.orientaionId = e.value.orientaionId;
-    this.addIntercept.saOrientation.source = e.value.source;
-
-    this.modifyIntercept.saOrientation.destination = e.value.destination;
-    this.modifyIntercept.saOrientation.flag = e.value.flag;
-    this.modifyIntercept.saOrientation.flagName = e.value.flagName;
-    this.modifyIntercept.saOrientation.orientaionId = e.value.orientaionId;
-    this.modifyIntercept.saOrientation.source = e.value.source;
+    // this.addIntercept.saOrientation.destination = e.value.destination;
+    // this.addIntercept.saOrientation.flag = e.value.flag;
+    // this.addIntercept.saOrientation.flagName = e.value.flagName;
+    this.addIntercept.saOrientationId = e.value.orientaionId;
+    // this.addIntercept.saOrientation.source = e.value.source;
+    //
+    // this.modifyIntercept.saOrientation.destination = e.value.destination;
+    // this.modifyIntercept.saOrientation.flag = e.value.flag;
+    // this.modifyIntercept.saOrientation.flagName = e.value.flagName;
+    this.modifyIntercept.saOrientationId = e.value.orientaionId;
+    // this.modifyIntercept.saOrientation.source = e.value.source;
 
     this.queryIntercept.orientationDO = e.value.orientaionId;
   }
@@ -557,4 +577,19 @@ export class InterceptComponent implements OnInit {
     );
     this.selectedintercepts = null;
   }
+
+  public  clearData(): void {
+    this.addAreaTree = new AddTreeArea();
+    this.addIntercept = new AddIntercept();
+    this.addServicesAreas = null;
+    this.highsdData = null;
+    this.addsaOrientation.value = null;
+    this.addsaOrientation1.value = null;
+    this.addserviceArea.value =null;
+    this.addserviceArea1.value =null;
+    this.addArealabel = null;
+
+  }
+
 }
+

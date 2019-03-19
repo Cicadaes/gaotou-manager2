@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
 import {DictService} from '../../../common/services/dict.service';
 import {AddDictWord, DictWord, ModifyDictWord, QueryDictWord} from '../../../common/model/dict.model';
 import {SelectItem} from '../../../common/model/shared-model';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-dict-word',
@@ -13,6 +14,8 @@ import {SelectItem} from '../../../common/model/shared-model';
 
 })
 export class DictWordComponent implements OnInit {
+  @ViewChild('dictionaryCode') dictionaryCode: Dropdown;
+  @ViewChild('dictionaryCode1') dictionaryCode1: Dropdown;
   // table显示相关
   public dictWords: DictWord[]; // 整个table数据
   public cols: any[]; // 表头
@@ -22,6 +25,7 @@ export class DictWordComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addDictWord: AddDictWord = new AddDictWord(); // 添加参数字段
   public addDictListSelect: SelectItem[]; // 字典列表
+  public DicttypeCode: any;
   //分页相关
   public nowPage: any;
   public option1: any;
@@ -276,6 +280,7 @@ export class DictWordComponent implements OnInit {
 
   // 修改
   public modifyBtn(): void {
+    // console.log(this.ss);
     if (this.selectedDictWords === undefined || this.selectedDictWords.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -286,12 +291,26 @@ export class DictWordComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedDictWords.length === 1) {
-      // this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
-      //   (value) => {
-      //     console.log(value);
-      //     this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
-      //   }
-      // );
+      this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
+        (value) => {
+          console.log(value);
+          this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
+          for(var i =0;i<this.addDictListSelect.length;i++){
+            if(this.addDictListSelect[i].id === this.selectedDictWords[0].dictionaryCode){
+              console.log(this.addDictListSelect[i].name);
+              this.DicttypeCode = this.addDictListSelect[i].name;
+            }
+          }
+        }
+      );
+      // switch (this.selectedDictWords[0].dictionaryCode) {
+      //   case 'SA_TYPE': this.DicttypeCode = '服务区类型';break;
+      //   case 'VECHLE_TYPE': this.DicttypeCode = '汽车类型';break;
+      //   case 'STORE_TYPE': this.DicttypeCode = '商店类型';break;
+      //   case 'EVENT_TYPE': this.DicttypeCode = '事件类型';break;
+      //   case 'DATA_TYPE': this.DicttypeCode = '数据类型';break;
+      // }
+
       this.modifyDialog = true;
       this.modifyDictWord.id = this.selectedDictWords[0].id;
       this.modifyDictWord.idt = this.selectedDictWords[0].idt;
@@ -370,9 +389,10 @@ export class DictWordComponent implements OnInit {
       }
     });
   }
+
   //条件查询
-  public  queryDictWordData(): void {
-    this.dictService.searchDictWord({page: 1, nums: 10},this.queryDictWord).subscribe(
+  public queryDictWordData(): void {
+    this.dictService.searchDictWord({page: 1, nums: 10}, this.queryDictWord).subscribe(
       (value) => {
         console.log(value);
         this.option1 = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -380,12 +400,22 @@ export class DictWordComponent implements OnInit {
       }
     );
   }
+
   //重置
-  public  resetQueryDictWord(): void {
+  public resetQueryDictWord(): void {
     this.queryDictWord.dictionaryCode = null;
     this.queryDictWord.entryCode = null;
     this.queryDictWord.entryValue = null;
     this.updateDictWordsata();
+  }
+
+  public clearData(): void {
+    this.addDictWord = new AddDictWord();
+    this.option = null;
+    this.dictionaryCode.value = null;
+    this.dictionaryCode1.value = null;
+    this.DicttypeCode = null;
+    this.addDictListSelect = null;
   }
 
   // 选择字典
@@ -405,6 +435,7 @@ export class DictWordComponent implements OnInit {
     }
     return oneChild;
   }
+
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;

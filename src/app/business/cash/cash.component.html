@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName51" style="margin-left: 0.5vw;font-size: 1.5rem">所属区化：</label>
-    <input pInputText id="addAreaName51" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <input pInputText id="addAreaName51" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="this.addAreaSelect"/>
     <label for="addserviceAreaId" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
     <p-dropdown id="addserviceAreaId" [options]="addServicesAreaTrees" (onChange)="serviceChange($event)" [style]="{'width':'7vw','margin-bottom':'3px'}"  scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="this.ServiceDown"></p-dropdown>
     <label for="addsaOrientationId" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
@@ -228,7 +228,7 @@
           <label for="addAreaName1">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.modifyCash.city.administrativeAreaName"/>
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.modifyCash.administrativeAreaName"/>
         </div>
       </div>
       <!--所属服务区-->
@@ -237,7 +237,7 @@
           <label >所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown [options]="addServicesAreaTrees" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyCash.serviceArea.serviceName"></p-dropdown>
+          <p-dropdown [options]="addServicesAreaTrees" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyCash.serviceAreaName"></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -255,7 +255,7 @@
           <label >所属店铺：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyCash.store.storeName"></p-dropdown>
+          <p-dropdown [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyCash.storeName"></p-dropdown>
         </div>
       </div>
       <!--收银机编号-->

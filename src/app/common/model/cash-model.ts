@@ -14,8 +14,13 @@ export class Cash {
   orientationFlag: number;
   storeName?: string;
   level?: string;
+  orientationDO?: orientationDO = new orientationDO();
 }
 
+//
+export  class   orientationDO{
+  id?: number;
+}
 // 添加泛型
 export class AddCashProvince {
   administrativeAreaId?: number;
@@ -51,29 +56,37 @@ export class AddCashStore {
 
 export class AddCash {
   // 区划
-  province: AddCashProvince = new AddCashProvince();
-  city: AddCashCity = new AddCashCity();
-  // 服务区
-  serviceArea: AddCashServiceArea = new AddCashServiceArea();
-  // 上下行
-  saOrientation: AddCashSaOrientation = new AddCashSaOrientation();
-  // 店铺
-  store: AddCashStore = new AddCashStore();
-  cashRegisterCode: string; // 收银机编号
+  // province: AddCashProvince = new AddCashProvince();
+  // city: AddCashCity = new AddCashCity();
+  // // 服务区
+  // serviceArea: AddCashServiceArea = new AddCashServiceArea();
+  // // 上下行
+  // saOrientation: AddCashSaOrientation = new AddCashSaOrientation();
+  // // 店铺
+  // store: AddCashStore = new AddCashStore();
+  administrativeAreaId?: number;
+  administrativeAreaName?: string;
+  serviceAreaId?: number;
+  serviceAreaName?: number;
+  saOrientationId?: number;
+  orientationFlag?: number;
+  storeId?: number;
+  storeName?: number;
+  cashRegisterCode?: string; // 收银机编号
   idt?: string; // 创建时间
   udt?: any; // 修改时间
 }
 
 export class ModifyCash {
-  // 区划
-  province: AddCashProvince = new AddCashProvince();
-  city: AddCashCity = new AddCashCity();
-  // 服务区
-  serviceArea: AddCashServiceArea = new AddCashServiceArea();
-  // 上下行
-  saOrientation: AddCashSaOrientation = new AddCashSaOrientation();
-  // 店铺
-  store: AddCashStore = new AddCashStore();
+
+  administrativeAreaId?: number;
+  administrativeAreaName?: string;
+  serviceAreaId?: number;
+  serviceAreaName?: string;
+  saOrientationId?: number;
+  orientationFlag?: number;
+  storeId?: number;
+  storeName?: string;
   cashRegisterCode: string; // 收银机编号
   idt?: string; // 创建时间
   id?: number;

@@ -367,6 +367,9 @@ export class EventTypeComponent implements OnInit {
     this.queryEventType.categoryCode = null;
     this.queryEventType.eventCategoryName = null;
   }
+  public  clearData(): void {
+      this.addEventType = new AddEventType();
+  }
 
   //分页查询
   public nowpageEventHandle(event: any) {

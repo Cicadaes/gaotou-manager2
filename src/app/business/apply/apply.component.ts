@@ -136,7 +136,10 @@ export class ApplyComponent implements OnInit {
   public getAppKeyClick() {
     this.applyService.getAppKey().subscribe(
       (value) => {
+        // console.log(value);
+        this.modifyApply.appKey = null;
         this.addApply.appKey = value.data;
+        this.modifyApply.appKey = value.data;
       }
     );
   }
@@ -349,6 +352,10 @@ export class ApplyComponent implements OnInit {
       }
     });
 
+  }
+
+  public  clearData(): void {
+      this.addApply = new AddApply();
   }
 
   //分页查询

@@ -39,7 +39,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--字典编码-->
       <div class="ui-g-6">
@@ -47,7 +47,7 @@
           <label for="dictionaryCode">字典编码：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="dictionaryCode" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="option"></p-dropdown>
+          <p-dropdown #dictionaryCode id="dictionaryCode" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择编码类型..." [(ngModel)]="option"></p-dropdown>
         </div>
       </div>
       <!--词条编码-->
@@ -85,7 +85,7 @@
       </div>
     </p-footer>
   </p-dialog>  <!--增加弹框-->
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--字典编码-->
       <div class="ui-g-6">
@@ -93,7 +93,7 @@
           <label for="dictionaryCode1">字典编码：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="dictionaryCode1" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." [(ngModel)]="option"></p-dropdown>
+          <p-dropdown #dictionaryCode1 id="dictionaryCode1" [options]="addDictListSelect" (onChange)="dictChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.DicttypeCode" [(ngModel)]="option"></p-dropdown>
         </div>
       </div>
       <!--词条编码-->

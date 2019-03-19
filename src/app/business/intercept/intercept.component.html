@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+    <input pInputText id="addAreaName" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="this.addArealabel" placeholder="请选择区划..."/>
     <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
     <p-dropdown id="addserviceArea" [options]="addServicesAreas" (onChange)="serviceChange($event)"  [style]="{'width':'7vw','margin-bottom':'3px'}" scrollHeight="100px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
     <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
@@ -45,7 +45,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--所属区划-->
       <div class="ui-g-6">
@@ -53,7 +53,7 @@
           <label for="addAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+          <input pInputText id="addAreaName" (click)="AreaTreeClick()" [(ngModel)]="this.addArealabel" placeholder="请选择区划..."/>
         </div>
       </div>
       <!--所属服务区-->
@@ -62,7 +62,7 @@
           <label for="addserviceArea">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addserviceArea" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown #addserviceArea id="addserviceArea" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -71,7 +71,7 @@
           <label for="addsaOrientation">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addsaOrientation" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown #addsaOrientation id="addsaOrientation" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
         </div>
       </div>
       <!--卡口编号-->
@@ -134,7 +134,7 @@
     </p-footer>
   </p-dialog>
   <!--修改弹框-->
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--所属区划-->
       <div class="ui-g-6">
@@ -142,7 +142,7 @@
           <label for="addAreaName1">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.modifyIntercept.province.administrativeAreaName"/>
+          <input pInputText id="addAreaName1" (click)="AreaTreeClick()" [(ngModel)]="this.modifyIntercept.administrativeAreaName" />
         </div>
       </div>
       <!--所属服务区-->
@@ -151,7 +151,7 @@
           <label for="addserviceArea1">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addserviceArea1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="modifyIntercept.serviceArea.serviceAreaName"></p-dropdown>
+          <p-dropdown #addserviceArea1 id="addserviceArea1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyIntercept.serviceAreaName"></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -160,7 +160,7 @@
           <label for="addsaOrientation1">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addsaOrientation1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyhighsdData"></p-dropdown>
+          <p-dropdown #addsaOrientation1 id="addsaOrientation1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyhighsdData"></p-dropdown>
         </div>
       </div>
       <!--卡口编号-->

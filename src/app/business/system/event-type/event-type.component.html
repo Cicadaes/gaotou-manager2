@@ -37,7 +37,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--分类编号-->
       <div class="ui-g-6">

@@ -297,24 +297,44 @@ export class CashComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedCashs.length === 1) {
-      this.modifyDialog = true;
-      this.cashService.QuryHighDirection(this.selectedCashs[0].saOrientationId).subscribe(
+      this.cashService.searchServiceAreaList(this.selectedCashs[0].administrativeAreaId).subscribe(
+        value => {
+          this.addServicesAreaTrees = this.initializeServiceArea(value.data);
+        }
+      );
+
+      this.cashService.searchHighDirection(this.selectedCashs[0].serviceAreaId).subscribe(
+        (value) => {
+          console.log(value);
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      );
+
+      this.cashService.searchStoreItem(this.selectedCashs[0].orientationDO.id).subscribe(
+        (value) => {
+          console.log(value.data);
+          this.storeList = this.initializeStore(value.data);
+        }
+      );
+      this.cashService.QuryHighDirection(this.selectedCashs[0].serviceAreaId).subscribe(
         (value) => {
           console.log(value);
           this.modifyhighsdData = value.data.source + '-' + value.data.destination;
         }
       );
+      this.modifyDialog = true;
       this.modifyCash.cashRegisterCode = this.selectedCashs[0].cashRegisterCode;
       this.modifyCash.id = this.selectedCashs[0].id;
       this.modifyCash.idt = this.selectedCashs[0].idt;
-      this.modifyCash.city.administrativeAreaName = this.selectedCashs[0].administrativeAreaName;
-      this.modifyCash.serviceArea.serviceName = this.selectedCashs[0].serviceAreaName;
-      this.modifyCash.store.storeName = this.selectedCashs[0].storeName;
-      this.modifyCash.store.storeId = this.selectedCashs[0].storeId;
-      this.modifyCash.city.administrativeAreaId = this.selectedCashs[0].administrativeAreaId;
+      this.modifyCash.administrativeAreaName = this.selectedCashs[0].administrativeAreaName;
+      this.modifyCash.serviceAreaName = this.selectedCashs[0].serviceAreaName;
+      this.modifyCash.storeName = this.selectedCashs[0].storeName;
+      this.modifyCash.storeId = this.selectedCashs[0].storeId;
+      this.modifyCash.administrativeAreaId = this.selectedCashs[0].administrativeAreaId;
+      this.modifyCash.saOrientationId = this.selectedCashs[0].orientationDO.id;
       // this.modifyCash.province.level = this.selectedCashs[0].;
       // this.modifyhighsdData = this.selectedCashs[0].orientationFlag===2?'遵义-贵阳':'贵阳-遵义';
-      console.log(this.modifyCash.serviceArea.serviceName);
+      console.log(this.modifyCash.serviceAreaName);
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -428,7 +448,8 @@ export class CashComponent implements OnInit {
     this.ServiceDown = null;
     this.orientationDown = null;
     this.StoreType = null;
-    this.addAreaTree.label = null;
+    // this.clearDown()；
+    this.addAreaSelect = '请选择区域...';
     this.addServicesAreaTrees = null;
     this.highsdData = null;
     this.storeList = null;
@@ -535,20 +556,20 @@ export class CashComponent implements OnInit {
     this.addAreaSelect = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
-      this.addCash.city.administrativeAreaId = this.addAreaTree.id;
-      this.addCash.city.administrativeAreaName = this.addAreaTree.label;
-      this.addCash.city.level = this.addAreaTree.level;
-      this.addCash.province.administrativeAreaId = this.addAreaTree.parent.id;
-      this.addCash.province.administrativeAreaName = this.addAreaTree.parent.label;
-      this.addCash.province.level = this.addAreaTree.parent.level;
+      this.addCash.administrativeAreaId = this.addAreaTree.id;
+      this.addCash.administrativeAreaName = this.addAreaTree.label;
+      // this.addCash.city.level = this.addAreaTree.level;
+      // this.addCash.province.administrativeAreaId = this.addAreaTree.parent.id;
+      // this.addCash.province.administrativeAreaName = this.addAreaTree.parent.label;
+      // this.addCash.province.level = this.addAreaTree.parent.level;
 
-      this.modifyCash.city.administrativeAreaId = this.addAreaTree.id;
-      this.modifyCash.city.administrativeAreaName = this.addAreaTree.label;
-      this.modifyCash.city.level = this.addAreaTree.level;
-      this.modifyCash.province.administrativeAreaId = this.addAreaTree.parent.id;
-      this.modifyCash.province.administrativeAreaName = this.addAreaTree.parent.label;
-      this.modifyCash.province.level = this.addAreaTree.parent.level;
-      this.modifyCash.serviceArea.serviceName = '请选择服务区';
+      this.modifyCash.administrativeAreaId = this.addAreaTree.id;
+      this.modifyCash.administrativeAreaName = this.addAreaTree.label;
+      // this.modifyCash.city.level = this.addAreaTree.level;
+      // this.modifyCash.province.administrativeAreaId = this.addAreaTree.parent.id;
+      // this.modifyCash.province.administrativeAreaName = this.addAreaTree.parent.label;
+      // this.modifyCash.province.level = this.addAreaTree.parent.level;
+      this.modifyCash.serviceAreaName = '请选择服务区';
       this.areaDialog = false;
       this.cashService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -567,10 +588,12 @@ export class CashComponent implements OnInit {
   // 选择服务区
   public serviceChange(e): void {
     this.servicesAreaDialog = false;
-    this.addCash.serviceArea.serviceAreaId = e.value.id;
-    this.addCash.serviceArea.serviceName = e.value.name;
-    this.modifyCash.serviceArea.serviceAreaId = e.value.id;
-    this.modifyCash.serviceArea.serviceName = e.value.name;
+    this.addCash.serviceAreaId = e.value.id;
+    this.addCash.serviceAreaName = e.value.name;
+
+    this.modifyCash.serviceAreaId = e.value.id;
+    this.modifyCash.serviceAreaName= e.value.name;
+
     this.queryCash.serviceAreaId = e.value.id;
     this.modifyhighsdData = '请选择上下行';
     this.cashService.searchHighDirection(e.value.id).subscribe(
@@ -584,21 +607,22 @@ export class CashComponent implements OnInit {
   // 选择上下行
   public directionChange(e): void {
     console.log(e);
-    this.addCash.saOrientation.destination = e.value.destination;
-    this.addCash.saOrientation.flag = e.value.flag;
-    this.addCash.saOrientation.flagName = e.value.flagName;
-    this.addCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
-    this.addCash.saOrientation.source = e.value.source;
-    this.addCash.saOrientation.id = e.value.id;
+    // this.addCash.saOrientation.destination = e.value.destination;
+    this.addCash.orientationFlag = e.value.flag;
+    // this.addCash.saOrientation.flagName = e.value.flagName;
+    // this.addCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
+    // this.addCash.saOrientation.source = e.value.source;
+    this.addCash.saOrientationId = e.value.id;
 
-    this.modifyCash.saOrientation.destination = e.value.destination;
-    this.modifyCash.saOrientation.flag = e.value.flag;
-    this.modifyCash.saOrientation.flagName = e.value.flagName;
-    this.modifyCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
-    this.modifyCash.saOrientation.source = e.value.source;
+    // this.modifyCash.saOrientation.destination = e.value.destination;
+    this.modifyCash.orientationFlag = e.value.flag;
+    // this.modifyCash.saOrientation.flagName = e.value.flagName;
+    // this.modifyCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
+    // this.modifyCash.saOrientation.source = e.value.source;
+    this.addCash.saOrientationId = e.value.id;
 
     this.queryCash.orientationDO = e.value.orientaionId;
-    this.modifyCash.store.storeName = '请选择店铺';
+    this.modifyCash.storeName = '请选择店铺';
     this.cashService.searchStoreItem(e.value.id).subscribe(
       (value) => {
         console.log(value.data);
@@ -609,13 +633,13 @@ export class CashComponent implements OnInit {
 
   // 选择店铺
   public storeChange(e): void {
-    this.addCash.store.categoryCode = e.value.categoryCode;
-    this.addCash.store.storeId = e.value.id;
-    this.addCash.store.storeName = e.value.name;
+    // this.addCash.store.categoryCode = e.value.categoryCode;
+    this.addCash.storeId = e.value.id;
+    this.addCash.storeName = e.value.name;
 
-    this.modifyCash.store.categoryCode = e.value.categoryCode;
-    this.modifyCash.store.storeId = e.value.id;
-    this.modifyCash.store.storeName = e.value.name;
+    // this.modifyCash.categoryCode = e.value.categoryCode;
+    this.modifyCash.storeId = e.value.id;
+    this.modifyCash.storeName = e.value.name;
 
     this.queryCash.storeId = e.value.id;
   }
