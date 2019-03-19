@@ -77,7 +77,7 @@ export class WifiComponent implements OnInit {
     this.modifyhighsdData = null;
     this.modifyWifi.province.administrativeAreaName = null;
     this.addServicesAreas = null;
-    this.modifyWifi.serviceArea.serviceAreaName = null;
+    this.modifyWifi.serviceArea.serviceName = null;
     this.wifi = this.cloneCar(event.data);
   }
 
@@ -312,7 +312,7 @@ export class WifiComponent implements OnInit {
       this.modifyWifi.devicePositionCode = this.selectedwifis[0].devicePositionCode;
       this.modifyWifi.city.administrativeAreaId = this.selectedwifis[0].administrativeAreaId;
       this.modifyWifi.city.administrativeAreaName = this.selectedwifis[0].administrativeAreaName;
-      this.modifyWifi.serviceArea.serviceAreaName = this.selectedwifis[0].serviceAreaName;
+      this.modifyWifi.serviceArea.serviceName = this.selectedwifis[0].serviceAreaName;
       this.modifyWifi.serviceArea.serviceAreaId = this.selectedwifis[0].serviceAreaId;
       this.modifyWifi.saOrientation.orientaionId = this.selectedwifis[0].saOrientationId;
       // this.modifyWifi.saOrientation.orientaionId = this.selectedwifis[0].saOrientationId;
@@ -454,7 +454,7 @@ export class WifiComponent implements OnInit {
       this.modifyWifi.province.level = this.addAreaTree.parent.level;
 
       this.areaDialog = false;
-      this.modifyWifi.serviceArea.serviceAreaName = '请选择服务区';
+      this.modifyWifi.serviceArea.serviceName = '请选择服务区';
       this.wifiService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
           this.addServicesAreas = this.initializeServiceArea(value.data);
@@ -472,10 +472,10 @@ export class WifiComponent implements OnInit {
   // 选择服务区
   public serviceChange(e): void {
     this.addWifi.serviceArea.serviceAreaId = e.value.id;
-    this.addWifi.serviceArea.serviceAreaName = e.value.name;
+    this.addWifi.serviceArea.serviceName = e.value.name;
 
     this.modifyWifi.serviceArea.serviceAreaId = e.value.id;
-    this.modifyWifi.serviceArea.serviceAreaName = e.value.name;
+    this.modifyWifi.serviceArea.serviceName = e.value.name;
     this.modifyhighsdData = '请选择高速方向';
     this.wifiService.searchHighDirection(e.value.id).subscribe(
       (value) => {

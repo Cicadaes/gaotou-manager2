@@ -213,7 +213,7 @@ export class AddCity {
 // 服务区
 export class AddServiceArea {
   serviceAreaId?: number;
-  serviceAreaName?: string;
+  serviceName?: string;
 }
 // 上下行
 export class AddSaOrientation {
