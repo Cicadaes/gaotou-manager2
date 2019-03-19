@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {CashService} from '../../common/services/cash.service';
 import {GlobalService} from '../../common/services/global.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {AddCash, Cash, ModifyCash, QueryCash, TreeNode} from '../../common/model/cash-model';
 import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-cash',
@@ -12,6 +13,12 @@ import {AddTreeArea, SelectItem} from '../../common/model/shared-model';
   encapsulation: ViewEncapsulation.None
 })
 export class CashComponent implements OnInit {
+  @ViewChild('addSer') addSer: Dropdown;
+  @ViewChild('addDirec') addDirec: Dropdown;
+  @ViewChild('addStore') addStore: Dropdown;
+  @ViewChild('modifySer') modifySer: Dropdown;
+  @ViewChild('modifyDirec') modifyDirec: Dropdown;
+  @ViewChild('modifyStore') modifyStore: Dropdown;
   // table显示相关
   public cashs: Cash[]; // 整个table数据
   public cols: any[]; // 表头
@@ -421,6 +428,12 @@ export class CashComponent implements OnInit {
 
   public clearDown(): void {
     this.addAreaSelect = '请选择区域...';
+    this.addSer.value = '请选择服务区...';
+    this.addDirec.value = '请选择服务区方向...';
+    this.addStore.value = '请选择店铺...';
+    this.modifySer.value = '请选择服务区...';
+    this.modifyDirec.value = '请选择服务区方向...';
+    this.modifyStore.value = '请选择店铺...';
     this.addServicesAreaTrees = null;
     this.highsdData = null;
     this.storeList = null;

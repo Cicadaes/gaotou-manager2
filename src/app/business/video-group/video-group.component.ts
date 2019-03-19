@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideoGroupService} from '../../common/services/video-group.service';
 import {AddVideoGroup, ModifyVideoGroup, QueryVideoGroup, VideoGroup} from '../../common/model/video-group-model';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-video-group',
@@ -12,6 +13,10 @@ import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model
   encapsulation: ViewEncapsulation.None
 })
 export class VideoGroupComponent implements OnInit {
+  @ViewChild('addSerdropDown') addSerdropDown: Dropdown;
+  @ViewChild('addDircDropDown') addDircDropDown: Dropdown;
+  @ViewChild('modifySer') modifySer: Dropdown;
+  @ViewChild('modifyDirec') modifyDirec: Dropdown;
   // table显示相关
   public videoGroups: VideoGroup[]; // 整个table数据
   public cols: any[]; // 表头
@@ -407,6 +412,10 @@ export class VideoGroupComponent implements OnInit {
 
   public clearDown(): void {
     this.addAreaTree.label = '请选择区域...';
+    this.addSerdropDown.value = '请选择服务区...';
+    this.addDircDropDown.value = '请选择服务区方向...';
+    this.modifySer.value = '请选择服务区...';
+    this.modifyDirec.value = '请选择服务区方向...';
     this.addServicesAreas = null;
     this.highsdData = null;
     this.addVideoGroup = new AddVideoGroup();
