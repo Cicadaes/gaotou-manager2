@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AddUser, modifyUser, QueryUser, User} from '../../common/model/user-model';
 import {UserService} from '../../common/services/user.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
@@ -14,6 +14,7 @@ import {
   TreeNode
 } from '../../common/model/shared-model';
 import {DatePipe} from '@angular/common';
+import {Calendar} from 'primeng/primeng';
 
 @Component({
   selector: 'app-user',
@@ -22,6 +23,7 @@ import {DatePipe} from '@angular/common';
   encapsulation: ViewEncapsulation.None
 })
 export class UserComponent implements OnInit {
+  @ViewChild('addbirthday') addbirthday: Calendar;
   // table显示相关
   public users: User[]; // 整个table数据
   public cols: any[]; // 表头
@@ -45,15 +47,21 @@ export class UserComponent implements OnInit {
   public CompanyTrees: CompanyTree[];
   public companyDialog: boolean;// 公司树弹窗
   public CompanyTree: CompanyTree = new CompanyTree(); // 公司树选择
+  public Companylabel: any;
+
 
   public DepartmentTrees:  DepartmentTree[];
   public departmentDialog: boolean;// 部门树弹窗
   public DepartmentTree:  DepartmentTree = new  DepartmentTree(); // 部门树选择
   public CompanyId: number; // 区域查询的公司ID
+  public Departmentlabel: any;
+
 
   public DutyTrees:  DutyTree[];
   public dutyDialog: boolean;// 职位树弹窗
   public DutyTree:  DutyTree = new  DutyTree(); // 职位树选择
+  public Dutylabel: any;
+
 
   //调教查询
   public queryUser:   QueryUser = new QueryUser();
@@ -95,7 +103,7 @@ export class UserComponent implements OnInit {
     this.userService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
@@ -125,6 +133,7 @@ export class UserComponent implements OnInit {
         this.globalService.eventSubject.next({display: true});
         this.userService.addItem(this.addUser).subscribe(
           (value) => {
+            console.log(value);
             if (value.status === '200') {
               this.globalService.eventSubject.next({display: false});
               if (this.cleanTimer) {
@@ -316,30 +325,30 @@ export class UserComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedUsers.length === 1) {
-   /*   // this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
-      //   (val) => {
-      //     console.log(val);
-      //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
-      //   }
-      // );
-      // this.userService.searchCompanyIdDepList(this.selectedUsers[0].organizationId).subscribe(
-      //   (value) => {
-      //     console.log(value);
-      //     this.addDepSelect = this.initializeSelectOrg(value.data);
-      //   }
-      // );
-      // this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: null}).subscribe(
-      //   (val) => {
-      //     console.log(val);
-      //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
-      //   }
-      // );
-      // this.userService.searchCompanyIdDepIdDutyList({companyId:this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
-      //   (val) => {
-      //     console.log(val);
-      //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
-      //   }
-      // );*/
+      /*   // this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
+         //   (val) => {
+         //     console.log(val);
+         //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+         //   }
+         // );
+         // this.userService.searchCompanyIdDepList(this.selectedUsers[0].organizationId).subscribe(
+         //   (value) => {
+         //     console.log(value);
+         //     this.addDepSelect = this.initializeSelectOrg(value.data);
+         //   }
+         // );
+         // this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: null}).subscribe(
+         //   (val) => {
+         //     console.log(val);
+         //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+         //   }
+         // );
+         // this.userService.searchCompanyIdDepIdDutyList({companyId:this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
+         //   (val) => {
+         //     console.log(val);
+         //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+         //   }
+         // );*/
       this.modifyDialog = true;
       this.modifyUser.id = this.selectedUsers[0].id;
       this.modifyUser.organizationId = this.selectedUsers[0].organizationId;
@@ -435,47 +444,47 @@ export class UserComponent implements OnInit {
     });
   }
   //
- /* // // 选择公司
-  // public companyChange(e): void {
-  //   this.addUser.organizationName = e.value.name;
-  //   this.addUser.organizationId = e.value.id;
-  //   this.modifyUser.organizationName = e.value.name;
-  //   this.modifyUser.organizationId = e.value.id;
-  //   this.userService.searchCompanyIdDepList(e.value.id).subscribe(
-  //     (value) => {
-  //       console.log(value);
-  //       this.addDepSelect = this.initializeSelectOrg(value.data);
-  //     }
-  //   );
-  //   this.userService.searchCompanyIdDepIdDutyList({companyId: e.value.id, depId: null}).subscribe(
-  //     (val) => {
-  //       console.log(val);
-  //       this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
-  //     }
-  //   );
-  // }
-  //
-  // // 选择部门
-  // public orgsChange(e): void {
-  //   this.addUser.deptName = e.value.name;
-  //   this.addUser.deptId = e.value.id;
-  //   this.modifyUser.deptName = e.value.name;
-  //   this.modifyUser.deptId = e.value.id;
-  //   this.userService.searchCompanyIdDepIdDutyList({companyId: this.addUser.organizationId, depId: e.value.id}).subscribe(
-  //     (val) => {
-  //       console.log(val);
-  //       this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
-  //     }
-  //   );
-  // }
+  /* // // 选择公司
+   // public companyChange(e): void {
+   //   this.addUser.organizationName = e.value.name;
+   //   this.addUser.organizationId = e.value.id;
+   //   this.modifyUser.organizationName = e.value.name;
+   //   this.modifyUser.organizationId = e.value.id;
+   //   this.userService.searchCompanyIdDepList(e.value.id).subscribe(
+   //     (value) => {
+   //       console.log(value);
+   //       this.addDepSelect = this.initializeSelectOrg(value.data);
+   //     }
+   //   );
+   //   this.userService.searchCompanyIdDepIdDutyList({companyId: e.value.id, depId: null}).subscribe(
+   //     (val) => {
+   //       console.log(val);
+   //       this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+   //     }
+   //   );
+   // }
+   //
+   // // 选择部门
+   // public orgsChange(e): void {
+   //   this.addUser.deptName = e.value.name;
+   //   this.addUser.deptId = e.value.id;
+   //   this.modifyUser.deptName = e.value.name;
+   //   this.modifyUser.deptId = e.value.id;
+   //   this.userService.searchCompanyIdDepIdDutyList({companyId: this.addUser.organizationId, depId: e.value.id}).subscribe(
+   //     (val) => {
+   //       console.log(val);
+   //       this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+   //     }
+   //   );
+   // }
 
-  // 选择部门
-  // public dutyChange(e): void {
-  //   this.addUser.dutyName = e.value.name;
-  //   this.addUser.dutyId = e.value.id;
-  //   this.modifyUser.dutyName = e.value.name;
-  //   this.modifyUser.dutyId = e.value.id;
-  // }*/
+   // 选择部门
+   // public dutyChange(e): void {
+   //   this.addUser.dutyName = e.value.name;
+   //   this.addUser.dutyId = e.value.id;
+   //   this.modifyUser.dutyName = e.value.name;
+   //   this.modifyUser.dutyId = e.value.id;
+   // }*/
 
   //条件查询
   public  QueryUser(): void {
@@ -496,8 +505,7 @@ export class UserComponent implements OnInit {
     this.queryUser.organizationId = null;
     this.queryUser.realName = null;
     this.queryUser.userName = null;
-    this.CompanyTree.label = null;
-    this.DepartmentTree.label =null;
+    this.clearData();
     this.updateUserDate();
   }
 
@@ -614,7 +622,7 @@ export class UserComponent implements OnInit {
         }, 3000);
       }else {
         this.dutyDialog = true;
-        console.log(this.CompanyId);
+        // console.log(this.CompanyId);
         this.userService.searchCompanyIdDepIdDutyList({companyId:this.CompanyId,deptId:this.DepartmentTree.id}).subscribe(
           (val) => {
             console.log(val);
@@ -627,6 +635,7 @@ export class UserComponent implements OnInit {
   }
 
   public treeSelectCompanyClick(): void {
+    this.Companylabel = this.CompanyTree.label;
     this.companyDialog = false;
     this.CompanyId = this.CompanyTree.id;
     this.addUser.organizationName = this.CompanyTree.label;
@@ -638,6 +647,7 @@ export class UserComponent implements OnInit {
     // this.queryDepartment.organizationId =  this.CompanyTree.id;
   }
   public treeSelectDepartmentClick (): void {
+    this.Departmentlabel = this.CompanyTree.label;
     this.departmentDialog = false;
     this.addUser.deptId = this.DepartmentTree.id;
     this.addUser.deptName = this.DepartmentTree.label;
@@ -647,6 +657,7 @@ export class UserComponent implements OnInit {
 
   }
   public treeSelectDutyClick (): void {
+    this.Dutylabel = this.DutyTree.label;
     this.dutyDialog = false;
     this.addUser.dutyName = this.DutyTree.dutyName;
     this.addUser.dutyId = this.DutyTree.id;
@@ -716,7 +727,13 @@ export class UserComponent implements OnInit {
 
 
 
-
+  public  clearData(): void {
+    this.addUser= new AddUser();
+    this.Dutylabel = '请选择职位...';
+    this.Companylabel = '请选择公司...';
+    this.Departmentlabel = '请选择部门...';
+    this.addbirthday.inputFieldValue = null;
+  }
 
 
 

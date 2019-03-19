@@ -11,9 +11,9 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addCompany" style="margin-left:  0.5vw;font-size: 1.5rem">所属公司：</label>
-    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择所属公司...">
     <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">所属部门：</label>
-    <input pInputText  id="addDep" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label" class="addAreaNameInput" placeholder="请选择所属部门...">
+    <input pInputText  id="addDep" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel" class="addAreaNameInput" placeholder="请选择所属部门...">
     <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">用户名：</label>
     <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.queryUser.userName"/>
     <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">真是姓名：</label>
@@ -41,7 +41,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
       <div class="ui-g-6">
@@ -49,7 +49,7 @@
           <label for="addorganizationName">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addorganizationName" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+          <input pInputText  id="addorganizationName" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择所属公司...">
         </div>
       </div>
       <!--所属部门-->
@@ -58,7 +58,7 @@
           <label for="adddeptName">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="adddeptName" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label"  placeholder="请选择所属部门...">
+          <input pInputText  id="adddeptName" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel"  placeholder="请选择所属部门...">
         </div>
       </div>
       <!--请选择职务-->
@@ -67,7 +67,7 @@
           <label for="addpid">请选择职务：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addpid" (click)="dutyTreeClick()" [(ngModel)]="DutyTree.label"  placeholder="请选择所属部门...">
+          <input pInputText  id="addpid" (click)="dutyTreeClick()" [(ngModel)]="this.Dutylabel"  placeholder="请选择所属部门...">
         </div>
       </div>
       <!--生日-->
@@ -76,10 +76,10 @@
           <label for="addbirthday">生日：</label>
         </div>
         <div class="ui-g-8">
-          <p-calendar id="addbirthday" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2020" dateFormat="yy-mm-dd"></p-calendar>
+          <p-calendar #addbirthday id="addbirthday" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2020" dateFormat="yy-mm-dd"></p-calendar>
         </div>
       </div>
-     <!--请输入姓名-->
+      <!--请输入姓名-->
       <div class="ui-g-6">
         <div class="ui-g-4">
           <label for="addrealName">请输入姓名：</label>
@@ -152,7 +152,7 @@
     </p-footer>
   </p-dialog>
   <!--修改弹框-->
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
       <div class="ui-g-6">
@@ -160,7 +160,7 @@
           <label for="addorganizationName1">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addorganizationName1" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  [placeholder]="this.modifyUser.organizationName">
+          <input pInputText  id="addorganizationName1" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择公司...">
         </div>
       </div>
       <!--所属部门-->
@@ -169,7 +169,7 @@
           <label for="adddeptName1">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="adddeptName1" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label"  [placeholder]="this.modifyUser.deptName">
+          <input pInputText  id="adddeptName1" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel"  placeholder="请选择部门部门...">
         </div>
       </div>
       <!--请选择职务-->
@@ -178,7 +178,7 @@
           <label for="adddutyName1">请选择职务：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="adddutyName1" (click)="dutyTreeClick()" [(ngModel)]="DutyTree.label"  [placeholder]="this.modifyUser.dutyName">
+          <input pInputText  id="adddutyName1" (click)="dutyTreeClick()" [(ngModel)]="this.Dutylabel"  placeholder="请选择职位...">
         </div>
       </div>
       <!--生日-->
@@ -190,7 +190,7 @@
           <p-calendar id="addbirthday1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event)" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2020" dateFormat="yy-mm-dd" [(ngModel)]="modifyUser.birthday"></p-calendar>
         </div>
       </div>
-     <!--请输入姓名-->
+      <!--请输入姓名-->
       <div class="ui-g-6">
         <div class="ui-g-4">
           <label for="addrealName1">请输入姓名：</label>
@@ -262,7 +262,7 @@
       </div>
     </p-footer>
   </p-dialog>
-   <!--树形结构弹窗-->
+  <!--树形结构弹窗-->
   <p-dialog header="请选择区域" [(visible)]="areaDialog" [responsive]="true" showEffect="fade" [maximizable]="true" [baseZIndex]="10000" [modal]="true" [width]="300" [height]="400">
     <div class="ui-g ui-fluid">
       <div class="ui-g-12">
