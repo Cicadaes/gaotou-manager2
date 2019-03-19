@@ -361,6 +361,10 @@ export class SerareaFieldtypeComponent implements OnInit {
     this.updateFieldTypeData();
   }
 
+  //清除数据
+  public  clearData(): void {
+      this.addFieldType = new AddFieldType();
+  }
 
 
   //分页

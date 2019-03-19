@@ -325,13 +325,13 @@ export class UserComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedUsers.length === 1) {
-      /*   // this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
+         // this.userService.searchCompanyIdDepIdDutyList({companyId: this.selectedUsers[0].organizationId, depId: this.selectedUsers[0].deptId}).subscribe(
          //   (val) => {
-         //     console.log(val);
-         //     this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
+         //     console.log(val.data);
+         //     // this.addDepTopDutySelect = this.initializeSelectDuty(val.data);
          //   }
          // );
-         // this.userService.searchCompanyIdDepList(this.selectedUsers[0].organizationId).subscribe(
+        /* // this.userService.searchCompanyIdDepList(this.selectedUsers[0].organizationId).subscribe(
          //   (value) => {
          //     console.log(value);
          //     this.addDepSelect = this.initializeSelectOrg(value.data);
@@ -568,7 +568,7 @@ export class UserComponent implements OnInit {
       console.log(this.modifyUser.organizationId);
       this.userService.searchDepartmentTree(this.modifyUser.organizationId).subscribe(
         (val) => {
-          console.log(val);
+          // console.log(val);
           this.DepartmentTrees = this.initializeDepartmentTree(val.data);
           // console.log( this.CompanyTrees);
         }
@@ -647,7 +647,7 @@ export class UserComponent implements OnInit {
     // this.queryDepartment.organizationId =  this.CompanyTree.id;
   }
   public treeSelectDepartmentClick (): void {
-    this.Departmentlabel = this.CompanyTree.label;
+    this.Departmentlabel = this.DepartmentTree.label;
     this.departmentDialog = false;
     this.addUser.deptId = this.DepartmentTree.id;
     this.addUser.deptName = this.DepartmentTree.label;
@@ -659,9 +659,10 @@ export class UserComponent implements OnInit {
   public treeSelectDutyClick (): void {
     this.Dutylabel = this.DutyTree.label;
     this.dutyDialog = false;
-    this.addUser.dutyName = this.DutyTree.dutyName;
+    this.addUser.dutyName = this.DutyTree.label;
     this.addUser.dutyId = this.DutyTree.id;
-    this.modifyUser.dutyName = this.DutyTree.dutyName;
+
+    this.modifyUser.dutyName = this.DutyTree.label;
     this.modifyUser.dutyId = this.DutyTree.id;
   }
   // 公司数据格式化

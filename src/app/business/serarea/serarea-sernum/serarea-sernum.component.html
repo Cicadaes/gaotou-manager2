@@ -11,11 +11,11 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="revampClick()">修改</button>
     <label for="addAreaName" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName5" style="height: 3vh;width: 7vw" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+    <input pInputText id="addAreaName5" style="height: 3vh;width: 7vw" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="this.addArealabel"/>
     <label for="addCompany" style="margin-left: 0.5vw;font-size: 1.5rem">所属公司：</label>
-    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+    <input pInputText  id="addCompany" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择所属公司...">
     <label for="addDep" style="margin-left: 0.5vw;font-size: 1.5rem">所属部门：</label>
-    <input pInputText  id="addDep" (click)="departmentTreequery()" [(ngModel)]="DepartmentTree.label" class="addAreaNameInput" placeholder="请选择所属部门...">
+    <input pInputText  id="addDep" (click)="departmentTreequery()" [(ngModel)]="this.Departmentlabel" class="addAreaNameInput" placeholder="请选择所属部门...">
     <label for="addDep" style="margin-left:  0.5vw;font-size: 1.5rem">服务区名：</label>
     <input pInputText id="addAreaName" style="height: 3vh;width: 7vw" [(ngModel)]="this.querySerarea.name" />
     <button class="btn querybtn" type="button" (click)="querySerareaData()">查询</button>
@@ -41,7 +41,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" blockScroll="true" [modal]="true" [width]="900">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" blockScroll="true" [modal]="true" [width]="900" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--所属公司-->
       <div class="ui-g-6">
@@ -49,7 +49,7 @@
           <label for="addorganizationName">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addorganizationName" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="CompanyTree.label"  placeholder="请选择所属公司...">
+          <input pInputText  id="addorganizationName" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择所属公司...">
         </div>
       </div>
       <!--所属部门-->
@@ -58,7 +58,7 @@
           <label for="adddeptName">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="adddeptName" (click)="departmentTreeClick()" [(ngModel)]="DepartmentTree.label" class="addAreaNameInput" placeholder="请选择所属部门...">
+          <input pInputText  id="adddeptName" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel" class="addAreaNameInput" placeholder="请选择所属部门...">
         </div>
       </div>
       <!--区划-->
@@ -67,7 +67,7 @@
           <label for="addAreaName3">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="addAreaName3" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label"/>
+          <input pInputText id="addAreaName3" placeholder="请选择所属区划..." (click)="AreaTreeClick()" [(ngModel)]="this.addArealabel"/>
         </div>
       </div>
       <!--创建人-->
@@ -76,7 +76,7 @@
           <label for="chiefName">创建人：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="chiefName" placeholder="请选择创建人..." (click)="userTreeClick()" [(ngModel)]="addUserTree.label"/>
+          <input pInputText id="chiefName" placeholder="请选择创建人..." (click)="userTreeClick()" [(ngModel)]="this.addUserlabel"/>
         </div>
       </div>
       <!--创建人电话-->

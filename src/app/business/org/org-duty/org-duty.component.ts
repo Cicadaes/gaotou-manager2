@@ -67,6 +67,8 @@ export class OrgDutyComponent implements OnInit {
   public modifyDialog: boolean;//修改弹窗显示控制
   public modifyDuty: ModifyDuty = new ModifyDuty();
   public modifyFlag = 0; //判断树形结构是修改还是删除
+  
+  public pdutyName: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -333,7 +335,7 @@ export class OrgDutyComponent implements OnInit {
   //修改
   public modifyBtn(): void {
     this.modifyFlag = 1;
-    console.log(this.modifyFlag);
+    // console.log(this.modifyFlag);
     if (this.selectedDuties === undefined || this.selectedDuties.length === 0) {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -344,15 +346,15 @@ export class OrgDutyComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedDuties.length === 1) {
-
       this.modifyDialog = true;
-     /* this.orgService.searchCompanyIdDepList(this.selectedDuties[0].organizationId).subscribe(
+      this.orgService.searchIdDepIdDutyList(this.selectedDuties[0].pid).subscribe(
         (value) => {
-          console.log(value);
-          this.addDepSelect = this.initializeSelectOrg(value.data);
+          console.log(value.data.dutyName);
+          this.pdutyName = value.data.dutyName;
+          // this.addDepSelect = this.initializeSelectOrg(value.data);
         }
       );
-      this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, deptId: null}).subscribe(
+      /*this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, deptId: null}).subscribe(
         (val) => {
           console.log(val);
           this.addDepTopDutySelect = this.initializeSelectDuty(val.data);

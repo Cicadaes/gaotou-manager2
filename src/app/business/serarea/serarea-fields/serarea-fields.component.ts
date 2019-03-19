@@ -27,6 +27,7 @@ export class SerareaFieldsComponent implements OnInit {
   // 修改相关
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyField: ModifyField = new ModifyField();
+  public attributeCategoryName: any;
   
   // 条件查询相关
   public attributeName1: any;
@@ -49,26 +50,29 @@ export class SerareaFieldsComponent implements OnInit {
       {field: 'position', header: '字段顺序'},
       {field: 'idt', header: '添加时间'},
     ];
-    this.serareaService.searchSaFieldTypeList({page: 1, nums: 10}).subscribe(
-      (val) => {
-        console.log(val.data.contents);
-        this.addFieldType = this.initializeFieldType(val.data.contents);
-      }
-    );
+
     this.uploadFieldData();
+    this.serareTypeFiled();
     this.attributeName1 = null;
   }
 
   public uploadFieldData(): void {
     this.serareaService.searchSaFieldList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        // console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.fields = value.data.contents;
       }
     );
   }
-
+  public serareTypeFiled(): void {
+    this.serareaService.searchSaFieldTypeList({page: 1, nums: 10}).subscribe(
+      (val) => {
+        // console.log(val.data.contents);
+        this.addFieldType = this.initializeFieldType(val.data.contents);
+      }
+    );
+  }
   // 选中后赋值
   public onRowSelect(event): void {
     console.log(event.data);
@@ -280,6 +284,8 @@ export class SerareaFieldsComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedfields.length === 1) {
+      this.serareTypeFiled();
+      console.log(this.addFieldType);
       this.modifyDialog = true;
       this.modifyField.id = this.selectedfields[0].id;
       this.modifyField.idt = this.selectedfields[0].idt;
@@ -289,7 +295,7 @@ export class SerareaFieldsComponent implements OnInit {
       this.modifyField.attributeDesc = this.selectedfields[0].attributeDesc;
       this.modifyField.position = this.selectedfields[0].position;
       this.modifyField.showTableHead = this.selectedfields[0].showTableHead;
-      this.modifyField.showTableHead = this.selectedfields[0].showTableHead;
+      this.attributeCategoryName = this.selectedfields[0].attributeCategoryName;
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -388,10 +394,14 @@ export class SerareaFieldsComponent implements OnInit {
     this.uploadFieldData();
   }
 
-
+  public  clearData(): void {
+      this.addField = new AddField();
+      this.addFieldType = null;
+  }
 
   // 字段分类改变
   public fieldTypeChange(e) {
+    // this.attributeCategoryName =
     this.addField.attributeCategoryId = e.value.id;
     this.modifyField.attributeCategoryId = e.value.id;
   }
@@ -411,11 +421,12 @@ export class SerareaFieldsComponent implements OnInit {
     this.nowPage = event;
     console.log('我是父组件');
     console.log(this.nowPage);
-    this.serareaService.searchSaFieldList({page: this.nowPage, nums: 14}).subscribe(
+    this.serareaService.searchSaFieldList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.fields = value.data.contents;
       }
     );
   }
+
 }

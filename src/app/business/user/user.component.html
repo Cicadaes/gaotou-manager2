@@ -160,7 +160,7 @@
           <label for="addorganizationName1">所属公司：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="addorganizationName1" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.Companylabel"  placeholder="请选择公司...">
+          <input pInputText  id="addorganizationName1" (click)="CompanyTreeClick()" class="addAreaNameInput" [(ngModel)]="this.modifyUser.organizationName"  placeholder="请选择公司...">
         </div>
       </div>
       <!--所属部门-->
@@ -169,7 +169,7 @@
           <label for="adddeptName1">所属部门：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="adddeptName1" (click)="departmentTreeClick()" [(ngModel)]="this.Departmentlabel"  placeholder="请选择部门部门...">
+          <input pInputText  id="adddeptName1" (click)="departmentTreeClick()" [(ngModel)]="this.modifyUser.deptName"  placeholder="请选择部门部门...">
         </div>
       </div>
       <!--请选择职务-->
@@ -178,7 +178,7 @@
           <label for="adddutyName1">请选择职务：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText  id="adddutyName1" (click)="dutyTreeClick()" [(ngModel)]="this.Dutylabel"  placeholder="请选择职位...">
+          <input pInputText  id="adddutyName1" (click)="dutyTreeClick()" [(ngModel)]="this.modifyUser.dutyName"  placeholder="请选择职位...">
         </div>
       </div>
       <!--生日-->

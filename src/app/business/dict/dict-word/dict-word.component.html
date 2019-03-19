@@ -7,7 +7,7 @@
   <h1 class="text-center">字典词条</h1>
   <!--按钮-->
   <div class="btn-manner">
-    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-primary" (click)="addDialog = true;this.updateDictType()">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">字典编码：</label>

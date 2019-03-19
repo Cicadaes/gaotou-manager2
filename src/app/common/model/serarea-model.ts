@@ -23,6 +23,7 @@ export class ModifyFieldType {
 /*******************字段泛型**************************/
 export class Field {
   attributeCategoryId?: number; // 属性分类id
+  attributeCategoryName?: string; // 属性分类id
   attributeDesc?: string; // 字段描述
   attributeName?: string; // 字段名称
   enabled?: any;
@@ -49,6 +50,7 @@ export class AddField {
 
 export class ModifyField {
   attributeCategoryId?: number; // 属性分类
+  // attributeCategoryName?: number; // 属性分类
   hasOrientation?: any; // 单选框(1公共2上行3下行)
   attributeName?: string; // 字段名称
   attributeDesc?: string; // 字段描述

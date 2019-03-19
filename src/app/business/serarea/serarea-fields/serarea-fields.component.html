@@ -7,7 +7,7 @@
   <h1 class="text-center">服务区字段管理</h1>
   <!--按钮-->
   <div class="btn-manner" style="line-height: 2vh">
-    <button class="btn btn-primary" (click)="addDialog = true">增加</button>
+    <button class="btn btn-primary" (click)="addDialog = true;this.serareTypeFiled()">增加</button>
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName" style="margin-left:  0.5vw;font-size: 1.5rem">字段名称：</label>
@@ -35,7 +35,7 @@
     </p-table>
   </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearData()">
     <div class="ui-g ui-fluid">
       <!--所属分类-->
       <div class="ui-g-6">
@@ -110,7 +110,7 @@
           <label for="attributeCategoryId1">所属分类：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="attributeCategoryId1" [options]="addFieldType" (onChange)="fieldTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择所属分类..."></p-dropdown>
+          <p-dropdown id="attributeCategoryId1" [options]="addFieldType" (onChange)="fieldTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.attributeCategoryName"></p-dropdown>
         </div>
       </div>
       <!--选择方向-->

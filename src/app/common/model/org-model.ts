@@ -189,6 +189,7 @@ export class ModifyDuty {
   organizationName?: string; // 公司名称
   deptName?: string; // 部门名称
   organizationId?: number; // 公司id
+  // pDutyName?: number; // 公司id
 }
 
 export class QueryDuty {

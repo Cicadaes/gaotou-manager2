@@ -78,7 +78,9 @@ export class OrgService {
   public searchDuty(num,body): Observable<any> {
     return this.http.post(`${this.globalService.urls}/duty/queryByPaging/${num.page}/${num.nums}`, body);
   }
-
+  // public searchPDutyName(id): Observable<any> {
+  //   return this.http.get(`${this.globalService.urls}/duty/queryById/${id}`);
+  // }
   /*************************数据联动查询*******************************/
   // 查询激活区域
   public searchAreaList(num): Observable<any> {

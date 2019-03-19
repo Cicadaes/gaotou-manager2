@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {SerareaService} from '../../../common/services/serarea.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../../common/services/global.service';
-import {AddSerarea, ModifySerarea, Serarea, QuerySerarea} from '../../../common/model/serarea-model';
+import {AddSerarea, ModifySerarea, Serarea, QuerySerarea, AddUpDownAttribute} from '../../../common/model/serarea-model';
 import {
   AddTreeArea,
   CompanyTree,
@@ -21,6 +21,7 @@ import {TreeNode} from '../../../common/model/cash-model';
 
 })
 export class SerareaSernumComponent implements OnInit {
+  @ViewChild('longitude') longitude : Input;
   // table显示相关
   public serAreas: Serarea[]; // 整个table数据
   public cols: any[]; // 表头
@@ -53,6 +54,12 @@ export class SerareaSernumComponent implements OnInit {
   // 分页相关
   public nowPage: any;
   public option: any;
+
+  //树结构选择相关
+  public Companylabel: any;
+  public Departmentlabel: any;
+  public addArealabel: any;
+  public addUserlabel: any;
 
   // 树结构
   public CompanyTrees: CompanyTree[];
@@ -89,18 +96,38 @@ export class SerareaSernumComponent implements OnInit {
       {appDesc: 'idt', header: '创建时间'},
     ];
     this.updateApplyListData();
+    this.updateData();
     // 初始化公司数据
     // this.serareaService.searchCompanyList({page: 1, nums: 1000}).subscribe(
     //   (val) => {
     //     this.addCompanySelect = this.initializeSelectCompany(val.data.contents);
     //   }
     // );
+
+
+    this.querySerarea.administrativeAreaId = null;
+    this.querySerarea.organizationId = null;
+    this.querySerarea.name = null;
+    this.querySerarea.deptId = null;
+  }
+
+  public updateApplyListData(): void {
+    this.serareaService.searchSerAraList({page: 1, nums: 10}).subscribe(
+      (value) => {
+        this.serAreas = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize , nowpage: 1};
+      }
+    );
+  }
+  //初始化上下行数据，人员数据
+  public  updateData(): void {
     // 初始化人员数据
     this.serareaService.searchUserList({page: 1, nums: 1000}).subscribe(
       (val) => {
         this.addUserTrees = this.initializeUserTree(val.data.contents);
       }
     );
+
     this.serareaService.searchtSerareaAttribute().subscribe(
       (value) => {
         value.data.commonAttribute.map((val, index) => {
@@ -118,22 +145,7 @@ export class SerareaSernumComponent implements OnInit {
         });
       }
     );
-
-    this.querySerarea.administrativeAreaId = null;
-    this.querySerarea.organizationId = null;
-    this.querySerarea.name = null;
-    this.querySerarea.deptId = null;
   }
-
-  public updateApplyListData(): void {
-    this.serareaService.searchSerAraList({page: 1, nums: 10}).subscribe(
-      (value) => {
-        this.serAreas = value.data.contents;
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize , nowpage: 1};
-      }
-    );
-  }
-
   // 选中后赋值
   public onRowSelect(event): void {
     this.serArea = this.cloneCar(event.data);
@@ -587,11 +599,20 @@ export class SerareaSernumComponent implements OnInit {
     this.querySerarea.organizationId = null;
     this.querySerarea.name = null;
     this.querySerarea.deptId = null;
-    this.addAreaTree.label = null;
-    this.CompanyTree.label = null;
-    this.DepartmentTree.label = null;
+    this.addArealabel = null;
+    this.Companylabel = null;
+    this.Departmentlabel = null;
     this.CompanyId = undefined;
     this.updateApplyListData();
+  }
+
+  public  clearData(): void {
+      this.addSerarea = new AddSerarea();
+      this.Companylabel = null;
+      this.addUserlabel = null;
+      this.Departmentlabel = null;
+      console.log(this.addSerarea);
+      // this.addArealabel = null;
   }
 
   // 选择公司
@@ -666,6 +687,7 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   public treeSelectCompanyClick(): void {
+    this.Companylabel =this.CompanyTree.label;
     this.companyDialog = false;
     this.CompanyId = this.CompanyTree.id;
     this.addSerarea.organizationName = this.CompanyTree.label;
@@ -678,6 +700,7 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   public treeSelectDepartmentClick(): void {
+    this.Departmentlabel = this.DepartmentTree.label;
     this.departmentDialog = false;
     this.addSerarea.deptId = this.DepartmentTree.id;
     this.addSerarea.deptName = this.DepartmentTree.label;
@@ -704,6 +727,7 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.addArealabel = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
       this.addSerarea.administrativeAreaId = this.addAreaTree.id;
@@ -732,6 +756,7 @@ export class SerareaSernumComponent implements OnInit {
   }
 
   public userTreeOnNodeSelect() {
+    this.addUserlabel = this.addUserTree.label;
     this.userDialog = false;
     this.addSerarea.chiefUserId = this.addUserTree.id;
     this.addSerarea.chiefName = this.addUserTree.label;

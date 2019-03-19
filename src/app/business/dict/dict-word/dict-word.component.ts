@@ -56,12 +56,7 @@ export class DictWordComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.updateDictWordsata();
-    this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
-      (value) => {
-        console.log(value);
-        this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
-      }
-    );
+    this.updateDictType();
     this.queryDictWord.dictionaryCode = null;
     this.queryDictWord.entryCode = null;
     this.queryDictWord.entryValue = null;
@@ -73,6 +68,14 @@ export class DictWordComponent implements OnInit {
         console.log(value);
         this.option1 = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
         this.dictWords = value.data.contents;
+      }
+    );
+  }
+  public updateDictType(): void {
+    this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
+      (value) => {
+        console.log(value);
+        this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
       }
     );
   }

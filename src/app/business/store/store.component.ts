@@ -299,7 +299,18 @@ export class StoreComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedstores.length === 1) {
-
+      this.storeService.searchHighDirection(this.selectedstores[0].serviceAreaId).subscribe(
+        (value) => {
+          // console.log(value);
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      );
+      this.storeService.searchStoreType().subscribe(
+        (val) => {
+          // console.log(val);
+          this.storeTypes = this.initializeStoreTypes(val.data);
+        }
+      );
       this.modifyDialog = true;
       this.modifyStore.id = this.selectedstores[0].id;
       this.modifyStore.serviceAreaId = this.selectedstores[0].serviceAreaId;
