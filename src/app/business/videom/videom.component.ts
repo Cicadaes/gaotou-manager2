@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {VideomService} from '../../common/services/videom.service';
 import {AddVideo, ModifyVideo, Video} from '../../common/model/videom-model';
 import {AddTreeArea, QueryVideo, SelectItem, TreeNode} from '../../common/model/shared-model';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-videom',
@@ -12,6 +13,12 @@ import {AddTreeArea, QueryVideo, SelectItem, TreeNode} from '../../common/model/
   encapsulation: ViewEncapsulation.None
 })
 export class VideomComponent implements OnInit {
+  @ViewChild('addSerdropDown') addSerdropDown: Dropdown;
+  @ViewChild('addDircDropDown') addDircDropDown: Dropdown;
+  @ViewChild('addShopDropDown') addShopDropDown: Dropdown;
+  @ViewChild('modifySerdropDown') modifySerdropDown: Dropdown;
+  @ViewChild('modifyDircDropDown') modifyDircDropDown: Dropdown;
+  @ViewChild('modifyShopDropDown') modifyShopDropDown: Dropdown;
   // table显示相关
   public videos: Video[]; // 整个table数据
   public cols: any[]; // 表头
@@ -432,6 +439,12 @@ export class VideomComponent implements OnInit {
 
   public clearDown(): void {
     this.addAreaSelect = '请选择区域...';
+    this.addSerdropDown.value = '请选择服务区...';
+    this.addDircDropDown.value = '请选择服务区方向...';
+    this.addShopDropDown.value = '请选择店铺...';
+    this.modifySerdropDown.value = '请选择服务区...';
+    this.modifyDircDropDown.value = '请选择服务区方向...';
+    this.modifyShopDropDown.value = '请选择店铺...';
     this.addServicesAreas = null;
     this.highsdData = null;
     this.storeList = null;

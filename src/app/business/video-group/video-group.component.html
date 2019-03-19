@@ -57,7 +57,7 @@
           <label for="addServiceAreaName3">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown  #dropDownThing id="addServiceAreaName3" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
+          <p-dropdown  #addSerdropDown id="addServiceAreaName3" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -65,7 +65,7 @@
           <label for="highDirec">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..." ></p-dropdown>
+          <p-dropdown #addDircDropDown id="highDirec" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -139,7 +139,7 @@
           <label for="addServiceAreaName1">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown #dropDownThing1 id="addServiceAreaName1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
+          <p-dropdown #modifySer id="addServiceAreaName1" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">
@@ -147,7 +147,7 @@
           <label for="highDirec1">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="highDirec1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..." ></p-dropdown>
+          <p-dropdown #modifyDirec id="highDirec1" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..." ></p-dropdown>
         </div>
       </div>
       <div class="ui-g-6">

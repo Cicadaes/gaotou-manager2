@@ -5,6 +5,7 @@ import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 import {DatePipe} from '@angular/common';
+import {Dropdown} from 'primeng/primeng';
 
 @Component({
   selector: 'app-store',
@@ -13,7 +14,7 @@ import {DatePipe} from '@angular/common';
   encapsulation: ViewEncapsulation.None
 })
 export class StoreComponent implements OnInit {
-
+  @ViewChild('addserviceAreaId1') addserviceAreaId1: Dropdown;
   public stores: Store[]; // 整个table数据
   public cols: any[]; // 表头
   public store: any; // 接收选中的值
@@ -424,12 +425,14 @@ export class StoreComponent implements OnInit {
 
   // addOnHide
   public addOnHide (): void {
-      this.addStore= new AddStore();
-      this.arealabel = "请选择区划";
-      this.addServicesAreas = null;
-      this.highsdData= null;
-      this.storeTypes = null;
-      this.StoreType = null;
+    console.log(this.addserviceAreaId1);
+    this.addserviceAreaId1.value = '请选择服务区';
+    this.addStore= new AddStore();
+    this.arealabel = "请选择区划";
+    this.addServicesAreas = null;
+    this.highsdData= null;
+    this.storeTypes = null;
+    this.StoreType = null;
   }
 
 //   //删除数据
