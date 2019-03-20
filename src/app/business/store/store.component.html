@@ -266,7 +266,7 @@
           <label for="modifyAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="this.arealabel" />
+          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="this.modifyStore.administrativeAreaName" />
         </div>
       </div>
       <!--服务区-->
@@ -275,7 +275,7 @@
           <label for="modifyserviceAreaId">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyStore.serviceAreaName"></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -284,7 +284,7 @@
           <label for="modifysaOrientationId">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择上下行..."></p-dropdown>
+          <p-dropdown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyOrientation"></p-dropdown>
         </div>
       </div>
       <!--店铺分类-->
@@ -293,7 +293,7 @@
           <label for="modifystoreId">店铺分类：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="modifystoreId" [options]="storeTypes" (onChange)="storeTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺类型..."></p-dropdown>
+          <p-dropdown id="modifystoreId" [options]="storeTypes" (onChange)="storeTypeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyStoreName"></p-dropdown>
         </div>
       </div>
       <!--合同开始日期-->
@@ -303,7 +303,7 @@
         </div>
         <div class="ui-g-8">
           <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
-          <p-calendar id="contractStartDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'contractStartDate')" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="modifyStore.contractStartDate"></p-calendar>
+          <p-calendar id="contractStartDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'contractStartDate')" [placeholder]="this.modifyStore.contractStartDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="modifyStore.contractStartDate"></p-calendar>
         </div>
       </div>
       <!--合同到期日期-->
@@ -313,7 +313,7 @@
         </div>
         <div class="ui-g-8">
           <!--<input pInputText type="number" id="addfoundDate" [(ngModel)]="addCompany.foundDate" />-->
-          <p-calendar id="contractExpirationDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'contractExpirationDate')" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="modifyStore.contractExpirationDate"></p-calendar>
+          <p-calendar id="contractExpirationDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'contractExpirationDate')" [placeholder]="this.modifyStore.contractExpirationDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd" [(ngModel)]="modifyStore.contractExpirationDate"></p-calendar>
         </div>
       </div>
       <!--经营状态-->
@@ -334,7 +334,7 @@
           <label for="statusChangeDate1">经营状态改变日期：</label>
         </div>
         <div class="ui-g-8">
-          <p-calendar id="statusChangeDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'statusChangeDate')" placeholder="请点击选择时间......" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd"></p-calendar>
+          <p-calendar id="statusChangeDate1" [style]="{'width': '80%'}" (onSelect)="timeOnSelect($event, 'statusChangeDate')" [placeholder]="this.modifyStore.statusChangeDate" [monthNavigator]="true" [yearNavigator]="true" yearRange="1980:2030" dateFormat="yy-mm-dd"></p-calendar>
         </div>
       </div>
       <!--收银分类-->

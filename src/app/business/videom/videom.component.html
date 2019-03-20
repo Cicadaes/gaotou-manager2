@@ -11,7 +11,7 @@
     <button class="btn btn-danger" type="button" (click)="deleteFirm()">删除</button>
     <button class="btn btn-success" type="button" (click)="modifyBtn()">修改</button>
     <label for="addAreaName10" style="margin-left: 1vw;font-size: 1.5rem">所属区划：</label>
-    <input pInputText id="addAreaName10" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaTree.label" />
+    <input pInputText id="addAreaName10" class="addAreaNameInput" (click)="AreaTreeClick()" [(ngModel)]="addAreaSelect" />
     <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">所属服务区：</label>
     <p-dropdown id="addserviceArea" [options]="addServicesAreas" (onChange)="serviceChange($event)"  [style]="{'width':'7vw','margin-bottom':'3px','height':'3.5vh'}"  scrollHeight="120px"  optionLabel="name" placeholder="请选择服务区..."  [(ngModel)]="this.ServiceName"></p-dropdown>
     <label for="addserviceArea" style="margin-left: 0.5vw;font-size: 1.5rem">方向：</label>
@@ -46,7 +46,7 @@
      </p-table>
    </p-scrollPanel>
   <!--增加弹框-->
-  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearDown()">
+  <p-dialog header="增加信息" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="1000" (onHide)="clearDown()">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
@@ -100,7 +100,7 @@
           <label for="addgroupId2">所属分组：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addgroupId2" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择分组..."></p-dropdown>
+          <p-dropdown #addgroupId2 id="addgroupId2" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择分组..."></p-dropdown>
         </div>
       </div>
       <!--摄像头名称-->
@@ -195,7 +195,7 @@
     </p-footer>
   </p-dialog>
   <!--修改弹框-->
-  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="800" (onHide)="clearDown()">
+  <p-dialog header="修改信息" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="1000" (onHide)="clearDown()">
     <div class="ui-g ui-fluid">
       <!--区划-->
       <div class="ui-g-6">
@@ -203,7 +203,7 @@
           <label for="modifyAreaName">所属区划：</label>
         </div>
         <div class="ui-g-8">
-          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="addAreaSelect"/>
+          <input pInputText id="modifyAreaName" (click)="AreaTreeClick()" [(ngModel)]="this.modifyVideo.administrativeAreaName"/>
         </div>
       </div>
       <!--服务区-->
@@ -212,7 +212,7 @@
           <label for="modifyserviceAreaId">所属服务区：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown #modifySerdropDown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" placeholder="请选择服务区..."></p-dropdown>
+          <p-dropdown #modifySerdropDown id="modifyserviceAreaId" [options]="addServicesAreas" (onChange)="serviceChange($event)" [style]="{'width':'182px'}" scrollHeight="120px" optionLabel="name" [placeholder]="this.modifyVideo.serviceAreaName"></p-dropdown>
         </div>
       </div>
       <!--上下行-->
@@ -221,7 +221,7 @@
           <label for="modifysaOrientationId">上下行：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown #modifyDircDropDown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择高速方向..."></p-dropdown>
+          <p-dropdown #modifyDircDropDown id="modifysaOrientationId" [options]="highsdData" (onChange)="directionChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyorientationDO"></p-dropdown>
         </div>
       </div>
       <!--店铺-->
@@ -230,7 +230,7 @@
           <label for="modifystoreId130">所属店铺：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown #modifyShopDropDown id="modifystoreId130" [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择店铺..."></p-dropdown>
+          <p-dropdown #modifyShopDropDown id="modifystoreId130" [options]="storeList" (onChange)="storeChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyStoreTypeName"></p-dropdown>
         </div>
       </div>
       <!--是否在店铺内-->
@@ -246,10 +246,10 @@
       <!--视频分组-->
       <div class="ui-g-6">
         <div class="ui-g-4">
-          <label for="addgroupId1">所属分组：</label>
+          <label for="modifygroupId1">所属分组：</label>
         </div>
         <div class="ui-g-8">
-          <p-dropdown id="addgroupId1" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" placeholder="请选择分组..."></p-dropdown>
+          <p-dropdown #modifygroupId1 id="modifygroupId1" [options]="videoGroupList" (onChange)="videoGroupChange($event)" [style]="{'width':'182px'}" scrollHeight="72px" optionLabel="name" [placeholder]="this.modifyGroupName"></p-dropdown>
         </div>
       </div>
       <!--摄像头名称-->

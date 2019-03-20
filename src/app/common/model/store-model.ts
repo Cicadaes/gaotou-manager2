@@ -22,9 +22,13 @@ export class Store {
   storeName: string; // 店铺名称
   usableArea: null; // 实用面积
   waterAccount: null; // 水费账号
+  administrativeAreaId?: number; // 区划id
+  administrativeAreaName?: string; // 区划名称
   orientationDO?: orientationDo
 }
 export class AddStore {
+  administrativeAreaId?: number; // 区划id
+  administrativeAreaName?: string; // 区划名称
   saOrientationId?: number; // 服务区方向
   serviceAreaId?: number; // 服务区id
   serviceAreaName?: string; // 服务区名称
@@ -46,6 +50,8 @@ export class AddStore {
   principalMobile?: string; // 负责人电话
 }
 export class ModifyStore {
+  administrativeAreaId?: number; // 区划id
+  administrativeAreaName?: string; // 区划名称
   saOrientationId?: number; // 服务区方向
   serviceAreaId?: number; // 服务区id
   serviceAreaName?: string; // 服务区名称
@@ -82,6 +88,7 @@ export class QueryStroe {
 export class orientationDo {
   id?: number;
   flag?: number;
+  flagName?: string;
   destination?: string;
   source?: string;
 

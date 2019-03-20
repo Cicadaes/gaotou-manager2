@@ -30,6 +30,7 @@ export class VideoGroupComponent implements OnInit {
   public addAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
+  public addArealabel: any;
   // 分页相关
   public nowPage: any;
   public option: any;
@@ -43,6 +44,8 @@ export class VideoGroupComponent implements OnInit {
   public modifyVideoGroup: ModifyVideoGroup = new ModifyVideoGroup();
   public modifyhighsdData: any;
   public col: any;
+  public modifyserviceAreaName: any;
+  public modifyOrientationName: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -80,6 +83,7 @@ export class VideoGroupComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
+    console.log(event.data);
     this.videoGroup = this.cloneCar(event.data);
   }
 
@@ -284,8 +288,23 @@ export class VideoGroupComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedVideoGroups.length === 1) {
+
+      this.videoGroupService.searchServiceAreaList(this.selectedVideoGroups[0].administrativeAreaId).subscribe(
+        (value) => {
+          this.addServicesAreas = this.initializeServiceArea(value.data);
+        }
+      );
+      this.videoGroupService.searchHighDirection(this.selectedVideoGroups[0].orientationDO.id).subscribe(
+        (value) => {
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      );
       this.modifyDialog = true;
+      this.modifyserviceAreaName = this.selectedVideoGroups[0].serviceAreaName;
+      this.modifyOrientationName =this.selectedVideoGroups[0].orientationDO.flagName+"："+ this.selectedVideoGroups[0].orientationDO.source+"—>"+ this.selectedVideoGroups[0].orientationDO.destination;
       this.modifyVideoGroup.groupCode = this.selectedVideoGroups[0].groupCode;
+      this.modifyVideoGroup.administrativeAreaId = this.selectedVideoGroups[0].administrativeAreaId;
+      this.modifyVideoGroup.administrativeAreaName = this.selectedVideoGroups[0].administrativeAreaName;
       this.modifyVideoGroup.groupName = this.selectedVideoGroups[0].groupName;
       this.modifyVideoGroup.id = this.selectedVideoGroups[0].id;
       this.modifyVideoGroup.idt = this.selectedVideoGroups[0].idt;
@@ -381,6 +400,13 @@ export class VideoGroupComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+
+    this.addArealabel = this.addAreaTree.label;
+    this.addVideoGroup.administrativeAreaId = this.addAreaTree.id;
+    this.addVideoGroup.administrativeAreaName = this.addAreaTree.label;
+
+    this.modifyVideoGroup.administrativeAreaId = this.addAreaTree.id;
+    this.modifyVideoGroup.administrativeAreaName = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
       this.areaDialog = false;
@@ -411,7 +437,7 @@ export class VideoGroupComponent implements OnInit {
   }
 
   public clearDown(): void {
-    this.addAreaTree.label = '请选择区域...';
+    this.addArealabel= '请选择区域...';
     this.addSerdropDown.value = '请选择服务区...';
     this.addDircDropDown.value = '请选择服务区方向...';
     this.modifySer.value = '请选择服务区...';
@@ -424,7 +450,7 @@ export class VideoGroupComponent implements OnInit {
   public  resetQueryVideoGroup(): void {
     this.queryVideoGroup.orientationDO = null;
     this.queryVideoGroup.serviceAreaId = null;
-    this.addAreaTree.label = '请选择区域...';
+    this.addArealabel = '请选择区域...';
     this.orientationName = null;
     this.ServiceName = null;
     this.addServicesAreas = null;

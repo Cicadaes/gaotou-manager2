@@ -17,10 +17,14 @@ export class Video {
   saOrientationId: number; // 服务区方向2
   cameraType: string; // 摄像头类型
   serviceAreaName: string; // 摄像头类型
-  orientationDo?:OrientationDo;
+  orientationDO?:OrientationDo;
+  administrativeAreaId?: number; // 区划id
+  administrativeAreaName?: string; // 区划名称
   // SelectItem?;SelectItem();
 }
 export class AddVideo {
+  administrativeAreaId?: number; // 区划id
+  administrativeAreaName?: string; // 区划名称
   saOrientationId: number; // 服务区方向2
   serviceAreaId: number; // 服务区id 1
   storeId: number; // 店铺id 10
@@ -36,6 +40,8 @@ export class AddVideo {
   // enabled: any; // 摄像头是否可用
 }
 export class ModifyVideo {
+  administrativeAreaId?: number; // 区划id
+  administrativeAreaName?: string; // 区划名称
   saOrientationId: number; // 服务区方向2
   serviceAreaId: number; // 服务区id 1
   storeId: number; // 店铺id 10
@@ -56,4 +62,6 @@ export class ModifyVideo {
 export class OrientationDo {
   destination?: string;
   source?: string;
+  id?:number;
+  flagName?:string;
 }

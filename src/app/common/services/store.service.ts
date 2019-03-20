@@ -43,6 +43,11 @@ export class StoreService {
     return this.http.post(
       `${this.globalService.urls}/administrativeArea/queryTreeByPaging/${num.page}/${num.nums}`, {});
   }
+  // // 查询激活区域
+  // public searchArea(num): Observable<any> {
+  //   return this.http.post(
+  //     `${this.globalService.urls}/administrativeArea/queryById/${num.page}/${num.nums}`, {});
+  // }
   // 根据区域查询所属服务区
   public searchServiceAreaList(id): Observable<any> {
     return this.http.get(

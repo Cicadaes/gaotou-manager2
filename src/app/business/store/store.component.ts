@@ -42,7 +42,8 @@ export class StoreComponent implements OnInit {
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyStore: ModifyStore = new ModifyStore(); //修改弹窗显示控制
   public modifyOrientation: any;
-  public modifySeriviceName: any;
+  public modifyStoreType: any;
+  public modifyStoreName: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
@@ -106,6 +107,7 @@ export class StoreComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
+    console.log(this.addStore);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -299,6 +301,13 @@ export class StoreComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedstores.length === 1) {
+      this.storeService.searchServiceAreaList(this.selectedstores[0].administrativeAreaId).subscribe(
+        value => {
+          console.log(value);
+          this.addServicesAreas = this.initializeServiceArea(value.data);
+        }
+      );
+
       this.storeService.searchHighDirection(this.selectedstores[0].serviceAreaId).subscribe(
         (value) => {
           // console.log(value);
@@ -309,10 +318,19 @@ export class StoreComponent implements OnInit {
         (val) => {
           // console.log(val);
           this.storeTypes = this.initializeStoreTypes(val.data);
+          // console.log(this.storeTypes);
+          this.modifyStoreType = this.selectedstores[0].categoryCode;
+          for (var i = 0;i<this.storeTypes.length; i++){
+            if (this.modifyStoreType === this.storeTypes[i].code) {
+                this.modifyStoreName = this.storeTypes[i].name;
+            }
+          }
         }
       );
+
       this.modifyDialog = true;
       this.modifyStore.id = this.selectedstores[0].id;
+      this.modifyStore.administrativeAreaName = this.selectedstores[0].administrativeAreaName;
       this.modifyStore.serviceAreaId = this.selectedstores[0].serviceAreaId;
       this.modifyStore.saOrientationId = this.selectedstores[0].orientationDO.id;
       this.modifyStore.storeName = this.selectedstores[0].storeName;
@@ -323,6 +341,7 @@ export class StoreComponent implements OnInit {
       this.modifyStore.principalMobile = this.selectedstores[0].principalMobile;
 
       // this.modifyStore.openData
+      this.modifyOrientation =this.selectedstores[0].orientationDO.flagName+":"+this.selectedstores[0].orientationDO.source+'—>'+this.selectedstores[0].orientationDO.destination;
       this.modifyStore.operateStatus = this.selectedstores[0].operateStatus;
       this.modifyStore.statusChangeDate = this.selectedstores[0].statusChangeDate;
       this.modifyStore.usableArea = this.selectedstores[0].usableArea;
@@ -332,6 +351,9 @@ export class StoreComponent implements OnInit {
       this.modifyStore.industryCode = this.selectedstores[0].industryCode;
       this.modifyStore.cashierType = this.selectedstores[0].cashierType;
       this.modifyStore.enabled = this.selectedstores[0].enabled;
+      this.modifyStore.serviceAreaName = this.selectedstores[0].serviceAreaName;
+      this.modifyStore.contractStartDate = this.selectedstores[0].contractStartDate;
+      this.modifyStore.contractExpirationDate = this.selectedstores[0].contractExpirationDate;
 
     } else {
       if (this.cleanTimer) {
@@ -444,6 +466,8 @@ export class StoreComponent implements OnInit {
     this.highsdData= null;
     this.storeTypes = null;
     this.StoreType = null;
+    this.modifyOrientation = null;
+    this.modifyStoreName = null;
   }
 
 //   //删除数据
@@ -493,6 +517,8 @@ export class StoreComponent implements OnInit {
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
+
+    // this.addStore.administrativeAreaId =this.addAreaTree.id;
     this.modifyStore.serviceAreaName = '请选择服务区';
     this.storeService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
@@ -506,6 +532,10 @@ export class StoreComponent implements OnInit {
   }
 
   public treeSelectAreaClick(): void {
+    this.addStore.administrativeAreaId =this.addAreaTree.id;
+    this.addStore.administrativeAreaName =this.addAreaTree.label;
+    this.modifyStore.administrativeAreaId =this.addAreaTree.id;
+    this.modifyStore.administrativeAreaName =this.addAreaTree.label;
     this.arealabel = this.addAreaTree.label;
     const a = parseFloat(this.addAreaTree.level);
     if (a >= 2) {
