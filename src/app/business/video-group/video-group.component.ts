@@ -5,6 +5,7 @@ import {VideoGroupService} from '../../common/services/video-group.service';
 import {AddVideoGroup, ModifyVideoGroup, QueryVideoGroup, VideoGroup} from '../../common/model/video-group-model';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 import {Dropdown} from 'primeng/primeng';
+import {log} from 'util';
 
 @Component({
   selector: 'app-video-group',
@@ -289,16 +290,20 @@ export class VideoGroupComponent implements OnInit {
       }, 3000);
     } else if (this.selectedVideoGroups.length === 1) {
 
-      this.videoGroupService.searchServiceAreaList(this.selectedVideoGroups[0].administrativeAreaId).subscribe(
-        (value) => {
-          this.addServicesAreas = this.initializeServiceArea(value.data);
-        }
-      );
-      this.videoGroupService.searchHighDirection(this.selectedVideoGroups[0].orientationDO.id).subscribe(
-        (value) => {
-          this.highsdData = this.initializeServiceAreaDirec(value.data);
-        }
-      );
+      if(this.selectedVideoGroups[0].administrativeAreaId) {
+        this.videoGroupService.searchServiceAreaList(this.selectedVideoGroups[0].administrativeAreaId).subscribe(
+          (value) => {
+            this.addServicesAreas = this.initializeServiceArea(value.data);
+          }
+        );
+      }
+     if(this.selectedVideoGroups[0].orientationDO.id){
+       this.videoGroupService.searchHighDirection(this.selectedVideoGroups[0].orientationDO.id).subscribe(
+         (value) => {
+           this.highsdData = this.initializeServiceAreaDirec(value.data);
+         }
+       );
+     }
       this.modifyDialog = true;
       this.modifyserviceAreaName = this.selectedVideoGroups[0].serviceAreaName;
       this.modifyOrientationName =this.selectedVideoGroups[0].orientationDO.flagName+"："+ this.selectedVideoGroups[0].orientationDO.source+"—>"+ this.selectedVideoGroups[0].orientationDO.destination;
@@ -323,7 +328,9 @@ export class VideoGroupComponent implements OnInit {
 
   // 修改确认
   public modifySure(): void {
+    console.log(this.modifyVideoGroup);
     this.confirmationService.confirm({
+      // console.log(this.modifyVideoGroup);
       message: `确定要修改吗？`,
       header: '修改提醒',
       icon: 'pi pi-exclamation-triangle',

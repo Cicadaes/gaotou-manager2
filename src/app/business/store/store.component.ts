@@ -302,7 +302,7 @@ export class StoreComponent implements OnInit {
       }, 3000);
     } else if (this.selectedstores.length === 1) {
       //服务区查询
-      if (this.selectedstores[0].administrativeAreaId) {
+      if(this.selectedstores[0].administrativeAreaId){
         this.storeService.searchServiceAreaList(this.selectedstores[0].administrativeAreaId).subscribe(
           value => {
             console.log(value);
@@ -312,6 +312,8 @@ export class StoreComponent implements OnInit {
           }
         );
       }
+
+
       //上下行查询
       if (this.selectedstores[0].serviceAreaId) {
         this.storeService.searchHighDirection(this.selectedstores[0].serviceAreaId).subscribe(
