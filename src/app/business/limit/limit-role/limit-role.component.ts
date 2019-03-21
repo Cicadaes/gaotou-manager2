@@ -78,9 +78,10 @@ export class LimitRoleComponent implements OnInit {
   public uploadRoleData(): void {
     this.limitService.searchRoleList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
-        this.option = {total: value.data.totalRecord, row:value.data.pageSize, nowpage: 1};
-        this.roles = value.data.contents;
+        if(value.data){
+          this.option = {total: value.data.totalRecord, row:value.data.pageSize, nowpage: 1};
+          this.roles = value.data.contents;
+        }
       }
     );
   }
@@ -104,7 +105,7 @@ export class LimitRoleComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    console.log(this.addRole);
+    // console.log(this.addRole);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -393,8 +394,11 @@ export class LimitRoleComponent implements OnInit {
     this.areaDialog = true;
     this.limitService.searchArea({page: 1, nums: 100}).subscribe(
       (val) => {
-        this.addAreaTrees = this.initializeTree(val.data.contents);
-        console.log(this.addAreaTrees);
+        if (val.data.contents){
+          this.addAreaTrees = this.initializeTree(val.data.contents);
+
+        }
+        // console.log(this.addAreaTrees);
       }
     );
   }

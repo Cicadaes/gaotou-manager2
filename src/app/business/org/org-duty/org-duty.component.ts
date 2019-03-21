@@ -349,8 +349,14 @@ export class OrgDutyComponent implements OnInit {
       this.modifyDialog = true;
       this.orgService.searchIdDepIdDutyList(this.selectedDuties[0].pid).subscribe(
         (value) => {
-          console.log(value.data.dutyName);
-          this.pdutyName = value.data.dutyName;
+          console.log(value);
+
+          if(value.data)
+          {
+
+            this.pdutyName = value.data.dutyName;
+
+          }
           // this.addDepSelect = this.initializeSelectOrg(value.data);
         }
       );
@@ -578,7 +584,10 @@ export class OrgDutyComponent implements OnInit {
       this.orgService.searchCompanyIdDepIdDutyList({companyId:this.modifyDuty.organizationId,deptId:this.modifyDuty.deptId}).subscribe(
         (val) => {
           console.log(val);
-          this.DutyTrees = this.initializeDutyTree(val.data);
+          if (val.data){
+            this.DutyTrees = this.initializeDutyTree(val.data);
+
+          }
           // console.log( this.CompanyTrees);
         }
       );
@@ -629,10 +638,13 @@ export class OrgDutyComponent implements OnInit {
     this.queryDuty.deptId = this.DepartmentTree.id;
   }
   public treeSelectDutyClick (): void {
+    this.pdutyName = this.DutyTree.label;
+
     this.Dutylabel = this.DutyTree.label;
     this.dutyDialog = false;
     this.addDuty.pid = this.DutyTree.pid;
     this.modifyDuty.pid = this.DutyTree.pid;
+    console.log(this.DutyTree.pid);
   }
   // 公司数据格式化
   public initializeCompanyTree(data): any {

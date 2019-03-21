@@ -16,6 +16,7 @@ export class CashComponent implements OnInit {
   @ViewChild('addSer') addSer: Dropdown;
   @ViewChild('addDirec') addDirec: Dropdown;
   @ViewChild('addStore') addStore: Dropdown;
+
   @ViewChild('modifySer') modifySer: Dropdown;
   @ViewChild('modifyDirec') modifyDirec: Dropdown;
   @ViewChild('modifyStore') modifyStore: Dropdown;
@@ -90,7 +91,7 @@ export class CashComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
-    console.log(event.data);
+    // console.log(event.data);
     this.cash = this.cloneCar(event.data);
   }
 
@@ -107,7 +108,7 @@ export class CashComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    console.log(this.addCash);
+    // console.log(this.addCash);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -422,7 +423,7 @@ export class CashComponent implements OnInit {
         }
       });
     }
-    console.log(this.modifyCash);
+    // console.log(this.modifyCash);
     // console.log(this.modifyCash.province.administrativeAreaName);
   }
 

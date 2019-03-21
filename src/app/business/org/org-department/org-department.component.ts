@@ -316,7 +316,9 @@ export class OrgDepartmentComponent implements OnInit {
       this.modifyDialog = true;
       this.orgService.searchCompanyIdDepList(this.selectedorgs[0].id).subscribe(
         (value) => {
-          this.addOrgSelect = this.initializeSelectOrg(value.data);
+          if (value.data) {
+            this.addOrgSelect = this.initializeSelectOrg(value.data);
+          }
         }
       );
       this.modifyDepartment.id = this.selectedorgs[0].id;

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
 import {AreaService} from '../../common/services/area.service';
 import {ConfirmationService, Message, MessageService} from 'primeng/api';
 import {GlobalService} from '../../common/services/global.service';
@@ -14,6 +14,7 @@ import {AddTreeArea} from '../../common/model/shared-model';
 })
 
 export class AreaComponent implements OnInit {
+  // @ViewChild ('input') input: Input;
   // 表格数据相关
   public areas: Area[]; // 整个table数据
   public cols: any[]; // 表头
@@ -273,6 +274,18 @@ export class AreaComponent implements OnInit {
     this.addAreaTreeSelect.push(event.node);
     this.addArea = this.addInitializeTree1(this.addAreaTreeSelect)[0];
   }
+
+  public  clearData(): void {
+    this.addArea.areaName =null;
+    this.addArea.areaCode = null;
+    // this.input
+   // console.log(this.input);
+  }
+  //
+  // public keyupFn (e): void {
+  //   // $("#pwd").val($(e.target).val());
+  //
+  // }
 
   // 递归调用重组数据结构
   public tableTreeInitialize(data): any {

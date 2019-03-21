@@ -606,7 +606,10 @@ export class UserComponent implements OnInit {
       this.userService.searchCompanyIdDepIdDutyList({companyId:this.modifyUser.organizationId,deptId:this.modifyUser.deptId}).subscribe(
         (val) => {
           console.log(val);
-          this.DutyTrees = this.initializeDutyTree(val.data);
+          if(val.data){
+            this.DutyTrees = this.initializeDutyTree(val.data);
+
+          }
           // console.log( this.CompanyTrees);
         }
       );
@@ -626,7 +629,9 @@ export class UserComponent implements OnInit {
         this.userService.searchCompanyIdDepIdDutyList({companyId:this.CompanyId,deptId:this.DepartmentTree.id}).subscribe(
           (val) => {
             console.log(val);
-            this.DutyTrees = this.initializeDutyTree(val.data);
+            if(val.data){
+                this.DutyTrees = this.initializeDutyTree(val.data);
+            }
             // console.log( this.CompanyTrees);
           }
         );

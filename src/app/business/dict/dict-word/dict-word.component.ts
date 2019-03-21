@@ -65,17 +65,22 @@ export class DictWordComponent implements OnInit {
   public updateDictWordsata(): void {
     this.dictService.searchDictWordList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value);
-        this.option1 = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
-        this.dictWords = value.data.contents;
+        // console.log(value);
+        if (value.data){
+          this.option1 = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+          this.dictWords = value.data.contents;
+        }
+
       }
     );
   }
   public updateDictType(): void {
     this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
       (value) => {
-        console.log(value);
-        this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
+        // console.log(value);
+        if (value.data.contents) {
+          this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
+        }
       }
     );
   }

@@ -300,19 +300,26 @@ export class InterceptComponent implements OnInit {
       this.interceptService.searchServiceAreaList(this.selectedintercepts[0].administrativeAreaId).subscribe(
         value => {
           // console.log(value.data);
-          this.addServicesAreas = this.initializeServiceArea(value.data);
+          if(value.data){
+            this.addServicesAreas = this.initializeServiceArea(value.data);
+
+          }
         }
       );
       this.interceptService.searchHighDirection(this.selectedintercepts[0].serviceAreaId).subscribe(
         (value) => {
+          if(value.data){
+            this.highsdData = this.initializeServiceAreaDirec(value.data);
+          }
           // console.log(value);
-          this.highsdData = this.initializeServiceAreaDirec(value.data);
         }
       );
       this.interceptService.QuryHighDirection(this.selectedintercepts[0].serviceAreaId).subscribe(
         (value) => {
           // console.log(value);
-          this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+          if(value.data){
+            this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+          }
         }
       );
       this.modifyIntercept.bayonetCode = this.selectedintercepts[0].bayonetCode;
@@ -422,7 +429,7 @@ export class InterceptComponent implements OnInit {
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
-    this.modifyIntercept.serviceAreaName = '请选择服务区';
+    this.modifyIntercept.serviceAreaName = '请选择服务区...';
     this.interceptService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
@@ -456,7 +463,9 @@ export class InterceptComponent implements OnInit {
       this.areaDialog = false;
       this.interceptService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
-          this.addServicesAreas = this.initializeServiceArea(value.data);
+          if(value.data){
+            this.addServicesAreas = this.initializeServiceArea(value.data);
+          }
         }
       );
     } else {
@@ -483,7 +492,9 @@ export class InterceptComponent implements OnInit {
     this.interceptService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
-        this.highsdData = this.initializeServiceAreaDirec(value.data);
+        if(value.data){
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
       }
     );
   }

@@ -42,7 +42,7 @@ export class StoreComponent implements OnInit {
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyStore: ModifyStore = new ModifyStore(); //修改弹窗显示控制
   public modifyOrientation: any;
-  public modifyStoreType: any;
+  // public modifyStoreType: any;
   public modifyStoreName: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
@@ -301,28 +301,41 @@ export class StoreComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedstores.length === 1) {
-      this.storeService.searchServiceAreaList(this.selectedstores[0].administrativeAreaId).subscribe(
-        value => {
-          console.log(value);
-          this.addServicesAreas = this.initializeServiceArea(value.data);
-        }
-      );
+      //服务区查询
+      if (this.selectedstores[0].administrativeAreaId) {
+        this.storeService.searchServiceAreaList(this.selectedstores[0].administrativeAreaId).subscribe(
+          value => {
+            console.log(value);
+            if (value.data){
+              this.addServicesAreas = this.initializeServiceArea(value.data);
+            }
+          }
+        );
+      }
+      //上下行查询
+      if (this.selectedstores[0].serviceAreaId) {
+        this.storeService.searchHighDirection(this.selectedstores[0].serviceAreaId).subscribe(
+          (value) => {
+            // console.log(value);
+            if (value.data){
+              this.highsdData = this.initializeServiceAreaDirec(value.data);
+            }
+          }
+        );
+      }
 
-      this.storeService.searchHighDirection(this.selectedstores[0].serviceAreaId).subscribe(
-        (value) => {
-          // console.log(value);
-          this.highsdData = this.initializeServiceAreaDirec(value.data);
-        }
-      );
+      //店铺查询
       this.storeService.searchStoreType().subscribe(
         (val) => {
           // console.log(val);
-          this.storeTypes = this.initializeStoreTypes(val.data);
-          // console.log(this.storeTypes);
-          this.modifyStoreType = this.selectedstores[0].categoryCode;
-          for (var i = 0;i<this.storeTypes.length; i++){
-            if (this.modifyStoreType === this.storeTypes[i].code) {
+          if(val.data){
+            this.storeTypes = this.initializeStoreTypes(val.data);
+            // console.log(this.storeTypes);
+            // this.modifyStoreType = ;
+            for (var i = 0;i<this.storeTypes.length; i++){
+              if (this.selectedstores[0].categoryCode === this.storeTypes[i].code) {
                 this.modifyStoreName = this.storeTypes[i].name;
+              }
             }
           }
         }
@@ -519,7 +532,7 @@ export class StoreComponent implements OnInit {
     this.areaDialog = true;
 
     // this.addStore.administrativeAreaId =this.addAreaTree.id;
-    this.modifyStore.serviceAreaName = '请选择服务区';
+    this.modifyStore.serviceAreaName = '请选择服务区...';
     this.storeService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         // console.log(val);
@@ -561,6 +574,7 @@ export class StoreComponent implements OnInit {
     this.modifyStore.serviceAreaId = e.value.id;
     this.modifyStore.serviceAreaName = e.value.name;
     this.queryStroe.serviceAreaId = e.value.id;
+    this.modifyOrientation = '请选择上下行...';
     // console.log(e.value.id);
     this.storeService.searchHighDirection(e.value.id).subscribe(
       (value) => {
