@@ -413,7 +413,9 @@ export class OrgDepartmentComponent implements OnInit {
       (val) => {
         console.log(val);
 
-        this.orgs = val.data.contents;
+        if (val.data){
+          this.orgs = val.data.contents;
+        }
       }
     );
   }

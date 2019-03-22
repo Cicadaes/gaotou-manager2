@@ -305,31 +305,50 @@ export class CashComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedCashs.length === 1) {
-      this.cashService.searchServiceAreaList(this.selectedCashs[0].administrativeAreaId).subscribe(
-        value => {
-          this.addServicesAreaTrees = this.initializeServiceArea(value.data);
-        }
-      );
+      if(this.selectedCashs[0].administrativeAreaId){
+        this.cashService.searchServiceAreaList(this.selectedCashs[0].administrativeAreaId).subscribe(
+          value => {
+            if(value.data){
+              this.addServicesAreaTrees = this.initializeServiceArea(value.data);
+            }
+          }
+        );
+      }
 
-      this.cashService.searchHighDirection(this.selectedCashs[0].serviceAreaId).subscribe(
-        (value) => {
-          console.log(value);
-          this.highsdData = this.initializeServiceAreaDirec(value.data);
-        }
-      );
+      if(this.selectedCashs[0].serviceAreaId){
+        this.cashService.searchHighDirection(this.selectedCashs[0].serviceAreaId).subscribe(
+          (value) => {
+            console.log(value);
+            if (value.data) {
+              this.highsdData = this.initializeServiceAreaDirec(value.data);
+            }
+          }
+        );
+      }
 
-      this.cashService.searchStoreItem(this.selectedCashs[0].orientationDO.id).subscribe(
-        (value) => {
-          console.log(value.data);
-          this.storeList = this.initializeStore(value.data);
-        }
-      );
-      this.cashService.QuryHighDirection(this.selectedCashs[0].serviceAreaId).subscribe(
-        (value) => {
-          console.log(value);
-          this.modifyhighsdData = value.data.source + '-' + value.data.destination;
-        }
-      );
+
+      if (this.selectedCashs[0].orientationDO.id) {
+        this.cashService.searchStoreItem(this.selectedCashs[0].orientationDO.id).subscribe(
+          (value) => {
+            // console.log(value.data);
+            if (value.data) {
+              this.storeList = this.initializeStore(value.data);
+            }
+          }
+        );
+      }
+
+      if (this.selectedCashs[0].serviceAreaId) {
+        this.cashService.QuryHighDirection(this.selectedCashs[0].serviceAreaId).subscribe(
+          (value) => {
+            console.log(value);
+            if (value.data) {
+              this.modifyhighsdData = value.data.source + '-' + value.data.destination;
+            }
+          }
+        );
+      }
+
       this.modifyDialog = true;
       this.modifyCash.cashRegisterCode = this.selectedCashs[0].cashRegisterCode;
       this.modifyCash.id = this.selectedCashs[0].id;
@@ -446,8 +465,10 @@ export class CashComponent implements OnInit {
     this.cashService.searchCash({page: 1, nums: 10}, this.queryCash).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        this.cashs = value.data.contents;
+        if (value.data) {
+          this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+          this.cashs = value.data.contents;
+        }
       }
     );
   }
@@ -587,7 +608,9 @@ export class CashComponent implements OnInit {
       this.areaDialog = false;
       this.cashService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
-          this.addServicesAreaTrees = this.initializeServiceArea(value.data);
+          if (value.data) {
+            this.addServicesAreaTrees = this.initializeServiceArea(value.data);
+          }
         }
       );
     } else {
@@ -613,7 +636,9 @@ export class CashComponent implements OnInit {
     this.cashService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
-        this.highsdData = this.initializeServiceAreaDirec(value.data);
+        if (value.data) {
+          this.highsdData = this.initializeServiceAreaDirec(value.data);
+        }
       }
     );
   }
@@ -639,8 +664,10 @@ export class CashComponent implements OnInit {
     this.modifyCash.storeName = '请选择店铺';
     this.cashService.searchStoreItem(e.value.id).subscribe(
       (value) => {
-        console.log(value.data);
-        this.storeList = this.initializeStore(value.data);
+        // console.log(value.data);
+        if (value.data) {
+          this.storeList = this.initializeStore(value.data);
+        }
       }
     );
   }
@@ -729,7 +756,9 @@ export class CashComponent implements OnInit {
     console.log(this.nowPage);
     this.cashService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
-        this.cashs = value.data.contents;
+        if (value.data) {
+          this.cashs = value.data.contents;
+        }
       }
     );
     this.selectedCashs = null;

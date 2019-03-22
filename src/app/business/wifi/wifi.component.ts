@@ -286,32 +286,39 @@ export class WifiComponent implements OnInit {
       }, 3000);
     } else if (this.selectedwifis.length === 1) {
       //查询服务区
-      this.wifiService.searchServiceAreaList(this.selectedwifis[0].administrativeAreaId).subscribe(
-        value => {
-          if(value.data){
-            this.addServicesAreas = this.initializeServiceArea(value.data);
+      if(this.selectedwifis[0].administrativeAreaId){
+        this.wifiService.searchServiceAreaList(this.selectedwifis[0].administrativeAreaId).subscribe(
+          value => {
+            if(value.data){
+              this.addServicesAreas = this.initializeServiceArea(value.data);
+            }
           }
-        }
-      );
+        );
+      }
       //查询当前服务区的上下行
-      this.wifiService.searchHighDirection(this.selectedwifis[0].serviceAreaId).subscribe(
-        (value) => {
-          // console.log(value);
-          if (value.data) {
-            this.highsdData = this.initializeServiceAreaDirec(value.data);
+      if (this.selectedwifis[0].serviceAreaId) {
+        this.wifiService.searchHighDirection(this.selectedwifis[0].serviceAreaId).subscribe(
+          (value) => {
+            // console.log(value);
+            if (value.data) {
+              this.highsdData = this.initializeServiceAreaDirec(value.data);
 
+            }
           }
-        }
-      );
+        );
+      }
+
       //查询当前服务区的上下行拼接显示
-      this.wifiService.QuryHighDirection(this.selectedwifis[0].saOrientationId).subscribe(
-        (value) => {
-          // console.log(value);
-          if(value.data){
-            this.modifyhighsdData =value.data.flagName+"："+ value.data.source + '-' + value.data.destination;
+      if (this.selectedwifis[0].saOrientationId) {
+        this.wifiService.QuryHighDirection(this.selectedwifis[0].saOrientationId).subscribe(
+          (value) => {
+            // console.log(value);
+            if(value.data){
+              this.modifyhighsdData =value.data.flagName+"："+ value.data.source + '-' + value.data.destination;
+            }
           }
-        }
-      );
+        );
+      }
 
       this.modifyDialog = true;
       this.modifyWifi.deviceCode = this.selectedwifis[0].deviceCode;

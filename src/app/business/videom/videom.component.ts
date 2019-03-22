@@ -306,30 +306,42 @@ export class VideomComponent implements OnInit {
         this.msgs = [];
       }, 3000);
     } else if (this.selectedvideos.length === 1) {
-      this.videomService.searchServiceAreaList(this.selectedvideos[0].administrativeAreaId).subscribe(
-        value => {
-          this.addServicesAreas = this.initializeServiceArea(value.data);
-          console.log(value);
-        }
-      );
-      this.videomService.searchHighDirection(this.selectedvideos[0].serviceAreaId).subscribe(
-        (value) => {
-          this.highsdData = this.initializeServiceAreaDirec(value.data);
-        }
-      );
-      this.videomService.searchStoreItem(this.selectedvideos[0].orientationDO.id).subscribe(
-        (value) => {
-          console.log(value);
-          this.storeList = this.initializeStore(value.data);
-          // console.log(this.storeList[2].id);
-          for (var i =0;i<value.data.length;i++){
-            if (this.selectedvideos[0].storeId === value.data[i].id){
-              this.modifyGroupName = value.data[i].storeName;
-              console.log(this.modifyGroupName);
+      if (this.selectedvideos[0].administrativeAreaId) {
+        this.videomService.searchServiceAreaList(this.selectedvideos[0].administrativeAreaId).subscribe(
+          value => {
+            if (value.data) {
+              this.addServicesAreas = this.initializeServiceArea(value.data);
+
+            }
+            // console.log(value);
+          }
+        );
+      }
+
+      if (this.selectedvideos[0].serviceAreaId) {
+        this.videomService.searchHighDirection(this.selectedvideos[0].serviceAreaId).subscribe(
+          (value) => {
+            this.highsdData = this.initializeServiceAreaDirec(value.data);
+          }
+        );
+      }
+
+      if (this.selectedvideos[0].orientationDO.id)  {
+        this.videomService.searchStoreItem(this.selectedvideos[0].orientationDO.id).subscribe(
+          (value) => {
+            console.log(value);
+            this.storeList = this.initializeStore(value.data);
+            // console.log(this.storeList[2].id);
+            for (var i =0;i<value.data.length;i++){
+              if (this.selectedvideos[0].storeId === value.data[i].id){
+                this.modifyGroupName = value.data[i].storeName;
+                console.log(this.modifyGroupName);
+              }
             }
           }
-        }
-      );
+        );
+      }
+
       this.videomService.searchVideoGroupList(this.selectedvideos[0].orientationDO.id).subscribe(
         (value) => {
           // console.log(value);

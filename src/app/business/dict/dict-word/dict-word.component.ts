@@ -302,11 +302,13 @@ export class DictWordComponent implements OnInit {
       this.dictService.searchDictList({page: 1, nums: 100}).subscribe(
         (value) => {
           console.log(value);
-          this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
-          for(var i =0;i<this.addDictListSelect.length;i++){
-            if(this.addDictListSelect[i].id === this.selectedDictWords[0].dictionaryCode){
-              console.log(this.addDictListSelect[i].name);
-              this.DicttypeCode = this.addDictListSelect[i].name;
+          if (value.data){
+            this.addDictListSelect = this.initializeSelectDictList(value.data.contents);
+            for(var i =0;i<this.addDictListSelect.length;i++){
+              if(this.addDictListSelect[i].id === this.selectedDictWords[0].dictionaryCode){
+                console.log(this.addDictListSelect[i].name);
+                this.DicttypeCode = this.addDictListSelect[i].name;
+              }
             }
           }
         }

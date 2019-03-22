@@ -6,6 +6,7 @@ import {AddVideoGroup, ModifyVideoGroup, QueryVideoGroup, VideoGroup} from '../.
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 import {Dropdown} from 'primeng/primeng';
 import {log} from 'util';
+import {e} from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-video-group',
@@ -290,17 +291,23 @@ export class VideoGroupComponent implements OnInit {
       }, 3000);
     } else if (this.selectedVideoGroups.length === 1) {
 
-      if(this.selectedVideoGroups[0].administrativeAreaId) {
-        this.videoGroupService.searchServiceAreaList(this.selectedVideoGroups[0].administrativeAreaId).subscribe(
-          (value) => {
-            this.addServicesAreas = this.initializeServiceArea(value.data);
-          }
-        );
+      if(this.selectedVideoGroups[0].administrativeAreaId ) {
+        if ( this.selectedVideoGroups[0].serviceAreaId){
+          this.videoGroupService.searchServiceAreaList(this.selectedVideoGroups[0].administrativeAreaId).subscribe(
+            (value) => {
+              if(value.data){
+                this.addServicesAreas = this.initializeServiceArea(value.data);
+              }
+            }
+          );
+        }
       }
      if(this.selectedVideoGroups[0].orientationDO.id){
        this.videoGroupService.searchHighDirection(this.selectedVideoGroups[0].orientationDO.id).subscribe(
          (value) => {
-           this.highsdData = this.initializeServiceAreaDirec(value.data);
+           if(value.data){
+             this.highsdData = this.initializeServiceAreaDirec(value.data);
+           }
          }
        );
      }
@@ -308,12 +315,29 @@ export class VideoGroupComponent implements OnInit {
       this.modifyserviceAreaName = this.selectedVideoGroups[0].serviceAreaName;
       this.modifyOrientationName =this.selectedVideoGroups[0].orientationDO.flagName+"："+ this.selectedVideoGroups[0].orientationDO.source+"—>"+ this.selectedVideoGroups[0].orientationDO.destination;
       this.modifyVideoGroup.groupCode = this.selectedVideoGroups[0].groupCode;
-      this.modifyVideoGroup.administrativeAreaId = this.selectedVideoGroups[0].administrativeAreaId;
       this.modifyVideoGroup.administrativeAreaName = this.selectedVideoGroups[0].administrativeAreaName;
       this.modifyVideoGroup.groupName = this.selectedVideoGroups[0].groupName;
       this.modifyVideoGroup.id = this.selectedVideoGroups[0].id;
       this.modifyVideoGroup.idt = this.selectedVideoGroups[0].idt;
       this.modifyVideoGroup.enabled = this.selectedVideoGroups[0].enabled;
+      if(this.selectedVideoGroups[0].orientationDO.id){
+        this.modifyVideoGroup.saOrientationId = this.selectedVideoGroups[0].orientationDO.id;
+      }else {
+        this.modifyVideoGroup.saOrientationId = null;
+
+      }
+      if (this.selectedVideoGroups[0].serviceAreaId) {
+        this.modifyVideoGroup.serviceAreaId = this.selectedVideoGroups[0].serviceAreaId;
+      }else {
+        this.modifyVideoGroup.serviceAreaId = null;
+
+      }
+      if (this.selectedVideoGroups[0].administrativeAreaId){
+        this.modifyVideoGroup.administrativeAreaId = this.selectedVideoGroups[0].administrativeAreaId;
+      } else {
+        this.modifyVideoGroup.administrativeAreaId = null;
+
+      }
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -399,6 +423,9 @@ export class VideoGroupComponent implements OnInit {
 
   public AreaTreeClick(): void {
     this.areaDialog = true;
+    this.modifyserviceAreaName ='请选择服务区...';
+    this.modifyVideoGroup.serviceAreaId = null;
+    // console.log( this.modifyVideoGroup.serviceAreaId);
     this.videoGroupService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addAreaTrees = this.initializeTree(val.data.contents);
@@ -436,6 +463,7 @@ export class VideoGroupComponent implements OnInit {
     this.addVideoGroup.serviceAreaId = e.value.id;
     this.modifyVideoGroup.serviceAreaId = e.value.id;
     this.queryVideoGroup.serviceAreaId = e.value.id;
+    this.modifyOrientationName = '请选择上下行...';
     this.videoGroupService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         this.highsdData = this.initializeServiceAreaDirec(value.data);

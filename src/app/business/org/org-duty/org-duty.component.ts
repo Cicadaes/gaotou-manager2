@@ -347,19 +347,21 @@ export class OrgDutyComponent implements OnInit {
       }, 3000);
     } else if (this.selectedDuties.length === 1) {
       this.modifyDialog = true;
-      this.orgService.searchIdDepIdDutyList(this.selectedDuties[0].pid).subscribe(
-        (value) => {
-          console.log(value);
+      if (this.selectedDuties[0].pid) {
+        this.orgService.searchIdDepIdDutyList(this.selectedDuties[0].pid).subscribe(
+          (value) => {
+            console.log(value);
 
-          if(value.data)
-          {
+            if(value.data)
+            {
 
-            this.pdutyName = value.data.dutyName;
+              this.pdutyName = value.data.dutyName;
 
+            }
+            // this.addDepSelect = this.initializeSelectOrg(value.data);
           }
-          // this.addDepSelect = this.initializeSelectOrg(value.data);
-        }
-      );
+        );
+      }
       /*this.orgService.searchCompanyIdDepIdDutyList({companyId: this.selectedDuties[0].organizationId, deptId: null}).subscribe(
         (val) => {
           console.log(val);

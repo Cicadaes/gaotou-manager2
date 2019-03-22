@@ -124,7 +124,9 @@ export class SerareaSernumComponent implements OnInit {
     // 初始化人员数据
     this.serareaService.searchUserList({page: 1, nums: 1000}).subscribe(
       (val) => {
-        this.addUserTrees = this.initializeUserTree(val.data.contents);
+        if (val.data.contents) {
+          this.addUserTrees = this.initializeUserTree(val.data.contents);
+        }
       }
     );
 
@@ -424,6 +426,7 @@ export class SerareaSernumComponent implements OnInit {
       this.msgs.push({severity: 'error', summary: '操作错误', detail: '修改只能选择一项'});
     } else if (this.selectedSerAreas.length === 1) {
       this.revampSerArea = {};
+
       this.serareaService.searchSerAraListItem({id: this.selectedSerAreas[0].id}).subscribe(
         (val) => {
           if (val.status === '200') {
