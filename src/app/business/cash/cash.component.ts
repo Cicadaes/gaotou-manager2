@@ -604,6 +604,10 @@ export class CashComponent implements OnInit {
       // this.modifyCash.province.administrativeAreaId = this.addAreaTree.parent.id;
       // this.modifyCash.province.administrativeAreaName = this.addAreaTree.parent.label;
       // this.modifyCash.province.level = this.addAreaTree.parent.level;
+
+      this.addSer.value = null;
+      this.modifySer.value = null;
+
       this.modifyCash.serviceAreaName = '请选择服务区';
       this.areaDialog = false;
       this.cashService.searchServiceAreaList(this.addAreaTree.id).subscribe(
@@ -632,6 +636,13 @@ export class CashComponent implements OnInit {
     this.modifyCash.serviceAreaName= e.value.name;
 
     this.queryCash.serviceAreaId = e.value.id;
+
+
+    this.addDirec.value = null;
+
+    this.modifyDirec.value = null;
+
+
     this.modifyhighsdData = '请选择上下行';
     this.cashService.searchHighDirection(e.value.id).subscribe(
       (value) => {
@@ -659,6 +670,11 @@ export class CashComponent implements OnInit {
     // this.modifyCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
     // this.modifyCash.saOrientation.source = e.value.source;
     this.addCash.saOrientationId = e.value.id;
+
+
+    this.addStore.value = null;
+    this.modifyStore.value = null;
+
 
     this.queryCash.orientationDO = e.value.orientaionId;
     this.modifyCash.storeName = '请选择店铺';

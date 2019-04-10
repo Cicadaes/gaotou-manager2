@@ -14,10 +14,10 @@ import {Dropdown} from 'primeng/primeng';
   encapsulation: ViewEncapsulation.None
 })
 export class InterceptComponent implements OnInit {
-  @ViewChild('addserviceArea1') addserviceArea: Dropdown;
-  @ViewChild('addserviceArea1') addserviceArea1: Dropdown;
-  @ViewChild('addserviceArea1') addsaOrientation: Dropdown;
-  @ViewChild('addserviceArea1') addsaOrientation1: Dropdown;
+  @ViewChild('addserviceArea') addserviceArea: Dropdown;
+  @ViewChild('serviceArea1') serviceArea1: Dropdown;
+  @ViewChild('addsaOrientation') addsaOrientation: Dropdown;
+  @ViewChild('saOrientation1') saOrientation1: Dropdown;
   // table显示相关
   public intercepts: Intercept[]; // 整个table数据
   public cols: any[]; // 表头
@@ -319,16 +319,6 @@ export class InterceptComponent implements OnInit {
           }
         );
       }
-      if (this.selectedintercepts[0].serviceAreaId) {
-        this.interceptService.QuryHighDirection(this.selectedintercepts[0].serviceAreaId).subscribe(
-          (value) => {
-            // console.log(value);
-            if(value.data){
-              this.modifyhighsdData = value.data.source + '-' + value.data.destination;
-            }
-          }
-        );
-      }
       this.modifyIntercept.bayonetCode = this.selectedintercepts[0].bayonetCode;
       this.modifyIntercept.bayonetName = this.selectedintercepts[0].bayonetName;
       this.modifyIntercept.bayonetType = this.selectedintercepts[0].bayonetType;
@@ -338,6 +328,7 @@ export class InterceptComponent implements OnInit {
       this.modifyIntercept.serviceAreaName = this.selectedintercepts[0].serviceAreaName;
       this.modifyIntercept.administrativeAreaId = this.selectedintercepts[0].administrativeAreaId;
       this.modifyIntercept.administrativeAreaName = this.selectedintercepts[0].administrativeAreaName;
+      this.modifyhighsdData =this.selectedintercepts[0].orientationDO.flagName+':'+ this.selectedintercepts[0].orientationDO.source + '-' + this.selectedintercepts[0].orientationDO.destination ;
     } else {
       if (this.cleanTimer) {
         clearTimeout(this.cleanTimer);
@@ -352,6 +343,7 @@ export class InterceptComponent implements OnInit {
 
   // 修改确认
   public modifySure(): void {
+    console.log(this.modifyIntercept);
     this.confirmationService.confirm({
       message: `确定要修改吗？`,
       header: '修改提醒',
@@ -404,6 +396,7 @@ export class InterceptComponent implements OnInit {
         );
       },
       reject: () => {
+
       }
     });
 
@@ -469,6 +462,9 @@ export class InterceptComponent implements OnInit {
       // this.modifyIntercept.province.administrativeAreaId = this.addAreaTree.parent.id;
       // this.modifyIntercept.province.administrativeAreaName = this.addAreaTree.parent.label;
       // this.modifyIntercept.province.level = this.addAreaTree.parent.level;
+
+      this.addserviceArea.value =null;
+      this.serviceArea1.value =null;
       this.areaDialog = false;
       this.interceptService.searchServiceAreaList(this.addAreaTree.id).subscribe(
         value => {
@@ -500,6 +496,8 @@ export class InterceptComponent implements OnInit {
     this.modifyIntercept.serviceAreaName = e.value.name;
     this.queryIntercept.serviceAreaId = e.value.id;
     this.modifyhighsdData = '请选择上下行';
+    this.addsaOrientation.value = null;
+    this.saOrientation1.value = null;
     this.interceptService.searchHighDirection(e.value.id).subscribe(
       (value) => {
         console.log(value);
@@ -606,9 +604,9 @@ export class InterceptComponent implements OnInit {
     this.addServicesAreas = null;
     this.highsdData = null;
     this.addsaOrientation.value = null;
-    this.addsaOrientation1.value = null;
+    this.saOrientation1.value = null;
     this.addserviceArea.value =null;
-    this.addserviceArea1.value =null;
+    this.serviceArea1.value =null;
     this.addArealabel = null;
 
   }
