@@ -16,7 +16,7 @@ import {Dropdown} from 'primeng/primeng';
 export class StoreComponent implements OnInit {
   @ViewChild('addserviceAreaId1') addserviceAreaId1: Dropdown;
   public stores: Store[]; // 整个table数据
-  public cols: any[]; // 表头
+  public columns: any[]; // 表头
   public store: any; // 接收选中的值
   public selectedstores: Store[]; // 多个选择
   //分页相关
@@ -58,13 +58,14 @@ export class StoreComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cols = [
+    this.columns = [
       {field: 'storeName', header: '店铺名称'},
       {field: 'categoryCode', header: '店铺分类'},
       {field: 'principal', header: '负责人姓名'},
       {field: 'principalMobile', header: '负责人电话'},
       {field: 'serviceAreaName', header: '所属服务区'},
-      {field: 'saOrientationId', header: '服务区方向'},
+      {field: 'serviceAreaId', header: '服务区ID'},
+      // {field: 'orientationDO', header: '服务区方向'},
     ];
     this.updateCashDate();
 
@@ -74,10 +75,10 @@ export class StoreComponent implements OnInit {
   public updateCashDate(): void {
     this.storeService.searchList({page: 1, nums: 10}).subscribe(
       (value) => {
-        console.log(value.data.totalRecord);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
+        this.totalpage = Math.ceil(value.data.totalRecord / value.data.pageSize);
         this.stores = value.data.contents;
+        console.log(this.stores);
       }
     );
 
