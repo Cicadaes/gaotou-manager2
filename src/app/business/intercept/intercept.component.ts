@@ -18,6 +18,9 @@ export class InterceptComponent implements OnInit {
   @ViewChild('serviceArea1') serviceArea1: Dropdown;
   @ViewChild('addsaOrientation') addsaOrientation: Dropdown;
   @ViewChild('saOrientation1') saOrientation1: Dropdown;
+  @ViewChild('SerchserviceArea') SerchserviceArea: Dropdown;
+  @ViewChild('SerchsaOrientation') SerchsaOrientation: Dropdown;
+  @ViewChild('Serchintercepttype') Serchintercepttype: Dropdown;
   // table显示相关
   public intercepts: Intercept[]; // 整个table数据
   public cols: any[]; // 表头
@@ -41,6 +44,12 @@ export class InterceptComponent implements OnInit {
   public ServiceDown: any; //选择服务区
   public orientationDown: any; //选择上下行
   public queryIntercept: QueryIntercept = new QueryIntercept();
+  public SerchareaDialog: boolean;
+  public SerchAreaTrees: AddTreeArea[]; // 区域树结构
+  public SerchAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
+  public SerchServicesAreas: SelectItem[]; // 服务区列表
+  public SerchhighsdData: SelectItem[]; // 上下行选择数据
+  public SerchArealabel: any;
   // 修改相关
   public modifyDialog: boolean;//增加弹窗显示控制
   public modifyIntercept: ModifyIntercept = new ModifyIntercept();//增加弹窗显示控制
@@ -66,11 +75,7 @@ export class InterceptComponent implements OnInit {
     ];
     this.bayonetTypes = [{label:'进口',value:1},{label:'出口',value:2}];
     this.updateInterceptDate();
-    this.queryIntercept.serviceAreaName = null;
-    this.queryIntercept.serviceAreaId = null;
-    this.queryIntercept.bayonetCode = null;
-    this.queryIntercept.bayonetType = null;
-    this.queryIntercept.orientationDO = null;
+
   }
 
   public updateInterceptDate(): void {
@@ -81,6 +86,14 @@ export class InterceptComponent implements OnInit {
         this.intercepts = value.data.contents;
       }
     );
+    this.queryIntercept = new QueryIntercept();
+    this.SerchsaOrientation.value = null;
+    this.SerchserviceArea.value = null;
+    this.Serchintercepttype.value = null;
+    this.SerchServicesAreas =null;
+    this.SerchArealabel = '请选择区划...';
+    this.SerchhighsdData =null;
+    this.bayonetLabel = null;
   }
 
   // 选中后赋值
@@ -89,7 +102,7 @@ export class InterceptComponent implements OnInit {
     this.modifyhighsdData = null;
     this.modifyIntercept.administrativeAreaName = null;
     this.modifyIntercept.serviceAreaName = null;
-    this.addServicesAreas = null;
+    // this.addServicesAreas = null;
     this.intercept = this.cloneCar(event.data);
   }
 
@@ -414,11 +427,7 @@ export class InterceptComponent implements OnInit {
   }
   //重置
   public  resetQueryIntercept(): void {
-    this.queryIntercept.serviceAreaName = null;
-    this.queryIntercept.serviceAreaId = null;
-    this.queryIntercept.bayonetCode = null;
-    this.queryIntercept.bayonetType = null;
-    this.queryIntercept.orientationDO = null;
+    this.queryIntercept = new QueryIntercept();
     this.ServiceDown = null;
     this.orientationDown = null;
     this.bayonetLabel = null;
@@ -426,9 +435,78 @@ export class InterceptComponent implements OnInit {
     this.updateInterceptDate();
   }
 
+  /*
+  * 条件查询
+  */
+  // 选择区域
+  public SerchAreaTreeClick(): void {
+    this.SerchareaDialog = true;
+    this.SerchserviceArea.value =null;
+    // this.modifyIntercept.serviceAreaName = '请选择服务区...';
+    this.interceptService.searchAreaList({page: 1, nums: 100}).subscribe(
+      (val) => {
+        if(val.data){
+          this.SerchAreaTrees = this.initializeTree(val.data.contents);
+        }
+      }
+    );
+  }
+
+  public SerchtreeSelectAreaClick(): void {
+    this.SerchArealabel = this.SerchAreaTree.label;
+    const a = parseFloat(this.SerchAreaTree.level);
+    if (a >= 2) {
+
+      this.addserviceArea.value =null;
+      this.serviceArea1.value =null;
+      this.SerchareaDialog = false;
+      this.interceptService.searchServiceAreaList(this.SerchAreaTree.id).subscribe(
+        value => {
+          if(value.data){
+            if (value.data) {
+              this.SerchServicesAreas = this.initializeServiceArea(value.data);
+            }
+          }
+        }
+      );
+    } else {
+      if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+      }
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '最多选择一项修改'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+  // 选择服务区
+  public SerchserviceChange(e): void {
+    this.queryIntercept.serviceAreaId = e.value.id;
+
+    this.interceptService.searchHighDirection(e.value.id).subscribe(
+      (value) => {
+        console.log(value);
+        if(value.data){
+          this.SerchhighsdData = this.initializeServiceAreaDirec(value.data);
+        }
+      }
+    );
+  }
+  // 选择上下行
+  public SerchdirectionChange(e): void {
+    this.addIntercept.saOrientationId = e.value.orientaionId;
+  }
+  // 选择卡口类型
+  public bayonetChange (e): void {
+    console.log(e.value.value);
+    this.queryIntercept.bayonetType = e.value.value;
+  }
+
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
+    this.SerchserviceArea.value =null;
     this.modifyIntercept.serviceAreaName = '请选择服务区...';
     this.interceptService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
@@ -494,7 +572,6 @@ export class InterceptComponent implements OnInit {
 
     this.modifyIntercept.serviceAreaId = e.value.id;
     this.modifyIntercept.serviceAreaName = e.value.name;
-    this.queryIntercept.serviceAreaId = e.value.id;
     this.modifyhighsdData = '请选择上下行';
     this.addsaOrientation.value = null;
     this.saOrientation1.value = null;
@@ -525,11 +602,6 @@ export class InterceptComponent implements OnInit {
     this.queryIntercept.orientationDO = e.value.orientaionId;
   }
 
-  // 选择卡口类型
-  public bayonetChange (e): void {
-   console.log(e.value.value);
-   this.queryIntercept.bayonetType = e.value.value;
-  }
 
   // 数据格式化
   public initializeTree(data): any {
@@ -608,7 +680,6 @@ export class InterceptComponent implements OnInit {
     this.addserviceArea.value =null;
     this.serviceArea1.value =null;
     this.addArealabel = null;
-
   }
 
 }

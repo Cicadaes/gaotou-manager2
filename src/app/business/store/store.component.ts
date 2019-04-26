@@ -6,6 +6,7 @@ import {GlobalService} from '../../common/services/global.service';
 import {AddTreeArea, SelectItem, TreeNode} from '../../common/model/shared-model';
 import {DatePipe} from '@angular/common';
 import {Dropdown} from 'primeng/primeng';
+import * as Q from 'q';
 
 @Component({
   selector: 'app-store',
@@ -15,10 +16,16 @@ import {Dropdown} from 'primeng/primeng';
 })
 export class StoreComponent implements OnInit {
   @ViewChild('addserviceAreaId1') addserviceAreaId1: Dropdown;
+  @ViewChild('Serchservice') Serchservice: Dropdown;
+  @ViewChild('SerchaOrientation') SerchaOrientation: Dropdown;
+  @ViewChild('Serchstore') Serchstore: Dropdown;
+  @ViewChild('addstore') addstore: Dropdown;
+  @ViewChild('addsaOrientation') addsaOrientation: Dropdown;
   public stores: Store[]; // 整个table数据
   public cols: any[]; // 表头
   public store: any; // 接收选中的值
   public selectedstores: Store[]; // 多个选择
+  public Searchtype =1;
   //分页相关
   public nowPage: any;
   public option: any;
@@ -38,6 +45,13 @@ export class StoreComponent implements OnInit {
   public ServiceDown: any; //选择服务区
   public orientationDown: any; //选择上下行
   public StoreType: any; // 选择店铺分类
+  public SerchDialog: boolean; ///条件搜索区域弹筐显示
+  public SerchAreaTrees: AddTreeArea[]; // 区域树结构
+  public SerchAreaTree: AddTreeArea = new AddTreeArea(); // 区域树选择
+  public SerchServicesAreas: SelectItem[]; // 服务区列表
+  public SerchhighsdData: SelectItem[]; // 上下行选择数据
+  public SerchstoreTypes: SelectItem[]; // 上下行选择数据
+  public Sercharealabel= '请选择区划';
   //修改相关
   public modifyDialog: boolean; //修改弹窗显示控制
   public modifyStore: ModifyStore = new ModifyStore(); //修改弹窗显示控制
@@ -80,12 +94,40 @@ export class StoreComponent implements OnInit {
         this.stores = value.data.contents;
       }
     );
-
-    this.queryStroe.categoryCode = null;
-    this.queryStroe.orientationDO = null;
-    this.queryStroe.serviceAreaId = null;
-    this.queryStroe.storeName = null;
-    this.queryStroe.principal = null;
+    this.Sercharealabel = '请选择区划...';
+    console.log(this.Serchservice.selectedOption.value);
+    this.Serchservice.value = null;
+    this.SerchServicesAreas = null;
+    this.SerchhighsdData = null;
+    this.SerchstoreTypes =null;
+    this.SerchaOrientation.value = null;
+    this.Serchstore.value = null;
+    this.Searchtype =1;
+    this.queryStroe = new QueryStroe();
+    // this.queryStroe = new QueryStroe();
+    // // this.arealabel = null;
+    // this.Serchservice.value = '请选择服务区';
+    // this.SerchaOrientation.value = null;
+    // this.Serchstore.value = null;
+    // if (this.Searchtype === 2) {
+    //   this.storeService.searchStore({page: 1, nums: 10},this.queryStroe).subscribe(
+    //     (value) => {
+    //       this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+    //       this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
+    //       this.stores = value.data.contents;
+    //     }
+    //   );
+    // }else {
+    //   this.storeService.searchList({page: 1, nums: 10}).subscribe(
+    //     (value) => {
+    //       console.log(value.data.totalRecord);
+    //       this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+    //       this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
+    //       this.stores = value.data.contents;
+    //     }
+    //   );
+    // }
+    // this.selectedstores = null;
   }
 
   // 选中后赋值
@@ -107,6 +149,7 @@ export class StoreComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
+    console.log(this.queryStroe);
     console.log(this.addStore);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
@@ -454,11 +497,13 @@ export class StoreComponent implements OnInit {
   }
 
 
-  //分页查询
+  //搜索
   public  queryStoreData(): void {
+    console.log(this.queryStroe);
     this.storeService.searchStore({page: 1, nums: 10},this.queryStroe).subscribe(
       (value) => {
-        // console.log(value);
+        console.log(value);
+        this.Searchtype =2;
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.stores = value.data.contents;
       }
@@ -467,14 +512,21 @@ export class StoreComponent implements OnInit {
   // 重置
   public  resetQueryStore(): void {
     // this.clearMoudle();
+    this.Serchservice.value = null;
+    this.SerchaOrientation.value = null;
+    this.Serchstore.value = null;
+    this.Searchtype =1;
+    this.queryStroe = new QueryStroe();
     this.updateCashDate();
     this.addOnHide();
   }
 
   // addOnHide
   public addOnHide (): void {
-    console.log(this.addserviceAreaId1);
     this.addserviceAreaId1.value = '请选择服务区';
+    this.Serchservice.value = null;
+    this.SerchaOrientation.value = null;
+    this.Serchstore.value = null;
     this.addStore= new AddStore();
     this.arealabel = "请选择区划";
     this.addServicesAreas = null;
@@ -484,7 +536,11 @@ export class StoreComponent implements OnInit {
     this.modifyOrientation = null;
     this.modifyStoreName = null;
   }
-
+  public addHide (): void {
+    this.addStore = new AddStore();
+    this.addDialog = false;
+     this.arealabel =null;
+}
 //   //删除数据
 //   public  updateNowData(): void {
 //     console.log(this.nowPage);
@@ -528,12 +584,75 @@ export class StoreComponent implements OnInit {
 //   );
 //   this.selectedstores = null;
 // }
+  //搜索查询区域
+  public  SerchAreaTreeClick(): void {
+    this.SerchDialog = true;
+    this.Serchservice.value = null;
+    this.storeService.searchAreaList({page: 1, nums: 100}).subscribe(
+      (val) => {
+        // console.log(val);
+        this.SerchAreaTrees = this.initializeTree(val.data.contents);
+      }
+    );
+  }
+  public SerchtreeSelectAreaClick(): void {
+    this.Sercharealabel = this.SerchAreaTree.label;
+    const a = parseFloat(this.SerchAreaTree.level);
+    if (a >= 2) {
+      this.SerchDialog = false;
+      this.storeService.searchServiceAreaList(this.SerchAreaTree.id).subscribe(
+        value => {
+          this.SerchServicesAreas = this.initializeServiceArea(value.data);
+        }
+      );
+    } else {
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '操作错误', detail: '请选择市'});
+      this.cleanTimer = setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  // 选择服务区
+  public SerchserviceChange(e): void {
+    this.SerchaOrientation.value = null;
+    this.queryStroe.serviceAreaId = e.value.id;
+
+    // console.log(e.value.id);
+    this.storeService.searchHighDirection(e.value.id).subscribe(
+      (value) => {
+        // console.log(value);
+        this.SerchhighsdData = this.initializeServiceAreaDirec(value.data);
+      }
+    );
+  }
+  // 选择上下行
+  public SerchdirectionChange(e): void {
+    // console.log(e);
+    this.Serchstore.value = null;
+    this.queryStroe.orientationDO = e.value.id;
+    this.storeService.searchStoreType().subscribe(
+      (val) => {
+        // console.log(val);
+        this.SerchstoreTypes = this.initializeStoreTypes(val.data);
+      }
+    );
+  }
+
+  // 选择店铺类型
+  public SerchstoreTypeChange(e): void {
+    // console.log(e.value.code);
+    this.queryStroe.categoryCode = e.value.code;
+  }
+
+
+
 
   // 选择区域
   public AreaTreeClick(): void {
     this.areaDialog = true;
-
-    // this.addStore.administrativeAreaId =this.addAreaTree.id;
+    // this.Serchservice.value = null;
     this.modifyStore.serviceAreaName = '请选择服务区...';
     this.storeService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
@@ -571,6 +690,8 @@ export class StoreComponent implements OnInit {
 
   // 选择服务区
   public serviceChange(e): void {
+    this.addsaOrientation.value = null;
+    this.SerchaOrientation.value = null;
     this.addStore.serviceAreaId = e.value.id;
     this.addStore.serviceAreaName = e.value.name;
     this.modifyStore.serviceAreaId = e.value.id;
@@ -589,6 +710,9 @@ export class StoreComponent implements OnInit {
   // 选择上下行
   public directionChange(e): void {
     // console.log(e);
+    this.Serchstore.value = null;
+    this.addstore.value = null;
+
     this.addStore.saOrientationId = e.value.id;
     this.modifyStore.saOrientationId = e.value.id;
     this.queryStroe.orientationDO = e.value.id;
@@ -690,14 +814,22 @@ export class StoreComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    // console.log('我是父组件');
-    // console.log(this.nowPage);
-    this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
-      (value) => {
-        // console.log(value);
-        this.stores = value.data.contents;
-      }
-    );
+    if (this.Searchtype === 2) {
+      this.storeService.searchStore({page: this.nowPage, nums: 10},this.queryStroe).subscribe(
+        (value) => {
+          this.stores = value.data.contents;
+        }
+      );
+    }else {
+
+      this.storeService.searchList({page: this.nowPage, nums: 10}).subscribe(
+        (value) => {
+          console.log(value);
+          this.stores = value.data.contents;
+        }
+      );
+    }
+
     this.selectedstores = null;
   }
 }
