@@ -95,7 +95,7 @@ export class SerareaSernumComponent implements OnInit {
       {appDesc: 'createUserName', header: '创建的用户名'},
       {appDesc: 'idt', header: '创建时间'},
     ];
-    this.updateApplyListData();
+    this.updateApplyListData(1);
     this.updateData();
     // 初始化公司数据
     // this.serareaService.searchCompanyList({page: 1, nums: 1000}).subscribe(
@@ -111,11 +111,11 @@ export class SerareaSernumComponent implements OnInit {
     this.querySerarea.deptId = null;
   }
 
-  public updateApplyListData(): void {
-    this.serareaService.searchSerAraList({page: 1, nums: 10}).subscribe(
+  public updateApplyListData(page): void {
+    this.serareaService.searchSerAraList({page: page, nums: 10}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize , nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
       }
     );
   }
@@ -245,7 +245,7 @@ export class SerareaSernumComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateApplyListData();
+              this.updateApplyListData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -318,7 +318,7 @@ export class SerareaSernumComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateApplyListData();
+                  this.updateApplyListData(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -362,7 +362,7 @@ export class SerareaSernumComponent implements OnInit {
                   }
                   this.msgs = [];
                   this.selectedSerAreas = undefined;
-                  this.updateApplyListData();
+                  this.updateApplyListData(this.nowPage);
                   this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
@@ -426,9 +426,9 @@ export class SerareaSernumComponent implements OnInit {
       this.msgs.push({severity: 'error', summary: '操作错误', detail: '修改只能选择一项'});
     } else if (this.selectedSerAreas.length === 1) {
       this.revampSerArea = {};
-
       this.serareaService.searchSerAraListItem({id: this.selectedSerAreas[0].id}).subscribe(
         (val) => {
+          console.log(val.data.downAttributeValues);
           if (val.status === '200') {
             this.revampSerArea.administrativeAreaId = val.data.administrativeAreaId;
             this.revampSerArea.id = val.data.id;
@@ -441,13 +441,25 @@ export class SerareaSernumComponent implements OnInit {
             this.revampSerArea.organizationId = val.data.organizationId;
             this.revampSerArea.organizationName = val.data.organizationName;
             this.revampSerArea.commonAttributeValues = val.data.commonAttributeValues;
-            this.revampSerArea.upAttributeValues = val.data.upAttributeValues;
-            this.revampSerArea.downAttributeValues = val.data.downAttributeValues;
-            this.revampSerArea.createUserName = this.selectedSerAreas[0].createUserName;
-            this.upSource = this.revampSerArea.upAttributeValues.source;
-            this.upDestination = this.revampSerArea.upAttributeValues.destination;
-            this.downSource = this.revampSerArea.downAttributeValues.source;
-            this.downDestination = this.revampSerArea.downAttributeValues.destination;
+            if(val.data.upAttributeValues){
+              this.revampSerArea.upAttributeValues = val.data.upAttributeValues;
+
+            }else {
+              this.revampSerArea.upAttributeValues = new AddUpDownAttribute();
+            }
+            if (val.data.downAttributeValues) {
+              this.revampSerArea.downAttributeValues = val.data.downAttributeValues;
+            }else {
+              this.revampSerArea.downAttributeValues = new AddUpDownAttribute();
+            }
+
+              this.revampSerArea.createUserName = this.selectedSerAreas[0].createUserName;
+              this.upSource = this.revampSerArea.upAttributeValues.source;
+              this.upDestination = this.revampSerArea.upAttributeValues.destination;
+              this.downSource = this.revampSerArea.downAttributeValues.source;
+              this.downSource =null;
+              this.downDestination = this.revampSerArea.downAttributeValues.destination;
+
             this.serareaService.searchSaCommonFieldList(this.selectedSerAreas[0].id).subscribe(
               (value) => {
                 if (value.status === '200') {
@@ -545,7 +557,7 @@ export class SerareaSernumComponent implements OnInit {
               this.msgs = [];
               this.selectedSerAreas = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateApplyListData();
+              this.updateApplyListData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -606,7 +618,7 @@ export class SerareaSernumComponent implements OnInit {
     this.Companylabel = null;
     this.Departmentlabel = null;
     this.CompanyId = undefined;
-    this.updateApplyListData();
+    this.updateApplyListData(this.nowPage);
   }
 
   public  clearData(): void {
@@ -908,11 +920,10 @@ export class SerareaSernumComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
     this.serareaService.searchSerAraList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         console.log(value);
       }
     );

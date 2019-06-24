@@ -96,7 +96,7 @@ export class OrgCompanyComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateCompanyDate(1);
+              this.updateCompanyDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -180,7 +180,7 @@ export class OrgCompanyComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateCompanyDate(1);
+                    this.updateCompanyDate(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -229,7 +229,7 @@ export class OrgCompanyComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedcompanies = undefined;
-                    this.updateCompanyDate(1);
+                    this.updateCompanyDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -335,7 +335,7 @@ export class OrgCompanyComponent implements OnInit {
               this.selectedcompanies = undefined;
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateCompanyDate(1);
+              this.updateCompanyDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -393,7 +393,7 @@ export class OrgCompanyComponent implements OnInit {
     this.queryCompany.regNo = '';
     this.queryCompany.pid = null;
     this.arealabel = "请选择区划...";
-    this.updateCompanyDate(1);
+    this.updateCompanyDate(this.nowPage);
   }
 
   // 选择区域

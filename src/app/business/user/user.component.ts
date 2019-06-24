@@ -92,15 +92,15 @@ export class UserComponent implements OnInit {
       {field: 'dutyName', header: '职务'},
       {field: 'idt', header: '添加时间'}
     ];
-    this.updateUserDate();
+    this.updateUserDate(1);
     this.queryUser.deptId = null;
     this.queryUser.organizationId = null;
     this.queryUser.realName = null;
     this.queryUser.userName = null;
   }
 
-  public updateUserDate(): void {
-    this.userService.searchList({page: 1, nums: 10}).subscribe(
+  public updateUserDate(page): void {
+    this.userService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize};
@@ -141,7 +141,7 @@ export class UserComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateUserDate();
+              this.updateUserDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -222,7 +222,7 @@ export class UserComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateUserDate();
+                  this.updateUserDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -270,7 +270,7 @@ export class UserComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedUsers = undefined;
-                    this.updateUserDate();
+                    this.updateUserDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -403,7 +403,7 @@ export class UserComponent implements OnInit {
               this.msgs = [];
               this.selectedUsers = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateUserDate();
+              this.updateUserDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -506,7 +506,7 @@ export class UserComponent implements OnInit {
     this.queryUser.realName = null;
     this.queryUser.userName = null;
     this.clearData();
-    this.updateUserDate();
+    this.updateUserDate(this.nowPage);
   }
 
 
@@ -788,6 +788,8 @@ export class UserComponent implements OnInit {
       (value) => {
         console.log(value);
         this.users = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
         });

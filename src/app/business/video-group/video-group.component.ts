@@ -68,15 +68,16 @@ export class VideoGroupComponent implements OnInit {
       {field: 'orientationDO', header: '上下行'},
       {field: 'udt', header: '添加时间'},
     ];
-    this.updateCashDate();
+    this.updateCashDate(1);
     this.queryVideoGroup.orientationDO = null;
     this.queryVideoGroup.serviceAreaId = null;
   }
 
-  public updateCashDate(): void {
-    this.videoGroupService.searchList({page: 1, nums: 10}).subscribe(
+  public updateCashDate(page): void {
+    this.videoGroupService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.videoGroups = value.data.contents;
 
       }
@@ -117,7 +118,7 @@ export class VideoGroupComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateCashDate();
+              this.updateCashDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -189,7 +190,7 @@ export class VideoGroupComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateCashDate();
+                    this.updateCashDate(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -234,7 +235,7 @@ export class VideoGroupComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedVideoGroups = undefined;
-                    this.updateCashDate();
+                    this.updateCashDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -370,7 +371,7 @@ export class VideoGroupComponent implements OnInit {
               this.msgs = [];
               this.selectedVideoGroups = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateCashDate();
+              this.updateCashDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -490,7 +491,7 @@ export class VideoGroupComponent implements OnInit {
     this.ServiceName = null;
     this.addServicesAreas = null;
     this.highsdData = null;
-    this.updateCashDate();
+    this.updateCashDate(this.nowPage);
   }
 
   // 选择上下行
@@ -564,6 +565,8 @@ export class VideoGroupComponent implements OnInit {
     this.videoGroupService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         this.videoGroups = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
     this.selectedVideoGroups = null;

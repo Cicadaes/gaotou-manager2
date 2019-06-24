@@ -88,7 +88,7 @@ export class OrgDutyComponent implements OnInit {
       {field: 'description', header: '部门描述'},
       {field: 'organizationName', header: '所属公司'},
     ];
-    this.updateDutyDate();
+    this.updateDutyDate(1);
     this.orgService.searchCompanyList({page: 1, nums: 100}).subscribe(
       (val) => {
         this.addCompanySelect = this.initializeSelectCompany(val.data.contents);
@@ -100,12 +100,13 @@ export class OrgDutyComponent implements OnInit {
     this.queryDuty.dutyName = null;
   }
 
-  public updateDutyDate(): void {
-    this.orgService.searchDutyList({page: 1, nums: 10}).subscribe(
+  public updateDutyDate(page): void {
+    this.orgService.searchDutyList({page: page, nums: 10}).subscribe(
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
-        this.option = {total: val.data.totalRecord, row: val.data.pageSize};
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
+
       }
     );
   }
@@ -164,7 +165,7 @@ export class OrgDutyComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateDutyDate();
+              this.updateDutyDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -242,7 +243,7 @@ export class OrgDutyComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateDutyDate();
+                  this.updateDutyDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -290,7 +291,7 @@ export class OrgDutyComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedDuties = undefined;
-                    this.updateDutyDate();
+                    this.updateDutyDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -427,7 +428,7 @@ export class OrgDutyComponent implements OnInit {
               this.msgs = [];
               this.selectedDuties = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateDutyDate();
+              this.updateDutyDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -488,7 +489,7 @@ export class OrgDutyComponent implements OnInit {
     this.Companylabel = '请选择公司...';
     this.Departmentlabel = '请选择部门...';
     this.Dutylabel = '请选择职位...';
-    this.updateDutyDate();
+    this.updateDutyDate(this.nowPage);
   }
   // //选择区域
   // public AreaTreeClick(): void {
@@ -796,6 +797,8 @@ export class OrgDutyComponent implements OnInit {
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
+
         // this.option = {total: val.data.totalRecord, row: val.data.pageSize};
       }
     );

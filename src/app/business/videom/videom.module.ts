@@ -6,7 +6,6 @@ import {SharedModule} from '../../common/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from 'primeng/table';
 import {
-  CheckboxModule,
   ConfirmationService,
   ConfirmDialogModule,
   DialogModule, DropdownModule, MessageModule,

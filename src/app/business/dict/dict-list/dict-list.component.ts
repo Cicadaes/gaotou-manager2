@@ -46,16 +46,17 @@ export class DictListComponent implements OnInit {
       {field: 'dictionaryName', header: '字典名称'},
       {field: 'idt', header: '添加时间'},
     ];
-    this.updateDictListData();
+    this.updateDictListData(1);
     this.queryDict.dictionaryCode =null;
     this.queryDict.dictionaryName =null;
   }
 
-  public updateDictListData(): void {
-    this.dictService.searchDictList({page: 1, nums: 10}).subscribe(
+  public updateDictListData(page): void {
+    this.dictService.searchDictList({page: page, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.dictLists = value.data.contents;
       }
     );
@@ -96,7 +97,7 @@ export class DictListComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateDictListData();
+              this.updateDictListData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -169,7 +170,7 @@ export class DictListComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateDictListData();
+                    this.updateDictListData(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -214,7 +215,7 @@ export class DictListComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedDictLists = undefined;
-                    this.updateDictListData();
+                    this.updateDictListData(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -304,7 +305,7 @@ export class DictListComponent implements OnInit {
               this.msgs = [];
               this.selectedDictLists = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateDictListData();
+              this.updateDictListData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -360,7 +361,7 @@ export class DictListComponent implements OnInit {
   public  resetQueryDictList(): void {
      this.queryDict.dictionaryName = null;
      this.queryDict.dictionaryCode = null;
-     this.updateDictListData();
+     this.updateDictListData(this.nowPage);
   }
 
   public  clearData(): void {
@@ -375,6 +376,7 @@ export class DictListComponent implements OnInit {
       (value) => {
         console.log(value);
         this.dictLists = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
       }
     );
     this.modifyDictList = null;

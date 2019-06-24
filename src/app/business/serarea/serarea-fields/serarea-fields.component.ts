@@ -51,17 +51,18 @@ export class SerareaFieldsComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
 
-    this.uploadFieldData();
+    this.uploadFieldData(1);
     this.serareTypeFiled();
     this.attributeName1 = null;
   }
 
-  public uploadFieldData(): void {
-    this.serareaService.searchSaFieldList({page: 1, nums: 10}).subscribe(
+  public uploadFieldData(page): void {
+    this.serareaService.searchSaFieldList({page: page, nums: 10}).subscribe(
       (value) => {
         // console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
         this.fields = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
   }
@@ -118,7 +119,7 @@ export class SerareaFieldsComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.uploadFieldData();
+              this.uploadFieldData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -190,7 +191,7 @@ export class SerareaFieldsComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.uploadFieldData();
+                  this.uploadFieldData(this.nowPage);
                 } else {
                   this.globalService.eventSubject.next({display: false});
                   if (this.cleanTimer) {
@@ -231,7 +232,7 @@ export class SerareaFieldsComponent implements OnInit {
                   }
                   this.msgs = [];
                   this.selectedfields = undefined;
-                  this.uploadFieldData();
+                  this.uploadFieldData(this.nowPage);
                   this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
@@ -337,7 +338,7 @@ export class SerareaFieldsComponent implements OnInit {
               this.msgs = [];
               this.selectedfields=undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.uploadFieldData();
+              this.uploadFieldData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -383,7 +384,7 @@ export class SerareaFieldsComponent implements OnInit {
     this.serareaService.searchSaField({page: 1, nums: 10},{attributeDesc:this.attributeName1}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.fields = value.data.contents;
       }
     );
@@ -391,7 +392,7 @@ export class SerareaFieldsComponent implements OnInit {
   //重置
   public  resetQueryFields(): void {
     this.attributeName1 = null;
-    this.uploadFieldData();
+    this.uploadFieldData(this.nowPage);
   }
 
   public  clearData(): void {
@@ -424,6 +425,8 @@ export class SerareaFieldsComponent implements OnInit {
     this.serareaService.searchSaFieldList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.fields = value.data.contents;
       }
     );

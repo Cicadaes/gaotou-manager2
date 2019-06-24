@@ -45,16 +45,17 @@ export class EventTypeComponent implements OnInit {
       {field: 'eventCategoryName', header: '分类名称'},
       {field: 'idt', header: '创建时间'},
     ];
-    this.updateEventTypeDate();
+    this.updateEventTypeDate(1);
     this.queryEventType.categoryCode = null;
     this.queryEventType.eventCategoryName = null;
   }
 
-  public updateEventTypeDate(): void {
-    this.systemService.searchEventTypeList({page: 1, nums: 10}).subscribe(
+  public updateEventTypeDate(page): void {
+    this.systemService.searchEventTypeList({page: page, nums: 10}).subscribe(
       (value) => {
         // console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.eventTypes = value.data.contents;
       }
     );
@@ -100,7 +101,7 @@ export class EventTypeComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateEventTypeDate();
+              this.updateEventTypeDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -174,7 +175,7 @@ export class EventTypeComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateEventTypeDate();
+                  this.updateEventTypeDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -218,7 +219,7 @@ export class EventTypeComponent implements OnInit {
                   }
                   this.msgs = [];
                   this.selecteEventTypes = undefined;
-                  this.updateEventTypeDate();
+                  this.updateEventTypeDate(this.nowPage);
                   this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
@@ -311,7 +312,7 @@ export class EventTypeComponent implements OnInit {
               this.msgs = [];
               this.selecteEventTypes = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateEventTypeDate();
+              this.updateEventTypeDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -363,7 +364,7 @@ export class EventTypeComponent implements OnInit {
   }
   // 重置
   public  resetQueryEventType(): void {
-    this.updateEventTypeDate();
+    this.updateEventTypeDate(this.nowPage);
     this.queryEventType.categoryCode = null;
     this.queryEventType.eventCategoryName = null;
   }
@@ -380,6 +381,8 @@ export class EventTypeComponent implements OnInit {
       (value) => {
         console.log(value);
         this.eventTypes = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
     this.selecteEventTypes = null;

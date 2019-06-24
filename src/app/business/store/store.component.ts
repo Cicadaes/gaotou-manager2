@@ -61,7 +61,7 @@ export class StoreComponent implements OnInit {
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
   public msgs: Message[] = []; // 消息弹窗
-  public totalpage: any;
+  // public totalpage: any;
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -80,22 +80,22 @@ export class StoreComponent implements OnInit {
       {field: 'serviceAreaName', header: '所属服务区'},
       {field: 'saOrientationId', header: '服务区方向'},
     ];
-    this.updateCashDate();
+    this.updateStoreDate(1);
 
     // console.log();
   }
 
-  public updateCashDate(): void {
-    this.storeService.searchList({page: 1, nums: 10}).subscribe(
+  public updateStoreDate(page): void {
+    this.storeService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.totalRecord);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
+        // this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
         this.stores = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
     this.Sercharealabel = '请选择区划...';
-    console.log(this.Serchservice.selectedOption.value);
     this.Serchservice.value = null;
     this.SerchServicesAreas = null;
     this.SerchhighsdData = null;
@@ -149,8 +149,6 @@ export class StoreComponent implements OnInit {
 
   // 增加
   public addsSave(): void {
-    console.log(this.queryStroe);
-    console.log(this.addStore);
     this.confirmationService.confirm({
       message: `确定要增加吗？`,
       header: '增加提醒',
@@ -166,12 +164,11 @@ export class StoreComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateCashDate();
+              this.updateStoreDate(this.nowPage);
               // this.updateAddData();
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
-              // this.clearMoudle();
               this.addDialog = false;
             } else {
               setTimeout(() => {
@@ -243,7 +240,7 @@ export class StoreComponent implements OnInit {
                     }, 3000);
                     // this.nowpageEventHandle();
                     //查询数据
-                    this.updateCashDate()
+                    this.updateStoreDate(this.nowPage)
                     // this.updateNowData();
                   }, 3000);
                 } else {
@@ -289,7 +286,7 @@ export class StoreComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedstores = undefined;
-                    this.updateCashDate();
+                    this.updateStoreDate(this.nowPage);
                     // this.updateNowData();
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
@@ -445,7 +442,7 @@ export class StoreComponent implements OnInit {
               this.msgs = [];
               this.selectedstores = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateCashDate();
+              this.updateStoreDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -517,7 +514,7 @@ export class StoreComponent implements OnInit {
     this.Serchstore.value = null;
     this.Searchtype =1;
     this.queryStroe = new QueryStroe();
-    this.updateCashDate();
+    this.updateStoreDate(this.nowPage);
     this.addOnHide();
   }
 

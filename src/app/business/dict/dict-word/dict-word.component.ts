@@ -55,19 +55,20 @@ export class DictWordComponent implements OnInit {
       {field: 'entryValue', header: '词条值'},
       {field: 'idt', header: '添加时间'},
     ];
-    this.updateDictWordsata();
+    this.updateDictWordsata(1);
     this.updateDictType();
     this.queryDictWord.dictionaryCode = null;
     this.queryDictWord.entryCode = null;
     this.queryDictWord.entryValue = null;
   }
 
-  public updateDictWordsata(): void {
-    this.dictService.searchDictWordList({page: 1, nums: 10}).subscribe(
+  public updateDictWordsata(page): void {
+    this.dictService.searchDictWordList({page: page, nums: 10}).subscribe(
       (value) => {
         // console.log(value);
         if (value.data){
-          this.option1 = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+          this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
           this.dictWords = value.data.contents;
         }
 
@@ -120,7 +121,7 @@ export class DictWordComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateDictWordsata();
+              this.updateDictWordsata(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -196,7 +197,7 @@ export class DictWordComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateDictWordsata();
+                  this.updateDictWordsata(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -244,7 +245,7 @@ export class DictWordComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedDictWords = undefined;
-                    this.updateDictWordsata();
+                    this.updateDictWordsata(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -360,7 +361,7 @@ export class DictWordComponent implements OnInit {
               this.msgs = [];
               this.selectedDictWords = undefined;
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateDictWordsata();
+              this.updateDictWordsata(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -416,7 +417,7 @@ export class DictWordComponent implements OnInit {
     this.queryDictWord.dictionaryCode = null;
     this.queryDictWord.entryCode = null;
     this.queryDictWord.entryValue = null;
-    this.updateDictWordsata();
+    this.updateDictWordsata(this.nowPage);
   }
 
   public clearData(): void {
@@ -455,6 +456,8 @@ export class DictWordComponent implements OnInit {
       (value) => {
         console.log(value);
         this.dictWords = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
     this.selectedDictWords = null;

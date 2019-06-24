@@ -59,14 +59,15 @@ export class WifiComponent implements OnInit {
       {field: 'orientationFlag', header: '所属服务区方向'},
       {field: 'administrativeAreaName', header: '所属区划'}
     ];
-    this.updateWifiDate();
+    this.updateWifiDate(1);
   }
 
-  public updateWifiDate(): void {
-    this.wifiService.searchList({page: 1, nums: 10}).subscribe(
+  public updateWifiDate(page): void {
+    this.wifiService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
         console.log(value.data.contents);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.wifis = value.data.contents;
       }
     );
@@ -112,7 +113,7 @@ export class WifiComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateWifiDate();
+              this.updateWifiDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -185,7 +186,7 @@ export class WifiComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateWifiDate();
+                    this.updateWifiDate(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -231,7 +232,7 @@ export class WifiComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedwifis = undefined;
-                    this.updateWifiDate();
+                    this.updateWifiDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -362,7 +363,7 @@ export class WifiComponent implements OnInit {
               this.msgs = [];
               this.selectedwifis = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateWifiDate();
+              this.updateWifiDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -418,7 +419,7 @@ export class WifiComponent implements OnInit {
   // 重置
   public resetQueryWifi(): void {
     this.ServiceName = null;
-    this.updateWifiDate();
+    this.updateWifiDate(this.nowPage);
   }
 
   public  clearData(): void {
@@ -586,6 +587,8 @@ export class WifiComponent implements OnInit {
       (value) => {
         // console.log(value.data.contents);
         this.wifis = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
     this.selectedwifis = null;

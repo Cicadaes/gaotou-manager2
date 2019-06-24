@@ -74,15 +74,15 @@ export class InterceptComponent implements OnInit {
       {field: 'idt', header: '添加时间'},
     ];
     this.bayonetTypes = [{label:'进口',value:1},{label:'出口',value:2}];
-    this.updateInterceptDate();
+    this.updateInterceptDate(1);
 
   }
 
-  public updateInterceptDate(): void {
-    this.interceptService.searchList({page: 1, nums: 10, bayonetType: '2'}).subscribe(
+  public updateInterceptDate(page): void {
+    this.interceptService.searchList({page: page, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.intercepts = value.data.contents;
       }
     );
@@ -136,7 +136,7 @@ export class InterceptComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateInterceptDate();
+              this.updateInterceptDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -209,7 +209,7 @@ export class InterceptComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateInterceptDate();
+                    this.updateInterceptDate(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -255,7 +255,7 @@ export class InterceptComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedintercepts = undefined;
-                    this.updateInterceptDate();
+                    this.updateInterceptDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -373,7 +373,7 @@ export class InterceptComponent implements OnInit {
               this.msgs = [];
               this.selectedintercepts = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateInterceptDate();
+              this.updateInterceptDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -432,7 +432,7 @@ export class InterceptComponent implements OnInit {
     this.orientationDown = null;
     this.bayonetLabel = null;
     this.clearData();
-    this.updateInterceptDate();
+    this.updateInterceptDate(this.nowPage);
   }
 
   /*
@@ -663,7 +663,8 @@ export class InterceptComponent implements OnInit {
     this.interceptService.searchList({page: this.nowPage, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.intercepts = value.data.contents;
       }
     );
