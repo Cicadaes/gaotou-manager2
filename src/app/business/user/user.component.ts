@@ -90,6 +90,7 @@ export class UserComponent implements OnInit {
       {field: 'organizationName', header: '所属公司'},
       {field: 'deptName', header: '所属部门'},
       {field: 'dutyName', header: '职务'},
+      {field: 'userName', header: '用户名'},
       {field: 'idt', header: '添加时间'}
     ];
     this.updateUserDate(1);
@@ -103,7 +104,8 @@ export class UserComponent implements OnInit {
     this.userService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
@@ -492,6 +494,7 @@ export class UserComponent implements OnInit {
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
 
         this.users = value.data.contents;
         this.users.map((val, index) => {
