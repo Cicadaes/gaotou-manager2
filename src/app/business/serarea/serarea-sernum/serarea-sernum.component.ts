@@ -52,7 +52,7 @@ export class SerareaSernumComponent implements OnInit {
   public downSource: string;  // 下行起始点
   public downDestination: string;  // 下行终点
   // 分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
 
   //树结构选择相关
@@ -602,7 +602,8 @@ export class SerareaSernumComponent implements OnInit {
     this.serareaService.searchSerAra({page: 1, nums: 10}, this.querySerarea).subscribe(
       (value) => {
         this.serAreas = value.data.contents;
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         console.log(value);
       }
     );

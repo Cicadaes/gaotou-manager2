@@ -27,7 +27,7 @@ export class StoreComponent implements OnInit {
   public selectedstores: Store[]; // 多个选择
   public Searchtype =1;
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
@@ -826,7 +826,6 @@ export class StoreComponent implements OnInit {
         }
       );
     }
-
     this.selectedstores = null;
   }
 }

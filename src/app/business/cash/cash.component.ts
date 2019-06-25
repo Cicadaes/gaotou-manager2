@@ -43,7 +43,7 @@ export class CashComponent implements OnInit {
   public StoreType: any; // 选择店铺分类
   public queryCash: QueryCash = new QueryCash();
   // 分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
@@ -467,7 +467,8 @@ export class CashComponent implements OnInit {
       (value) => {
         console.log(value);
         if (value.data) {
-          this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+          this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
           this.cashs = value.data.contents;
         }
       }

@@ -53,7 +53,7 @@ export class OrgDutyComponent implements OnInit {
   // public DepartmentId: number; // 区域查询的公司ID
   // 分页相关
   public option: any;
-  public nowPage: any;
+  public nowPage = 1;
 
   //条件查询
   public addAreaTrees: AddTreeArea[]; // 区域树结构
@@ -476,7 +476,8 @@ export class OrgDutyComponent implements OnInit {
       (val) => {
         console.log(val);
         this.duties = val.data.contents;
-        this.option = {total: val.data.totalRecord, row: val.data.pageSize};
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
+
       }
     );
   }

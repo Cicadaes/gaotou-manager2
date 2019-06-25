@@ -34,7 +34,7 @@ export class VideoGroupComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public addArealabel: any;
   // 分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 条件查询相关
   public queryVideoGroup: QueryVideoGroup = new QueryVideoGroup();
@@ -415,7 +415,7 @@ export class VideoGroupComponent implements OnInit {
   public queryVideoGroupData(): void {
     this.videoGroupService.searchVideoGroup({page: 1, nums: 10}, this.queryVideoGroup).subscribe(
       (value) => {
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.videoGroups = value.data.contents;
 
       }

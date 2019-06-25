@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
   // public addDepSelect: SelectItem[]; // 部门列表
   // public addDepTopDutySelect: SelectItem[]; // 职务
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   //树形结构相关
   public addAreaTrees: AddTreeArea[]; // 区域树结构
@@ -491,7 +491,8 @@ export class UserComponent implements OnInit {
     this.userService.searchUser({page: 1, nums: 10},this.queryUser).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
@@ -782,8 +783,6 @@ export class UserComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
     this.userService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);

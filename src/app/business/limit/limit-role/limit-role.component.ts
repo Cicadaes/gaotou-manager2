@@ -30,7 +30,7 @@ export class LimitRoleComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addRole: AddRole = new AddRole();
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 修改相关
   public modifyDialog: boolean;//控制显示弹窗显示
@@ -378,7 +378,7 @@ export class LimitRoleComponent implements OnInit {
     this.limitService.searchRole({page: 1, nums: 10},{roleName:this.roleName}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.roles = value.data.contents;
       }
     );

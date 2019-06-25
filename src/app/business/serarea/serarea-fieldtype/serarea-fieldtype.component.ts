@@ -25,7 +25,7 @@ export class SerareaFieldtypeComponent implements OnInit {
   public categoryName: any;
   
   //分页相关
-  public nowPage: any;
+  public nowPage = 1 ;
   public option: any;
   //修改相关
   public modifyDialog: boolean; //修改弹窗显示控制
@@ -351,7 +351,8 @@ export class SerareaFieldtypeComponent implements OnInit {
     this.serareaService.searchSaFieldType({page: 1, nums: 10},{categoryName:this.categoryName}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.fieldTypes = value.data.contents;
       }
     );
@@ -371,8 +372,6 @@ export class SerareaFieldtypeComponent implements OnInit {
   //分页
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
     this.serareaService.searchSaFieldTypeList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);

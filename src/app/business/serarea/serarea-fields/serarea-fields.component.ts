@@ -18,7 +18,7 @@ export class SerareaFieldsComponent implements OnInit {
   public field: any; // 接收选中的值
   public selectedfields: Field[]; // 多个选择
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 增加相关
   public addDialog: boolean; // 增加弹窗显示控制
@@ -385,6 +385,7 @@ export class SerareaFieldsComponent implements OnInit {
       (value) => {
         console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.fields = value.data.contents;
       }
     );

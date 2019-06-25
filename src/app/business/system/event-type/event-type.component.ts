@@ -20,7 +20,7 @@ export class EventTypeComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addEventType: AddEventType = new AddEventType();
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 条件查询相关
   public queryEventType: QueryEventType = new QueryEventType();
@@ -357,7 +357,8 @@ export class EventTypeComponent implements OnInit {
     this.systemService.searchEventType({page: 1, nums: 10},this.queryEventType).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.eventTypes = value.data.contents;
       }
     );
@@ -375,8 +376,6 @@ export class EventTypeComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
     this.systemService.searchEventTypeList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);

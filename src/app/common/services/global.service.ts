@@ -7,7 +7,7 @@ export class GlobalService {
   public urls = `http://120.77.171.73:8888/highway-management`;
   // public urls = `http://123.249.28.108:8082/highway-management`;
   public url = `http://120.77.171.73:8080/highway-authentication`;
-  // public urlt = `http://192.168.28.7:8080/highway-management`;
+  // public urls = `http://192.168.28.139:8080`;
   // sessionStorage临时存储
   public sessionStorage: any;
   constructor() {

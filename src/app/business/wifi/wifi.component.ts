@@ -32,7 +32,7 @@ export class WifiComponent implements OnInit {
   public highsdData: SelectItem[]; // 上下行选择数据
   public addArealabel: any;
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   //条件查询
   public ServiceName: any;
@@ -409,8 +409,7 @@ export class WifiComponent implements OnInit {
   public queryWifiData(): void {
     this.wifiService.searchWifi({page: 1, nums: 10}, {serviceAreaName: this.ServiceName}).subscribe(
       (value) => {
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
-        console.log(this.option);
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.wifis = value.data.contents;
       }
     );

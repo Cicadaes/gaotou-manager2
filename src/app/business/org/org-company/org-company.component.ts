@@ -35,7 +35,7 @@ export class OrgCompanyComponent implements OnInit {
   public queryCompany: queryCompany = new queryCompany();
   public arealabel = '请选择区划...';
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
@@ -67,7 +67,7 @@ export class OrgCompanyComponent implements OnInit {
     this.orgService.searchCompanyList({page: page, nums: 10}).subscribe(
       (value) => {
         this.companies = value.data.contents;
-        this.option = {total:value.data.totalRecord, row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         console.log(value);
       }
     );

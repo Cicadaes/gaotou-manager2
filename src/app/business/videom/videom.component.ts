@@ -46,7 +46,7 @@ export class VideomComponent implements OnInit {
   public  orientationName: any;
   public  VideoGroupName: any;
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 修改相关
   public modifyDialog: boolean; //修改弹窗显示
@@ -518,7 +518,8 @@ export class VideomComponent implements OnInit {
     this.videomService.searchVideo({page: 1, nums: 10}, this.queryVideo).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.videos = value.data.contents;
       }
     );

@@ -27,7 +27,7 @@ export class DictWordComponent implements OnInit {
   public addDictListSelect: SelectItem[]; // 字典列表
   public DicttypeCode: any;
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option1: any;
 
   //条件查询
@@ -406,7 +406,8 @@ export class DictWordComponent implements OnInit {
     this.dictService.searchDictWord({page: 1, nums: 10}, this.queryDictWord).subscribe(
       (value) => {
         console.log(value);
-        this.option1 = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.dictWords = value.data.contents;
       }
     );

@@ -36,7 +36,7 @@ export class InterceptComponent implements OnInit {
   public addServicesAreas: SelectItem[]; // 服务区列表
   public highsdData: SelectItem[]; // 上下行选择数据
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   //条件查询相关
   public bayonetTypes: any; //选择卡口分类
@@ -420,7 +420,7 @@ export class InterceptComponent implements OnInit {
     this.interceptService.searchIntercept({page: 1, nums: 10},this.queryIntercept).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.intercepts = value.data.contents;
       }
     );
@@ -658,8 +658,7 @@ export class InterceptComponent implements OnInit {
 
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
+
     this.interceptService.searchList({page: this.nowPage, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
         console.log(value);

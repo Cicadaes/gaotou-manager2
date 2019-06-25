@@ -51,7 +51,7 @@ export class OrgDepartmentComponent implements OnInit {
   public areaDialog: boolean; // 区域树弹窗
   public queryDepartment: queryDepartment = new queryDepartment();
   public dType: any;
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   //修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
@@ -413,7 +413,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.orgService.searchDepart({page: 1, nums: 10},this.queryDepartment).subscribe(
       (val) => {
         console.log(val);
-
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
         if (val.data){
           this.orgs = val.data.contents;
         }

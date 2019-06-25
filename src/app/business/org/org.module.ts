@@ -19,7 +19,6 @@ import { OrgService } from '../../common/services/org.service';
 import { OrgDutyComponent } from './org-duty/org-duty.component';
 import {OrgDepartmentComponent} from './org-department/org-department.component';
 import { OrgCompanyComponent } from './org-company/org-company.component';
-import {PagingComponent} from '../../common/components/paging/paging.component';
 import {PagingModule} from '../../common/components/paging/paging.module';
 
 @NgModule({

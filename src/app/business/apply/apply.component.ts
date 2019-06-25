@@ -21,7 +21,7 @@ export class ApplyComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addApply: AddApply = new AddApply();
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 修改相关
   public modifyDialog: boolean;
