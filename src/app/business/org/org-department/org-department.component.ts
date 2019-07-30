@@ -51,7 +51,7 @@ export class OrgDepartmentComponent implements OnInit {
   public areaDialog: boolean; // 区域树弹窗
   public queryDepartment: queryDepartment = new queryDepartment();
   public dType: any;
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   //修改相关
   public modifyDialog: boolean;//修改弹窗显示控制
@@ -94,14 +94,15 @@ export class OrgDepartmentComponent implements OnInit {
     this.queryDepartment.organizationId = null;
     this.queryDepartment.deptName = null;
     this.queryDepartment.pid = null;
-    this.updateOrgDate();
+    this.updateOrgDate(1);
   }
 
-  public updateOrgDate(): void {
-    this.orgService.searchDepartList({page: 1, nums: 10}).subscribe(
+  public updateOrgDate(page): void {
+    this.orgService.searchDepartList({page: page, nums: 10}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
-        this.option = {total:val.data.totalRecord, row:val.data.pageSize}
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
+
 
       }
     );
@@ -134,7 +135,7 @@ export class OrgDepartmentComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateOrgDate();
+              this.updateOrgDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -211,7 +212,7 @@ export class OrgDepartmentComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateOrgDate();
+                  this.updateOrgDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -259,7 +260,7 @@ export class OrgDepartmentComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedorgs = undefined;
-                    this.updateOrgDate();
+                    this.updateOrgDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -365,7 +366,7 @@ export class OrgDepartmentComponent implements OnInit {
               this.msgs = [];
               this.selectedorgs = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateOrgDate();
+              this.updateOrgDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -412,7 +413,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.orgService.searchDepart({page: 1, nums: 10},this.queryDepartment).subscribe(
       (val) => {
         console.log(val);
-
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
         if (val.data){
           this.orgs = val.data.contents;
         }
@@ -428,7 +429,7 @@ export class OrgDepartmentComponent implements OnInit {
     this.queryDepartment.pid = null;
     this.clearData();
     this.dType = null;
-    this.updateOrgDate();
+    this.updateOrgDate(this.nowPage);
     this.DepartmentType = [{label:'1、服务区类',value:1},{label:'2、非服务区类',value:2}];
 
   }
@@ -633,6 +634,8 @@ export class OrgDepartmentComponent implements OnInit {
     this.orgService.searchDepartList({page:this.nowPage, nums: 10}).subscribe(
       (val) => {
         this.orgs = val.data.contents;
+        this.option = {total: val.data.totalRecord, row: val.data.pageSize, nowpage: val.data.pageNo};
+
       }
     );
     this.selectedorgs = null;

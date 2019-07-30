@@ -20,7 +20,7 @@ export class EventTypeComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addEventType: AddEventType = new AddEventType();
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 条件查询相关
   public queryEventType: QueryEventType = new QueryEventType();
@@ -45,16 +45,17 @@ export class EventTypeComponent implements OnInit {
       {field: 'eventCategoryName', header: '分类名称'},
       {field: 'idt', header: '创建时间'},
     ];
-    this.updateEventTypeDate();
+    this.updateEventTypeDate(1);
     this.queryEventType.categoryCode = null;
     this.queryEventType.eventCategoryName = null;
   }
 
-  public updateEventTypeDate(): void {
-    this.systemService.searchEventTypeList({page: 1, nums: 10}).subscribe(
+  public updateEventTypeDate(page): void {
+    this.systemService.searchEventTypeList({page: page, nums: 10}).subscribe(
       (value) => {
         // console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.eventTypes = value.data.contents;
       }
     );
@@ -100,7 +101,7 @@ export class EventTypeComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateEventTypeDate();
+              this.updateEventTypeDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -174,7 +175,7 @@ export class EventTypeComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateEventTypeDate();
+                  this.updateEventTypeDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -218,7 +219,7 @@ export class EventTypeComponent implements OnInit {
                   }
                   this.msgs = [];
                   this.selecteEventTypes = undefined;
-                  this.updateEventTypeDate();
+                  this.updateEventTypeDate(this.nowPage);
                   this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
@@ -311,7 +312,7 @@ export class EventTypeComponent implements OnInit {
               this.msgs = [];
               this.selecteEventTypes = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateEventTypeDate();
+              this.updateEventTypeDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -356,14 +357,15 @@ export class EventTypeComponent implements OnInit {
     this.systemService.searchEventType({page: 1, nums: 10},this.queryEventType).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.eventTypes = value.data.contents;
       }
     );
   }
   // 重置
   public  resetQueryEventType(): void {
-    this.updateEventTypeDate();
+    this.updateEventTypeDate(this.nowPage);
     this.queryEventType.categoryCode = null;
     this.queryEventType.eventCategoryName = null;
   }
@@ -374,12 +376,12 @@ export class EventTypeComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
     this.systemService.searchEventTypeList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.eventTypes = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
       }
     );
     this.selecteEventTypes = null;

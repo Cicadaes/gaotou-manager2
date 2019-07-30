@@ -58,7 +58,8 @@ export class AreaComponent implements OnInit {
   public updateAreaDate(page): void {
     this.areaService.searchList({page: page, nums: 10}, {}).subscribe(
       (value) => {
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.areas = this.tableTreeInitialize(value.data.contents);
       }
     );
@@ -102,7 +103,7 @@ export class AreaComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.msg});
-              this.updateAreaDate(1);
+              this.updateAreaDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -172,7 +173,7 @@ export class AreaComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateAreaDate(1);
+                  this.updateAreaDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -216,7 +217,7 @@ export class AreaComponent implements OnInit {
                   }
                   this.msgs = [];
                   this.selectAreas = undefined;
-                  this.updateAreaDate(1);
+                  this.updateAreaDate(this.nowPage);
                   this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.msg});
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
@@ -386,6 +387,7 @@ export class AreaComponent implements OnInit {
     console.log(this.nowPage);
     this.areaService.searchList({page: this.nowPage, nums: 10}, {}).subscribe(
       (value) => {
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.areas = this.tableTreeInitialize(value.data.contents);
       }
     );

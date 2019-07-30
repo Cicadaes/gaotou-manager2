@@ -27,7 +27,7 @@ export class PagingComponent implements OnInit, OnChanges {
       if ( Math.ceil(this.option.total / this.option.row) >= 1) {
         this.showPaging = true;
       }
-      this.nowPage = 1;
+      this.nowPage = this.option.nowpage;
     }
   }
   public pClick(): void {

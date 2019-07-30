@@ -35,7 +35,7 @@ export class OrgCompanyComponent implements OnInit {
   public queryCompany: queryCompany = new queryCompany();
   public arealabel = '请选择区划...';
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 其他提示弹窗相关
   public cleanTimer: any; // 清除时钟
@@ -67,7 +67,7 @@ export class OrgCompanyComponent implements OnInit {
     this.orgService.searchCompanyList({page: page, nums: 10}).subscribe(
       (value) => {
         this.companies = value.data.contents;
-        this.option = {total:value.data.totalRecord, row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         console.log(value);
       }
     );
@@ -96,7 +96,7 @@ export class OrgCompanyComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateCompanyDate(1);
+              this.updateCompanyDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -180,7 +180,7 @@ export class OrgCompanyComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateCompanyDate(1);
+                    this.updateCompanyDate(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -229,7 +229,7 @@ export class OrgCompanyComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedcompanies = undefined;
-                    this.updateCompanyDate(1);
+                    this.updateCompanyDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -335,7 +335,7 @@ export class OrgCompanyComponent implements OnInit {
               this.selectedcompanies = undefined;
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateCompanyDate(1);
+              this.updateCompanyDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -393,7 +393,7 @@ export class OrgCompanyComponent implements OnInit {
     this.queryCompany.regNo = '';
     this.queryCompany.pid = null;
     this.arealabel = "请选择区划...";
-    this.updateCompanyDate(1);
+    this.updateCompanyDate(this.nowPage);
   }
 
   // 选择区域

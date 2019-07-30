@@ -43,7 +43,7 @@ export class CashComponent implements OnInit {
   public StoreType: any; // 选择店铺分类
   public queryCash: QueryCash = new QueryCash();
   // 分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 修改相关
   public modifyDialog: boolean; // 修改弹窗显示控制
@@ -73,17 +73,18 @@ export class CashComponent implements OnInit {
       {field: 'cashRegisterCode', header: '收银机编号'},
       {field: 'idt', header: '添加时间'},
     ];
-    this.updateCashDate();
+    this.updateCashDate(1);
     this.queryCash.orientationDO = null;
     this.queryCash.serviceAreaId = null;
     this.queryCash.storeName = null;
     this.queryCash.storeId = null;
   }
 
-  public updateCashDate(): void {
-    this.cashService.searchList({page: 1, nums: 10}).subscribe(
+  public updateCashDate(page): void {
+    this.cashService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: 1};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.cashs = value.data.contents;
       }
     );
@@ -124,7 +125,7 @@ export class CashComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateCashDate();
+              this.updateCashDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -201,7 +202,7 @@ export class CashComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.updateCashDate();
+                    this.updateCashDate(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -250,7 +251,7 @@ export class CashComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedCashs = undefined;
-                    this.updateCashDate();
+                    this.updateCashDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -403,7 +404,7 @@ export class CashComponent implements OnInit {
                 this.msgs = [];
                 this.selectedCashs = undefined;
                 this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-                this.updateCashDate();
+                this.updateCashDate(this.nowPage);
                 this.cleanTimer = setTimeout(() => {
                   this.msgs = [];
                 }, 3000);
@@ -466,7 +467,8 @@ export class CashComponent implements OnInit {
       (value) => {
         console.log(value);
         if (value.data) {
-          this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+          this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
           this.cashs = value.data.contents;
         }
       }
@@ -475,7 +477,7 @@ export class CashComponent implements OnInit {
 
   //重置
   public resetQueryCash(): void {
-    this.updateCashDate();
+    this.updateCashDate(this.nowPage);
     this.queryCash.orientationDO = null;
     this.queryCash.serviceAreaId = null;
     this.queryCash.storeName = null;
@@ -604,6 +606,10 @@ export class CashComponent implements OnInit {
       // this.modifyCash.province.administrativeAreaId = this.addAreaTree.parent.id;
       // this.modifyCash.province.administrativeAreaName = this.addAreaTree.parent.label;
       // this.modifyCash.province.level = this.addAreaTree.parent.level;
+
+      this.addSer.value = null;
+      this.modifySer.value = null;
+
       this.modifyCash.serviceAreaName = '请选择服务区';
       this.areaDialog = false;
       this.cashService.searchServiceAreaList(this.addAreaTree.id).subscribe(
@@ -632,6 +638,13 @@ export class CashComponent implements OnInit {
     this.modifyCash.serviceAreaName= e.value.name;
 
     this.queryCash.serviceAreaId = e.value.id;
+
+
+    this.addDirec.value = null;
+
+    this.modifyDirec.value = null;
+
+
     this.modifyhighsdData = '请选择上下行';
     this.cashService.searchHighDirection(e.value.id).subscribe(
       (value) => {
@@ -659,6 +672,11 @@ export class CashComponent implements OnInit {
     // this.modifyCash.saOrientation.serviceAreaId = e.value.serviceAreaId;
     // this.modifyCash.saOrientation.source = e.value.source;
     this.addCash.saOrientationId = e.value.id;
+
+
+    this.addStore.value = null;
+    this.modifyStore.value = null;
+
 
     this.queryCash.orientationDO = e.value.orientaionId;
     this.modifyCash.storeName = '请选择店铺';
@@ -757,6 +775,8 @@ export class CashComponent implements OnInit {
     this.cashService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         if (value.data) {
+          this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
           this.cashs = value.data.contents;
         }
       }

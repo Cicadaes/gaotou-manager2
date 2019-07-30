@@ -14,6 +14,7 @@ export class Intercept {
   idt?: string;
   serviceAreaName?: string;
   administrativeAreaName?:string;
+  orientationDO?:orientationDO;
 }
 
 export class AddIntercept {
@@ -53,4 +54,11 @@ export class QueryIntercept {
   bayonetCode?: number;
   bayonetType?: number;
   serviceAreaName?: string;
+}
+
+export class  orientationDO{
+  destination?: string;
+  source?: string;
+  flagName?: string;
+
 }

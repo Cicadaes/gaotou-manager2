@@ -30,7 +30,7 @@ export class LimitRoleComponent implements OnInit {
   public addDialog: boolean; // 增加弹窗显示控制
   public addRole: AddRole = new AddRole();
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   // 修改相关
   public modifyDialog: boolean;//控制显示弹窗显示
@@ -71,16 +71,16 @@ export class LimitRoleComponent implements OnInit {
       {field: 'description', header: '角色描述'},
       {field: 'idt', header: '添加时间'},
     ];
-    this.uploadRoleData();
+    this.uploadRoleData(1);
     this.roleName = null;
   }
 
-  public uploadRoleData(): void {
-    this.limitService.searchRoleList({page: 1, nums: 10}).subscribe(
+  public uploadRoleData(page): void {
+    this.limitService.searchRoleList({page: page, nums: 10}).subscribe(
       (value) => {
         if(value.data){
-          this.option = {total: value.data.totalRecord, row:value.data.pageSize, nowpage: 1};
           this.roles = value.data.contents;
+          this.option = {total: value.data.totalRecord, row:value.data.pageSize, nowpage: value.data.pageNo};
         }
       }
     );
@@ -122,7 +122,7 @@ export class LimitRoleComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.uploadRoleData();
+              this.uploadRoleData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -195,7 +195,7 @@ export class LimitRoleComponent implements OnInit {
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
                     }, 3000);
-                    this.uploadRoleData();
+                    this.uploadRoleData(this.nowPage);
                   }, 3000);
                 } else {
                   setTimeout(() => {
@@ -240,7 +240,7 @@ export class LimitRoleComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedRoles = undefined;
-                    this.uploadRoleData();
+                    this.uploadRoleData(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -331,7 +331,7 @@ export class LimitRoleComponent implements OnInit {
               this.msgs = [];
               this.selectedRoles = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.uploadRoleData();
+              this.uploadRoleData(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -378,7 +378,7 @@ export class LimitRoleComponent implements OnInit {
     this.limitService.searchRole({page: 1, nums: 10},{roleName:this.roleName}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.roles = value.data.contents;
       }
     );
@@ -386,7 +386,7 @@ export class LimitRoleComponent implements OnInit {
   // 重置数据
   public  resetQueryRole(): void {
     this.roleName = null;
-    this.uploadRoleData();
+    this.uploadRoleData(this.nowPage);
   }
 
   //选择区域
@@ -525,8 +525,8 @@ export class LimitRoleComponent implements OnInit {
     this.limitService.searchRoleList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row:value.data.pageSize};
         this.roles = value.data.contents;
+        this.option = {total: value.data.totalRecord, row:value.data.pageSize, nowpage: value.data.pageNo};
       }
     );
     this.selectedRoles = null;

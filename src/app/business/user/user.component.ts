@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
   // public addDepSelect: SelectItem[]; // 部门列表
   // public addDepTopDutySelect: SelectItem[]; // 职务
   //分页相关
-  public nowPage: any;
+  public nowPage = 1;
   public option: any;
   //树形结构相关
   public addAreaTrees: AddTreeArea[]; // 区域树结构
@@ -90,20 +90,22 @@ export class UserComponent implements OnInit {
       {field: 'organizationName', header: '所属公司'},
       {field: 'deptName', header: '所属部门'},
       {field: 'dutyName', header: '职务'},
+      {field: 'userName', header: '用户名'},
       {field: 'idt', header: '添加时间'}
     ];
-    this.updateUserDate();
+    this.updateUserDate(1);
     this.queryUser.deptId = null;
     this.queryUser.organizationId = null;
     this.queryUser.realName = null;
     this.queryUser.userName = null;
   }
 
-  public updateUserDate(): void {
-    this.userService.searchList({page: 1, nums: 10}).subscribe(
+  public updateUserDate(page): void {
+    this.userService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total: value.data.totalRecord, row: value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
@@ -141,7 +143,7 @@ export class UserComponent implements OnInit {
               }
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: '增加提醒', detail: value.message});
-              this.updateUserDate();
+              this.updateUserDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -222,7 +224,7 @@ export class UserComponent implements OnInit {
                   this.cleanTimer = setTimeout(() => {
                     this.msgs = [];
                   }, 3000);
-                  this.updateUserDate();
+                  this.updateUserDate(this.nowPage);
                 } else {
                   setTimeout(() => {
                     this.globalService.eventSubject.next({display: false});
@@ -270,7 +272,7 @@ export class UserComponent implements OnInit {
                     }
                     this.msgs = [];
                     this.selectedUsers = undefined;
-                    this.updateUserDate();
+                    this.updateUserDate(this.nowPage);
                     this.msgs.push({severity: 'success', summary: '删除提醒', detail: value.message});
                     this.cleanTimer = setTimeout(() => {
                       this.msgs = [];
@@ -403,7 +405,7 @@ export class UserComponent implements OnInit {
               this.msgs = [];
               this.selectedUsers = undefined;
               this.msgs.push({severity: 'success', summary: '修改提醒', detail: value.message});
-              this.updateUserDate();
+              this.updateUserDate(this.nowPage);
               this.cleanTimer = setTimeout(() => {
                 this.msgs = [];
               }, 3000);
@@ -491,7 +493,9 @@ export class UserComponent implements OnInit {
     this.userService.searchUser({page: 1, nums: 10},this.queryUser).subscribe(
       (value) => {
         console.log(value);
-        this.option = {total:value.data.totalRecord,row:value.data.pageSize};
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
+
         this.users = value.data.contents;
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
@@ -506,7 +510,7 @@ export class UserComponent implements OnInit {
     this.queryUser.realName = null;
     this.queryUser.userName = null;
     this.clearData();
-    this.updateUserDate();
+    this.updateUserDate(this.nowPage);
   }
 
 
@@ -782,12 +786,12 @@ export class UserComponent implements OnInit {
   //分页查询
   public nowpageEventHandle(event: any) {
     this.nowPage = event;
-    console.log('我是父组件');
-    console.log(this.nowPage);
     this.userService.searchList({page: this.nowPage, nums: 10}).subscribe(
       (value) => {
         console.log(value);
         this.users = value.data.contents;
+        this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
+
         this.users.map((val, index) => {
           val.gender = this.sex[val.gender - 1];
         });
