@@ -3,11 +3,11 @@ import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class GlobalService {
-  public eventSubject: Subject<any> = new Subject<any>(); // 控制全局加载动画
-  public urls = `http://120.77.171.73:8888/highway-management`;
-  // public urls = `http://123.249.28.108:8082/highway-management`;
-  public url = `http://120.77.171.73:8080/highway-authentication`;
-  // public urls = `http://192.168.28.139:8080`;
+  public eventSubject: Subject<any> = new Subject<any>();
+  public urls = `http://120.77.171.73:8888/highway-management`; // 正式端
+  // public urls = `http://123.249.28.108:8082/highway-management`; // 测试端
+  // public url = `http://139.9.225.98:8081/highway-authentication`; // 正式端
+  public url = `http://192.168.28.101:8080`; // 正式端
   // sessionStorage临时存储
   public sessionStorage: any;
   constructor() {
