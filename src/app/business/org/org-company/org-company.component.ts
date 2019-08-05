@@ -401,7 +401,7 @@ export class OrgCompanyComponent implements OnInit {
     this.areaDialog = true;
     this.orgService.searchAreaList({page: 1, nums: 100}).subscribe(
       (val) => {
-        this.addAreaTrees = this.initializeTree(val.data.contents);
+        this.addAreaTrees = this.initializeTree(val.data);
         console.log(val);
       }
     );

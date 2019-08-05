@@ -81,7 +81,6 @@ export class InterceptComponent implements OnInit {
   public updateInterceptDate(page): void {
     this.interceptService.searchList({page: page, nums: 10, bayonetType: '2'}).subscribe(
       (value) => {
-        console.log(value);
         this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
         this.intercepts = value.data.contents;
       }
@@ -98,7 +97,6 @@ export class InterceptComponent implements OnInit {
 
   // 选中后赋值
   public onRowSelect(event): void {
-    console.log(event.data);
     this.modifyhighsdData = null;
     this.modifyIntercept.administrativeAreaName = null;
     this.modifyIntercept.serviceAreaName = null;
