@@ -28,7 +28,7 @@
 
   <p-scrollPanel [style]="{width: 'auto', height: '60vh'}">
     <!--数据-->
-    <p-table [columns]="columns" [value]="stores" selectionMode="multiple" [(selection)]="selectedstores" (onRowSelect)="onRowSelect($event)">
+    <p-table [value]="stores" selectionMode="multiple" [(selection)]="selectedstores" (onRowSelect)="onRowSelect($event)">
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns">
