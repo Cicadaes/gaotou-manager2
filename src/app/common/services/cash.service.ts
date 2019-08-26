@@ -17,7 +17,6 @@ export class CashService {
   }
   // 删除单个
   public deleteItem(id): Observable<any> {
-    console.log(id);
     return this.http.get(`${this.globalService.urls}/cashRegister/delete/${id}`);
   }
   // 删除多个

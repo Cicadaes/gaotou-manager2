@@ -88,7 +88,7 @@ export class StoreComponent implements OnInit {
   public updateStoreDate(page): void {
     this.storeService.searchList({page: page, nums: 10}).subscribe(
       (value) => {
-        console.log(value.data.totalRecord);
+        console.log(value);
         // this.totalpage = Math.ceil(value.data.totalRecord/ value.data.pageSize);
         this.stores = value.data.contents;
         this.option = {total: value.data.totalRecord, row: value.data.pageSize, nowpage: value.data.pageNo};
